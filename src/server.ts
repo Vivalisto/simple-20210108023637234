@@ -1,9 +1,11 @@
 import express, { json } from 'express';
+import UserRoutes from './routes/UserRoutes';
 
-const app = express();
+const server = express();
+server.use(express.json());
 
-app.use(express.json());
+server.use('/users', UserRoutes);
 
-app.listen(3333, () => {
+server.listen(3333, () => {
   console.log('api online!');
 });
