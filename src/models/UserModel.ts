@@ -4,11 +4,10 @@ const Schema = mongoose.Schema;
 
 //schema
 const userSchema = new Schema({
-  firstName: {
+  name: {
     type: String,
     required: true,
   },
-  lastName: { type: String },
   email: {
     type: String,
     unique: true,
@@ -19,6 +18,23 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  birthDate: {
+    type: Date,
+    required: true,
+  },
+  cpf: {
+    type: String,
+    required: true,
+  },
+  cellphone: {
+    type: String,
+    required: true,
+  },
+  isBroker: {
+    type: Boolean,
+    default: false,
+  },
+  organization: {},
   created: {
     type: Date,
     default: Date.now(),

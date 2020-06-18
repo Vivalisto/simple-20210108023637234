@@ -1,0 +1,8 @@
+applications:
+  - name: vivalisto
+    path: .
+    memory: 128M
+    command: npm start
+    routes:
+      - route: vivalistobackend.mybluemix.net
+    instances: 1
