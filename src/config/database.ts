@@ -1,10 +1,12 @@
 import mongoose from 'mongoose';
 
-const url =
-  'mongodb://dbuser:vivalisto2020@ds125716.mlab.com:25716/vivalisto-dev';
-// const url = 'mongodb://dbuser:dbuser18@ds249267.mlab.com:49267/vivalisto';
-// const url = 'mongodb://localhost:27017/vivalisto';
+class DataBase {
+  private DB_URL =
+    'mongodb://dbuser:vivalisto2020@ds125716.mlab.com:25716/vivalisto-dev';
 
-mongoose.connect(url, { useNewUrlParser: true });
+  createConnection() {
+    mongoose.connect(this.DB_URL, { useNewUrlParser: true });
+  }
+}
 
-export default mongoose;
+export default DataBase;

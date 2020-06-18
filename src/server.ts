@@ -1,11 +1,19 @@
-import express, { json } from 'express';
-import UserRoutes from './routes/UserRoutes';
+import StartUp from './startUp';
 
-const server = express();
-server.use(express.json());
+let port = process.env.PORT || '3333';
 
-server.use('/users', UserRoutes);
-
-server.listen(3333, () => {
-  console.log('api online!');
+StartUp.app.listen(port, () => {
+  console.log(`servidor executando na porta ${port}`);
 });
+
+// import express, { json } from 'express';
+// import UserRoutes from './routes/UserRoutes';
+
+// const server = express();
+// server.use(express.json());
+
+// server.use('/users', UserRoutes);
+
+// server.listen(3333, () => {
+//   console.log('api online!');
+// });

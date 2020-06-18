@@ -1,9 +1,6 @@
-import mongoose from '../config/database';
+import * as mongoose from 'mongoose';
 
-const Schema = mongoose.Schema;
-
-//schema
-const userSchema = new Schema({
+const UserSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -41,4 +38,4 @@ const userSchema = new Schema({
   },
 });
 
-export default mongoose.model('users', userSchema);
+export default UserSchema;
