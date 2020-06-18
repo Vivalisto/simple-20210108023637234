@@ -7,8 +7,8 @@ userRouter.get('/test', (req, res) => res.json({ msg: 'server ativo' }));
 
 userRouter.get('/', UserController.get);
 userRouter.get('/:id', UserController.getById);
-userRouter.post('/', UserController.get);
-userRouter.put('/:id', UserController.get);
-userRouter.delete('/:id', UserController.get);
+userRouter.post('/', UserController.create);
+userRouter.put('/:id', UserController.update);
+userRouter.delete('/:id', UserController.delete);
 
 export default userRouter;

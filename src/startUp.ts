@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 
 import DataBase from './config/database';
 import userRouter from './routes/UserRoutes';
@@ -16,7 +17,15 @@ class StartUp {
     this.routes();
   }
 
+  enableCors() {
+    const options: cors.CorsOptions = {
+      methods: 'GET, OPTIONS, PUT, POST, DELETE',
+      origin: '*',
+    };
+  }
+
   middler() {
+    this.enableCors();
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
   }
