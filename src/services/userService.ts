@@ -1,24 +1,24 @@
 import UserRepository from '../repositories/userRepository';
 
 class UserService {
-  get() {
-    return UserRepository.find();
+  async get() {
+    return await UserRepository.find();
   }
 
-  getById(_id: string) {
-    return UserRepository.findById(_id);
+  async getById(_id: string) {
+    return await UserRepository.findById(_id);
   }
 
-  create(user: any) {
-    return UserRepository.create(user);
+  async create(user: any) {
+    return await UserRepository.create(user);
   }
 
-  update(_id: string, user: any) {
-    return UserRepository.findByIdAndUpdate(_id, user);
+  async update(_id: string, user: any) {
+    return await UserRepository.findByIdAndUpdate(_id, user);
   }
 
-  delete(_id: string) {
-    return UserRepository.findByIdAndRemove(_id);
+  async delete(_id: string) {
+    return await UserRepository.findByIdAndRemove(_id);
   }
 }
 

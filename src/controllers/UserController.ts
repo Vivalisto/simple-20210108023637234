@@ -4,8 +4,8 @@ import httpStatus, * as HttpStatus from 'http-status';
 import UserService from '../services/userService';
 import Helper from '../utils/helper';
 class UserController {
-  get(req: Request, res: Response) {
-    UserService.get()
+  async get(req: Request, res: Response) {
+    await UserService.get()
       .then((users) => {
         Helper.sendResponse(res, HttpStatus.OK, users);
       })
@@ -14,10 +14,10 @@ class UserController {
       });
   }
 
-  getById(req: Request, res: Response) {
+  async getById(req: Request, res: Response) {
     const { id } = req.params;
 
-    UserService.getById(id)
+    await UserService.getById(id)
       .then((users) => {
         Helper.sendResponse(res, HttpStatus.OK, users);
       })
@@ -26,10 +26,10 @@ class UserController {
       });
   }
 
-  create(req: Request, res: Response) {
+  async create(req: Request, res: Response) {
     let user = req.body;
 
-    UserService.create(user)
+    await UserService.create(user)
       .then((user) => {
         Helper.sendResponse(
           res,
@@ -42,11 +42,11 @@ class UserController {
       });
   }
 
-  update(req: Request, res: Response) {
+  async update(req: Request, res: Response) {
     const { id } = req.params;
     const userUpdate = req.body;
 
-    UserService.update(id, userUpdate)
+    await UserService.update(id, userUpdate)
       .then((user) => {
         Helper.sendResponse(
           res,
@@ -59,10 +59,10 @@ class UserController {
       });
   }
 
-  delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response) {
     const { id } = req.params;
 
-    UserService.delete(id)
+    await UserService.delete(id)
       .then(() => {
         Helper.sendResponse(res, httpStatus.OK, 'Usuário deletado com sucesso');
       })
