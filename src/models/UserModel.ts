@@ -1,4 +1,6 @@
 import * as mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+import { NextFunction } from 'express';
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -14,6 +16,7 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    select: false,
   },
   birthDate: {
     type: Date,
@@ -36,6 +39,16 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+});
+
+UserSchema.pre('save', async function (next) {
+  const user: any = this;
+
+  if (user.password) {
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+
+  next();
 });
 
 export default UserSchema;
