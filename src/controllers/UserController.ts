@@ -25,10 +25,19 @@ class UserController {
   }
 
   async create(req: Request, res: Response) {
-    let user = req.body;
+    const userRequest = req.body;
+    const { email } = req.body;
 
     try {
-      let response = UserService.create(user);
+      const user = await UserService.userExist(email);
+
+      if (user) {
+        Helper.sendResponse(res, HttpStatus.BAD_REQUEST, 'User already exists');
+      }
+
+      console.log('user', user);
+      let response = await UserService.create(userRequest);
+      console.log('user', response);
       Helper.sendResponse(res, HttpStatus.OK, 'Usuário cadastrado com sucesso');
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
@@ -40,7 +49,7 @@ class UserController {
     const userUpdate = req.body;
 
     try {
-      const user = UserService.update(id, userUpdate);
+      const user = await UserService.update(id, userUpdate);
       Helper.sendResponse(res, HttpStatus.OK, 'Atualizado com sucesso');
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
@@ -51,7 +60,7 @@ class UserController {
     const { id } = req.params;
 
     try {
-      UserService.delete(id);
+      await UserService.delete(id);
       Helper.sendResponse(res, httpStatus.OK, 'Usuário deletado com sucesso');
     } catch (error) {
       console.error.bind(console, `Error ${error}`);

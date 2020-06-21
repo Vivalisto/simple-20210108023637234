@@ -1,4 +1,7 @@
+import jwt from 'jsonwebtoken';
+
 import UserRepository from '../repositories/userRepository';
+import keys from '../config/keys-dev';
 
 class UserService {
   async get() {
@@ -19,6 +22,19 @@ class UserService {
 
   async delete(_id: string) {
     return await UserRepository.findByIdAndRemove(_id);
+  }
+
+  async userExist(email: string, withPassworld?: boolean) {
+    if (withPassworld) {
+      return await UserRepository.findOne({ email }).select('+password');
+    }
+    return await UserRepository.findOne({ email });
+  }
+
+  async generateToken(user: any) {
+    return jwt.sign({ id: user._id }, keys.secretOrKey, {
+      expiresIn: 86400,
+    });
   }
 }
 
