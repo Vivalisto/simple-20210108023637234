@@ -1,10 +1,16 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
+import * as Yup from 'yup';
 import httpStatus, * as HttpStatus from 'http-status';
-import jwt from 'jsonwebtoken';
 
 import UserService from '../services/userService';
 import Helper from '../utils/helper';
+import { authenticateValidation } from '../validation/authValidation';
+
+const schema = Yup.object().shape({
+  email: Yup.string().required().email(),
+  password: Yup.string().required(),
+});
 
 class AuthController {
   async register(req: Request, res: Response) {
@@ -15,7 +21,11 @@ class AuthController {
       const user = await UserService.userExist(email);
 
       if (user) {
-        Helper.sendResponse(res, HttpStatus.BAD_REQUEST, 'User already exists');
+        Helper.sendResponse(
+          res,
+          HttpStatus.BAD_REQUEST,
+          'Usuário já possui cadastro'
+        );
       }
 
       await UserService.create(userRequest);
@@ -27,6 +37,8 @@ class AuthController {
 
   async authenticate(req: Request, res: Response) {
     const { email, password } = req.body;
+
+    await authenticateValidation(res, req.body);
 
     try {
       const user: any = await UserService.userExist(email, true);
