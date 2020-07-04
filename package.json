@@ -4,7 +4,7 @@
   "description": "Dev Backend",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "ts-node-dev src/server.ts",
+    "dev": "ts-node-dev --inspect --transpileOnly --ignore-watch node_modules src/server.ts",
     "build": "tsc",
     "start": "node ./dist/server.js"
   },
