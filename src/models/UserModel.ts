@@ -2,6 +2,16 @@ import * as mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { NextFunction } from 'express';
 
+interface IUser {
+  name: string;
+  email: string;
+  cpf: string;
+  cellphone: string;
+  password: string;
+  birthDate: Date;
+  created: Date;
+}
+
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -26,15 +36,30 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  creci: {
+    type: String,
+  },
   cellphone: {
     type: String,
     required: true,
   },
   isBroker: {
     type: Boolean,
+    default: true,
+  },
+  isOrganization: {
+    type: Boolean,
+    required: true,
     default: false,
   },
-  organization: {},
+  organization: {
+    cnpj: String,
+    cpf: String,
+    creci: String,
+    name: String,
+    image: String,
+    useCpf: Boolean,
+  },
   created: {
     type: Date,
     default: Date.now(),

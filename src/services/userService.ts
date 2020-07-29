@@ -17,7 +17,7 @@ class UserService {
   }
 
   async update(_id: string, user: any) {
-    return await UserRepository.findByIdAndUpdate(_id, user);
+    return await UserRepository.findByIdAndUpdate(_id, user, { new: true });
   }
 
   async delete(_id: string) {
