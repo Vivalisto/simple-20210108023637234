@@ -6,6 +6,8 @@ import httpStatus, * as HttpStatus from 'http-status';
 import UserService from '../services/userService';
 import Helper from '../utils/helper';
 import { authenticateValidation } from '../validation/authValidation';
+import { request } from 'http';
+import userService from '../services/userService';
 
 const schema = Yup.object().shape({
   email: Yup.string().required().email(),
@@ -55,10 +57,9 @@ class AuthController {
       if (!validPassword) {
         Helper.sendResponse(res, HttpStatus.BAD_REQUEST, 'Senha inválida');
       }
-      user.password = undefined;
 
       const token = await UserService.generateToken(user);
-      Helper.sendResponse(res, HttpStatus.OK, { user, token, result });
+      Helper.sendResponse(res, HttpStatus.OK, { user, token });
     } catch (error) {
       Helper.sendResponse(
         res,
@@ -84,9 +85,52 @@ class AuthController {
       UserService.updatePasswordReset(user);
 
       Helper.sendResponse(res, HttpStatus.OK, {
-        msg: 'Email link de alteração de senha enviado para o email indicado',
+        msg: 'Link de alteração de senha enviado para o email indicado',
       });
     } catch (error) {}
+  }
+
+  async resetPassword(req: Request, res: Response) {
+    const { email, password, token } = req.body;
+
+    try {
+      const user: any = await userService.userExistWithFields(
+        email,
+        '+passwordResetToken passwordResetExpires'
+      );
+
+      if (!user) {
+        Helper.sendResponse(
+          res,
+          HttpStatus.BAD_REQUEST,
+          'Usuário não encontrado'
+        );
+      }
+
+      if (token !== user.passwordResetToken) {
+        Helper.sendResponse(res, HttpStatus.BAD_REQUEST, 'Token inválido');
+      }
+
+      const now = new Date();
+
+      if (now > user.passwordResetExpires) {
+        Helper.sendResponse(
+          res,
+          HttpStatus.BAD_REQUEST,
+          'Token expirado, gere um novo token'
+        );
+      }
+
+      user.password = password;
+
+      user.save();
+
+      res.send();
+    } catch (error) {
+      res
+        .status(400)
+        .send({ error: 'Sua senha não pode ser resetada, tente novamente.' });
+    }
   }
 }
 

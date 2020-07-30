@@ -34,6 +34,13 @@ class UserService {
     return await UserRepository.findOne({ email });
   }
 
+  async userExistWithFields(email: string, withFields?: string) {
+    if (withFields) {
+      return await UserRepository.findOne({ email }).select(withFields);
+    }
+    return this.userExist(email);
+  }
+
   async updatePasswordReset(user: any) {
     const token = await crypto.randomBytes(20).toString('hex');
     const now = new Date();
@@ -42,7 +49,7 @@ class UserService {
 
     Mail.to = user.email;
     Mail.subject = 'Redefinição senha sistema Vivalisto';
-    Mail.message = 'Sua senha foi alterada. Nova senha: ';
+    Mail.message = `Sua senha foi alterada. Token: ${token}`;
     let result = Mail.sendMail();
 
     return await UserRepository.findByIdAndUpdate(user._id, {

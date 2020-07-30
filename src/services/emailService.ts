@@ -10,6 +10,7 @@
 // });
 
 import * as nodemailer from 'nodemailer';
+import { MailOptions } from 'nodemailer/lib/json-transport';
 // import config from '../configs/configs';
 
 class Mail {
@@ -20,7 +21,7 @@ class Mail {
   ) {}
 
   sendMail() {
-    let mailOptions = {
+    let mailOptions: MailOptions = {
       from: 'no-reply@vivalisto.com.br',
       to: this.to,
       subject: this.subject,
