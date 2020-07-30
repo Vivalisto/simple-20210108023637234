@@ -1,7 +1,10 @@
 import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 
 import UserRepository from '../repositories/userRepository';
 import keys from '../config/keys-dev';
+import Mail from '../services/emailService';
 
 class UserService {
   async get() {
@@ -29,6 +32,25 @@ class UserService {
       return await UserRepository.findOne({ email }).select('+password');
     }
     return await UserRepository.findOne({ email });
+  }
+
+  async updatePasswordReset(user: any) {
+    const token = await crypto.randomBytes(20).toString('hex');
+    const now = new Date();
+
+    now.setHours(now.getHours() + 1);
+
+    Mail.to = user.email;
+    Mail.subject = 'Redefinição senha sistema Vivalisto';
+    Mail.message = 'Sua senha foi alterada. Nova senha: ';
+    let result = Mail.sendMail();
+
+    return await UserRepository.findByIdAndUpdate(user._id, {
+      $set: {
+        passwordResetToken: token,
+        passwordResetExpires: now,
+      },
+    });
   }
 
   async generateToken(user: any) {

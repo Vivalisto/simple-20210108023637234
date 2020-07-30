@@ -58,7 +58,7 @@ class AuthController {
       user.password = undefined;
 
       const token = await UserService.generateToken(user);
-      Helper.sendResponse(res, HttpStatus.OK, { user, token });
+      Helper.sendResponse(res, HttpStatus.OK, { user, token, result });
     } catch (error) {
       Helper.sendResponse(
         res,
@@ -66,6 +66,27 @@ class AuthController {
         'Erro na autenticação'
       );
     }
+  }
+
+  async forgotPassword(req: Request, res: Response) {
+    const { email } = req.body;
+
+    try {
+      const user: any = await UserService.userExist(email);
+      if (!user) {
+        Helper.sendResponse(
+          res,
+          HttpStatus.BAD_REQUEST,
+          'Usuário não encontrado'
+        );
+      }
+
+      UserService.updatePasswordReset(user);
+
+      Helper.sendResponse(res, HttpStatus.OK, {
+        msg: 'Email link de alteração de senha enviado para o email indicado',
+      });
+    } catch (error) {}
   }
 }
 
