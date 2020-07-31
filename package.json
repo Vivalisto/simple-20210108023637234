@@ -30,6 +30,7 @@
     "mongoose": "^5.9.18",
     "nodemailer": "^6.4.10",
     "nodemailer-express-handlebars": "^4.0.0",
+    "nodemailer-sendgrid-transport": "^0.2.0",
     "request": "^2.88.2",
     "yup": "^0.29.1"
   },

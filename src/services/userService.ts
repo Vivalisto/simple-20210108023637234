@@ -49,8 +49,8 @@ class UserService {
 
     Mail.to = user.email;
     Mail.subject = 'Redefinição senha sistema Vivalisto';
-    Mail.message = `Sua senha foi alterada. <a> Token: http://localhost:3000/reset-password/${user.email}/${token}</a>`;
-    let result = Mail.sendMail();
+    Mail.message = `Solicitação de alteração de senha. <a href=http://localhost:3000/reset-password/${user.email}/${token}> Clique aqui para alterar sua senha</a>`;
+    Mail.sendMail();
 
     return await UserRepository.findByIdAndUpdate(user._id, {
       $set: {
