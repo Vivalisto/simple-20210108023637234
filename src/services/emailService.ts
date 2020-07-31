@@ -2,7 +2,7 @@
 
 import * as nodemailer from 'nodemailer';
 import { MailOptions } from 'nodemailer/lib/json-transport';
-import sendGridTransport from 'nodemailer-sendgrid-transport';
+const sendGridTransport = require('nodemailer-sendgrid-transport');
 
 class Mail {
   constructor(
