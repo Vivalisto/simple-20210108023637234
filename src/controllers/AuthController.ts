@@ -125,7 +125,9 @@ class AuthController {
 
       user.save();
 
-      res.send();
+      Helper.sendResponse(res, HttpStatus.OK, {
+        message: 'Senha alterada com sucesso',
+      });
     } catch (error) {
       res
         .status(400)
