@@ -78,14 +78,14 @@ class AuthController {
         Helper.sendResponse(
           res,
           HttpStatus.BAD_REQUEST,
-          'Usuário não encontrado'
+          'E-mail não encontrado. Verifique os dados digitados.'
         );
       }
 
       UserService.updatePasswordReset(user);
 
       Helper.sendResponse(res, HttpStatus.OK, {
-        msg: 'Link de alteração de senha enviado para o email indicado',
+        message: `Link de alteração de senha enviado para o email ${email}.`,
       });
     } catch (error) {}
   }
