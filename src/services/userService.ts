@@ -6,6 +6,8 @@ import UserRepository from '../repositories/userRepository';
 import keys from '../config/keys-dev';
 import Mail from '../services/emailService';
 
+import AppError from '../errors/AppError';
+
 class UserService {
   async get() {
     return await UserRepository.find();
@@ -16,6 +18,12 @@ class UserService {
   }
 
   async create(user: any) {
+    const userExist = await this.userExist(user.email);
+
+    if (userExist) {
+      throw new AppError('Usuário já cadastrado no sistema, uhu');
+    }
+
     return await UserRepository.create(user);
   }
 
@@ -29,23 +37,19 @@ class UserService {
 
   async userExist(email: string, withPassworld?: boolean) {
     if (withPassworld) {
-      return await UserRepository.findOne({ email }).select('+password');
+      const userPass = await UserRepository.findOne({ email }).select(
+        '+password'
+      );
+      return userPass;
     }
 
     const user = await UserRepository.findOne({ email });
-
-    if (!user) {
-      throw new Error('E-mail não encontrado. Verifique os dados digitados.');
-    }
     return user;
   }
 
   async userExistWithFields(email: string, withFields?: string) {
     if (withFields) {
       const user = await UserRepository.findOne({ email }).select(withFields);
-      if (!user) {
-        throw new Error('E-mail não encontrado. Verifique os dados digitados.');
-      }
       return user;
     }
     return this.userExist(email);
@@ -85,13 +89,13 @@ class UserService {
     );
 
     if (token !== user.passwordResetToken) {
-      throw new Error('Token inválido');
+      throw new AppError('Token inválido', 401);
     }
 
     const now = new Date();
 
     if (now > user.passwordResetExpires) {
-      throw new Error('Token expirado, gere um novo token');
+      throw new AppError('Token expirado, gere um novo token', 401);
     }
 
     user.password = password;

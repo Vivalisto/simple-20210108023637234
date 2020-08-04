@@ -34,6 +34,7 @@ class Mail {
         console.log(error);
         return error;
       } else {
+        console.log('info', info);
         return 'E-mail enviado com sucesso!';
       }
     });
