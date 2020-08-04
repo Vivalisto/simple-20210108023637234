@@ -21,7 +21,7 @@ class UserService {
     const userExist = await this.userExist(user.email);
 
     if (userExist) {
-      throw new AppError('Usuário já cadastrado no sistema, uhu');
+      throw new AppError('Usuário já cadastrado no sistema');
     }
 
     return await UserRepository.create(user);
@@ -55,13 +55,17 @@ class UserService {
     return this.userExist(email);
   }
 
-  async updatePasswordReset(email: string) {
+  async forgotPassword(email: string) {
     const token = await crypto.randomBytes(20).toString('hex');
     const now = new Date();
 
     now.setHours(now.getHours() + 1);
 
     const user: any = await this.userExist(email);
+
+    if (!user) {
+      throw new AppError('Usuário não cadastrado');
+    }
 
     await UserRepository.findByIdAndUpdate(user._id, {
       $set: {

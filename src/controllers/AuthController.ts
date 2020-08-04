@@ -45,7 +45,7 @@ class AuthController {
     const { email } = req.body;
 
     try {
-      await UserService.updatePasswordReset(email);
+      await UserService.forgotPassword(email);
 
       Helper.sendResponse(res, HttpStatus.OK, {
         message: `Link de alteração de senha enviado para o email ${email}.`,
