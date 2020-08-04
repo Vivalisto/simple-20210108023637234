@@ -6,6 +6,8 @@ import httpStatus, * as HttpStatus from 'http-status';
 import UserService from '../services/userService';
 import Helper from '../utils/helper';
 import { authenticateValidation } from '../validation/authValidation';
+import { request } from 'http';
+import userService from '../services/userService';
 
 const schema = Yup.object().shape({
   email: Yup.string().required().email(),
@@ -55,7 +57,6 @@ class AuthController {
       if (!validPassword) {
         Helper.sendResponse(res, HttpStatus.BAD_REQUEST, 'Senha inválida');
       }
-      user.password = undefined;
 
       const token = await UserService.generateToken(user);
       Helper.sendResponse(res, HttpStatus.OK, { user, token });
@@ -64,6 +65,42 @@ class AuthController {
         res,
         HttpStatus.INTERNAL_SERVER_ERROR,
         'Erro na autenticação'
+      );
+    }
+  }
+
+  async forgotPassword(req: Request, res: Response) {
+    const { email } = req.body;
+
+    try {
+      await UserService.updatePasswordReset(email);
+
+      Helper.sendResponse(res, HttpStatus.OK, {
+        message: `Link de alteração de senha enviado para o email ${email}.`,
+      });
+    } catch (error) {
+      Helper.sendResponse(
+        res,
+        HttpStatus.BAD_REQUEST,
+        error.message || 'Erro inesperado'
+      );
+    }
+  }
+
+  async resetPassword(req: Request, res: Response) {
+    const { email, password, token } = req.body;
+
+    try {
+      await userService.resetPasswordByForgotPassword(email, password, token);
+
+      Helper.sendResponse(res, HttpStatus.OK, {
+        message: 'Senha alterada com sucesso',
+      });
+    } catch (error) {
+      Helper.sendResponse(
+        res,
+        HttpStatus.BAD_REQUEST,
+        error.message || 'Erro inesperado'
       );
     }
   }
