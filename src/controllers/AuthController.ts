@@ -73,65 +73,35 @@ class AuthController {
     const { email } = req.body;
 
     try {
-      const user: any = await UserService.userExist(email);
-      if (!user) {
-        Helper.sendResponse(
-          res,
-          HttpStatus.BAD_REQUEST,
-          'E-mail não encontrado. Verifique os dados digitados.'
-        );
-      }
-
-      UserService.updatePasswordReset(user);
+      await UserService.updatePasswordReset(email);
 
       Helper.sendResponse(res, HttpStatus.OK, {
         message: `Link de alteração de senha enviado para o email ${email}.`,
       });
-    } catch (error) {}
+    } catch (error) {
+      Helper.sendResponse(
+        res,
+        HttpStatus.BAD_REQUEST,
+        error.message || 'Erro inesperado'
+      );
+    }
   }
 
   async resetPassword(req: Request, res: Response) {
     const { email, password, token } = req.body;
 
     try {
-      const user: any = await userService.userExistWithFields(
-        email,
-        '+passwordResetToken passwordResetExpires'
-      );
-
-      if (!user) {
-        Helper.sendResponse(
-          res,
-          HttpStatus.BAD_REQUEST,
-          'Usuário não encontrado'
-        );
-      }
-
-      if (token !== user.passwordResetToken) {
-        Helper.sendResponse(res, HttpStatus.BAD_REQUEST, 'Token inválido');
-      }
-
-      const now = new Date();
-
-      if (now > user.passwordResetExpires) {
-        Helper.sendResponse(
-          res,
-          HttpStatus.BAD_REQUEST,
-          'Token expirado, gere um novo token'
-        );
-      }
-
-      user.password = password;
-
-      user.save();
+      await userService.resetPasswordByForgotPassword(email, password, token);
 
       Helper.sendResponse(res, HttpStatus.OK, {
         message: 'Senha alterada com sucesso',
       });
     } catch (error) {
-      res
-        .status(400)
-        .send({ error: 'Sua senha não pode ser resetada, tente novamente.' });
+      Helper.sendResponse(
+        res,
+        HttpStatus.BAD_REQUEST,
+        error.message || 'Erro inesperado'
+      );
     }
   }
 }

@@ -31,33 +31,71 @@ class UserService {
     if (withPassworld) {
       return await UserRepository.findOne({ email }).select('+password');
     }
-    return await UserRepository.findOne({ email });
+
+    const user = await UserRepository.findOne({ email });
+
+    if (!user) {
+      throw new Error('E-mail não encontrado. Verifique os dados digitados.');
+    }
+    return user;
   }
 
   async userExistWithFields(email: string, withFields?: string) {
     if (withFields) {
-      return await UserRepository.findOne({ email }).select(withFields);
+      const user = await UserRepository.findOne({ email }).select(withFields);
+      if (!user) {
+        throw new Error('E-mail não encontrado. Verifique os dados digitados.');
+      }
+      return user;
     }
     return this.userExist(email);
   }
 
-  async updatePasswordReset(user: any) {
+  async updatePasswordReset(email: string) {
     const token = await crypto.randomBytes(20).toString('hex');
     const now = new Date();
 
     now.setHours(now.getHours() + 1);
 
-    Mail.to = user.email;
-    Mail.subject = 'Redefinição senha sistema Vivalisto';
-    Mail.message = `Solicitação de alteração de senha. <a href=http://150.238.42.242:30080/reset-password/${user.email}/${token}> Clique aqui para alterar sua senha</a>`;
-    Mail.sendMail();
+    const user: any = await this.userExist(email);
 
-    return await UserRepository.findByIdAndUpdate(user._id, {
+    await UserRepository.findByIdAndUpdate(user._id, {
       $set: {
         passwordResetToken: token,
         passwordResetExpires: now,
       },
     });
+
+    Mail.to = user.email;
+    Mail.subject = 'Redefinição senha sistema Vivalisto';
+    Mail.message = `Solicitação de alteração de senha. <a href=http://localhost:3000/reset-password/${user.email}/${token}> Clique aqui para alterar sua senha</a>`;
+    await Mail.sendMail();
+
+    return;
+  }
+
+  async resetPasswordByForgotPassword(
+    email: string,
+    password: string,
+    token: string
+  ) {
+    const user: any = await this.userExistWithFields(
+      email,
+      '+passwordResetToken passwordResetExpires'
+    );
+
+    if (token !== user.passwordResetToken) {
+      throw new Error('Token inválido');
+    }
+
+    const now = new Date();
+
+    if (now > user.passwordResetExpires) {
+      throw new Error('Token expirado, gere um novo token');
+    }
+
+    user.password = password;
+    user.save();
   }
 
   async generateToken(user: any) {
