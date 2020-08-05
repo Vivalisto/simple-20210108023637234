@@ -4,7 +4,10 @@ import httpStatus, * as HttpStatus from 'http-status';
 
 import UserService from '../services/userService';
 import Helper from '../utils/helper';
-import { authenticateValidation } from '../validation/authValidation';
+import {
+  authenticateValidation,
+  registerValidation,
+} from '../validation/authValidation';
 import { request } from 'http';
 import AuthService from '../services/authService';
 
@@ -20,6 +23,7 @@ class AuthController {
     const userRequest = req.body;
 
     try {
+      await registerValidation(req.body);
       const user = await AuthService.register(userRequest);
       Helper.sendResponse(res, HttpStatus.OK, user);
     } catch (error) {
@@ -31,7 +35,7 @@ class AuthController {
     const { email, password } = req.body;
 
     try {
-      await authenticateValidation(res, req.body);
+      await authenticateValidation(req.body);
 
       const auth = await AuthService.authenticate(email, password);
 
