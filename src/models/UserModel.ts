@@ -1,18 +1,31 @@
 import * as mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { NextFunction } from 'express';
+import { object, boolean, string } from 'yup';
 
+// corretor autonomo
 interface IUser {
   name: string;
   email: string;
+  password: string;
   cpf: string;
   cellphone: string;
-  password: string;
-  birthDate: Date;
-  created: Date;
+  birthDate: string;
+  creci?: string;
+  isBroker: boolean;
+  active: boolean;
+  isOrganization: boolean;
+  avatar: string;
+  organization: {
+    cnpj?: string;
+    cpf?: string;
+    name?: string;
+    creci?: string;
+    image?: string;
+  };
 }
 
-const UserSchema = new mongoose.Schema({
+const UserSchema: mongoose.Schema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -36,37 +49,38 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     select: false,
   },
-  birthDate: {
-    type: Date,
-    required: true,
-  },
   cpf: {
     type: String,
     required: true,
-  },
-  creci: {
-    type: String,
   },
   cellphone: {
     type: String,
     required: true,
   },
+  birthDate: {
+    type: Date,
+    required: true,
+  },
+  creci: {
+    type: String,
+  },
+  active: {
+    type: Boolean,
+    default: false,
+  },
   isBroker: {
     type: Boolean,
     default: true,
   },
+  avatar: {
+    type: String,
+  },
   isOrganization: {
     type: Boolean,
-    required: true,
     default: false,
   },
   organization: {
-    cnpj: String,
-    cpf: String,
-    creci: String,
-    name: String,
-    image: String,
-    useCpf: Boolean,
+    type: Object,
   },
   created: {
     type: Date,
