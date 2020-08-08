@@ -25,7 +25,9 @@ class AuthController {
     try {
       await registerValidation(req.body);
       const user = await AuthService.register(userRequest);
-      Helper.sendResponse(res, HttpStatus.OK, user);
+      Helper.sendResponse(res, HttpStatus.OK, {
+        message: 'Usuário cadastrado com sucesso',
+      });
     } catch (error) {
       Helper.sendResponse(res, error.statusCode, error.message);
     }

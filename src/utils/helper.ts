@@ -2,7 +2,7 @@ import { Response } from 'express';
 import httpStatus, * as HttpStatus from 'http-status';
 
 class Helper {
-  sendResponse = function (res: Response, statusCode: any, data: any) {
+  sendResponse = function (res: Response, statusCode: any = 400, data: any) {
     if (
       statusCode === HttpStatus.BAD_REQUEST ||
       statusCode === HttpStatus.UNAUTHORIZED
