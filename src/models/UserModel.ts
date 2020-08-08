@@ -17,8 +17,7 @@ interface IUser {
   isOrganization: boolean;
   avatar: string;
   organization: {
-    cnpj?: string;
-    cpf?: string;
+    document?: string;
     name?: string;
     creci?: string;
     image?: string;
