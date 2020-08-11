@@ -18,13 +18,10 @@ export default async (
   }
 
   const parts = authHeader.split(' ');
-  console.log('token', authHeader);
-  console.log(parts.length);
   if (!(parts.length === 2))
     Helper.sendResponse(res, httpStatus.UNAUTHORIZED, 'Token error');
 
   const [schema, token] = parts;
-  console.log('/ˆBearer/i.test(schema)', /ˆBearer/i.test(schema));
 
   if (!/^Bearer$/i.test(schema))
     Helper.sendResponse(res, httpStatus.UNAUTHORIZED, 'Token mal formatado');

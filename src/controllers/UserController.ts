@@ -35,9 +35,7 @@ class UserController {
         Helper.sendResponse(res, HttpStatus.BAD_REQUEST, 'User already exists');
       }
 
-      console.log('user', user);
       let response = await UserService.create(userRequest);
-      console.log('user', response);
       Helper.sendResponse(res, HttpStatus.OK, 'Usuário cadastrado com sucesso');
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
