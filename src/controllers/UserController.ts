@@ -42,8 +42,8 @@ class UserController {
     }
   }
 
-  async update(req: Request, res: Response) {
-    const { id } = req.params;
+  async update(req: Request | any, res: Response) {
+    const id = req.userId;
     const userUpdate = req.body;
 
     try {
