@@ -5,6 +5,8 @@ import cors from 'cors';
 import DataBase from './config/database';
 import userRouter from './routes/UserRoutes';
 import authRouter from './routes/AuthRoutes';
+import proposalRoutes from './routes/ProposalRoutes';
+import stageRouter from './routes/StageRoutes';
 import authMiddleware from './middlewares/auth';
 
 class StartUp {
@@ -36,6 +38,8 @@ class StartUp {
   routes() {
     this.app.use('/api/v1/auth', authRouter);
     this.app.use('/api/v1/users', userRouter);
+    this.app.use('/api/v1/proposals', proposalRoutes);
+    this.app.use('/api/v1/stage', stageRouter);
 
     this.app.route('/').get((req: Request, res: Response) => {
       return res.send({ versao: '0.0.1' });

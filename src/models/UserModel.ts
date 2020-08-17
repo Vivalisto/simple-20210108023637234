@@ -79,7 +79,18 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
     default: false,
   },
   organization: {
-    type: Object,
+    document: {
+      type: String,
+    },
+    name: {
+      type: String,
+    },
+    creci: {
+      type: String,
+    },
+    image: {
+      type: String,
+    },
   },
   created: {
     type: Date,
