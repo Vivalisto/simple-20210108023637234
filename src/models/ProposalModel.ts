@@ -141,6 +141,10 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   comments: {
     type: String,
   },
+  sendMail: {
+    type: Boolean,
+    default: false,
+  },
   proponent: ProponentSchema,
   immobile: ImmobileSchema,
   contract: ContractSchema,

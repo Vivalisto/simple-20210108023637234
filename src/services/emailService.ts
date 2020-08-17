@@ -15,7 +15,7 @@ class Mail {
 
   sendMail() {
     let mailOptions: MailOptions = {
-      from: 'washington.alexandre@vivalisto.com.br',
+      from: 'noreply@vivalisto.com.br',
       to: this.to,
       subject: this.subject,
       html: this.message,
