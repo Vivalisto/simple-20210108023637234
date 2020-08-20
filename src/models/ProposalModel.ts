@@ -18,6 +18,12 @@ const ProponentSchema: mongoose.Schema = new mongoose.Schema({
     required: true,
     enum: ['PF', 'PJ'],
   },
+  organizationName: {
+    type: String,
+  },
+  activityBranch: {
+    type: String,
+  },
 });
 
 const ImmobileSchema: mongoose.Schema = new mongoose.Schema({
