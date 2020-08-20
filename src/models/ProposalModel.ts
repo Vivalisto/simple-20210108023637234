@@ -27,6 +27,7 @@ const ImmobileSchema: mongoose.Schema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
+    uppercase: true,
     enum: ['COMERCIAL', 'RESIDENCIAL'],
   },
   subtype: {
@@ -63,9 +64,19 @@ const ImmobileSchema: mongoose.Schema = new mongoose.Schema({
 });
 
 const ContractSchema: mongoose.Schema = new mongoose.Schema({
-  guarantee: {
+  warranty: {
     type: String,
     required: true,
+  },
+  warranty_turn: {
+    type: Number,
+    default: 0,
+  },
+  warranty_type: {
+    type: String,
+    default: '',
+    uppercase: true,
+    enum: ['ALUGUEL', 'PACOTE', ''],
   },
   duration: {
     type: Number,
@@ -80,7 +91,7 @@ const ContractSchema: mongoose.Schema = new mongoose.Schema({
     required: true,
   },
   package: {
-    type: String,
+    type: Number,
     required: true,
   },
 });

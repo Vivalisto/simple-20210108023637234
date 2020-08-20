@@ -13,7 +13,8 @@ class ProposalController {
       let proposal = await proposalService.create({ ...proposalRequest, user });
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
-      console.error.bind(console, `Error ${error}`);
+      console.log('error', error);
+      // console.error.bind(console, `Error ${error}`);
     }
   }
 
