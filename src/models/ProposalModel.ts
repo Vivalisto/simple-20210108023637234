@@ -1,5 +1,11 @@
 import * as mongoose from 'mongoose';
 
+import { ProposalType } from '../enums/proposal-type.enum';
+import { PersonType } from '../enums/person-type.enum';
+import { Escrow, EscrowType } from '../enums/escrow.enum';
+import { ImmobileType } from '../enums/immobile-type.enum';
+import { ProposalStatus } from '../enums/proposal-status.enum';
+
 const ProponentSchema: mongoose.Schema = new mongoose.Schema({
   name: {
     type: String,
@@ -16,7 +22,8 @@ const ProponentSchema: mongoose.Schema = new mongoose.Schema({
   personType: {
     type: String,
     required: true,
-    enum: ['PF', 'PJ'],
+    uppercase: true,
+    enum: Object.values(PersonType),
   },
   organizationName: {
     type: String,
@@ -34,7 +41,7 @@ const ImmobileSchema: mongoose.Schema = new mongoose.Schema({
     type: String,
     required: true,
     uppercase: true,
-    enum: ['COMERCIAL', 'RESIDENCIAL'],
+    enum: Object.values(ImmobileType),
   },
   subtype: {
     type: String,
@@ -70,19 +77,20 @@ const ImmobileSchema: mongoose.Schema = new mongoose.Schema({
 });
 
 const ContractSchema: mongoose.Schema = new mongoose.Schema({
-  warranty: {
+  escrow: {
     type: String,
     required: true,
+    enum: Object.values(Escrow),
   },
-  warranty_turn: {
+  escrow_turn: {
     type: Number,
     default: 0,
   },
-  warranty_type: {
+  escrow_type: {
     type: String,
     default: '',
     uppercase: true,
-    enum: ['ALUGUEL', 'PACOTE', ''],
+    enum: Object.values(EscrowType),
   },
   duration: {
     type: Number,
@@ -143,12 +151,14 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ['ALUGUEL', 'COMPRA_VENDA'],
+    enum: Object.values(ProposalType),
   },
   status: {
     type: String,
     required: true,
-    default: 'PENDENTE',
+    uppercase: true,
+    enum: Object.values(ProposalStatus),
+    default: ProposalStatus.Pendente,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
