@@ -88,7 +88,6 @@ const ContractSchema: mongoose.Schema = new mongoose.Schema({
   },
   escrow_type: {
     type: String,
-    default: '',
     uppercase: true,
     enum: Object.values(EscrowType),
   },
