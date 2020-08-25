@@ -9,6 +9,7 @@ proposalRouter.get('/', ProposalController.get);
 proposalRouter.get('/:id', ProposalController.getById);
 proposalRouter.post('/', ProposalController.create);
 proposalRouter.put('/', ProposalController.update);
+proposalRouter.put('/:id/status', ProposalController.updateStatus);
 // proposalRouter.delete('/:id', ProposalController.delete);
 
 export default proposalRouter;

@@ -50,6 +50,19 @@ class ProposalController {
     }
   }
 
+  async updateStatus(req: Request | any, res: Response) {
+    const { userId } = req;
+    const { id } = req.params;
+    const ProposalUpdate = req.body;
+
+    try {
+      const proposal = await proposalService.update(id, ProposalUpdate);
+      Helper.sendResponse(res, HttpStatus.OK, { proposal });
+    } catch (error) {
+      console.error.bind(console, `Error ${error}`);
+    }
+  }
+
   // async delete(req: Request, res: Response) {
   //   const { id } = req.params;
 
