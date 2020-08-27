@@ -7,9 +7,16 @@ class ProposalService {
   }
 
   async get(userId: mongoose.Schema.Types.ObjectId) {
-    return await ProposalRepository.find({ user: { _id: userId } }).populate(
-      'user'
-    );
+    return await ProposalRepository.find({
+      user: { _id: userId },
+    }).populate('user', [
+      'name',
+      'isBroker',
+      'isOrganization',
+      'email',
+      'cellphone',
+      'creci',
+    ]);
   }
 
   async getById(_id: string) {
