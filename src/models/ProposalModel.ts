@@ -5,6 +5,7 @@ import { PersonType } from '../enums/person-type.enum';
 import { Escrow, EscrowType } from '../enums/escrow.enum';
 import { ImmobileType } from '../enums/immobile-type.enum';
 import { ProposalStatus } from '../enums/proposal-status.enum';
+import { ProposalPackegeType } from '../enums/proposal-packege-type.enum';
 
 const ProponentSchema: mongoose.Schema = new mongoose.Schema({
   name: {
@@ -76,6 +77,18 @@ const ImmobileSchema: mongoose.Schema = new mongoose.Schema({
   },
 });
 
+const PackegeSchema: mongoose.Schema = new mongoose.Schema({
+  type: {
+    type: String,
+    required: true,
+    uppercase: true,
+    enum: Object.values(ProposalPackegeType),
+  },
+  main: { type: String, uppercase: true },
+  charges: { type: String },
+  tax: { type: [String] },
+});
+
 const ContractSchema: mongoose.Schema = new mongoose.Schema({
   escrow: {
     type: String,
@@ -104,8 +117,7 @@ const ContractSchema: mongoose.Schema = new mongoose.Schema({
     required: true,
   },
   package: {
-    type: Number,
-    required: true,
+    type: [PackegeSchema],
   },
 });
 

@@ -7,6 +7,8 @@ class ProposalService {
   }
 
   async get(userId: mongoose.Schema.Types.ObjectId) {
+    // const query = {user: { _id: userId }, }
+
     return await ProposalRepository.find({
       user: { _id: userId },
     }).populate('user', [
