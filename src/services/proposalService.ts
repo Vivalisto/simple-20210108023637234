@@ -1,6 +1,9 @@
 import ProposalRepository from '../repositories/proposalRepository';
 import * as mongoose from 'mongoose';
 
+import { ProposalStatus } from '../enums/proposal-status.enum';
+import { ProposalStage } from '../enums/proposal-stage.enum';
+
 class ProposalService {
   async create(proposal: any) {
     return await ProposalRepository.create(proposal);
@@ -33,6 +36,16 @@ class ProposalService {
 
   async delete(_id: string) {
     return await ProposalRepository.findByIdAndRemove(_id);
+  }
+
+  async updateStatus(_id: string, proposalStatus: any) {
+    let proposalUpdate = proposalStatus;
+
+    if (proposalStatus.status === ProposalStatus.EmNegociacao) {
+      proposalUpdate = { ...proposalStatus, stage: ProposalStage.Documental };
+    }
+
+    return await this.update(_id, proposalUpdate);
   }
 }
 

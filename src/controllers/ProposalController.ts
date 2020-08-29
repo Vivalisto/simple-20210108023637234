@@ -53,10 +53,10 @@ class ProposalController {
   async updateStatus(req: Request | any, res: Response) {
     const { userId } = req;
     const { id } = req.params;
-    const ProposalUpdate = req.body;
+    const proposalStatus = req.body;
 
     try {
-      const proposal = await proposalService.update(id, ProposalUpdate);
+      const proposal = await proposalService.updateStatus(id, proposalStatus);
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
