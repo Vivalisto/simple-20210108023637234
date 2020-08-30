@@ -63,6 +63,18 @@ class ProposalController {
     }
   }
 
+  async getSignings(req: Request | any, res: Response) {
+    try {
+      const proposals = await proposalService.getSignings(req.userId);
+      Helper.sendResponse(res, HttpStatus.OK, { proposals });
+    } catch (error) {
+      Helper.sendResponse(
+        res,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Erro ao buscar as propostas'
+      );
+    }
+  }
   // async delete(req: Request, res: Response) {
   //   const { id } = req.params;
 

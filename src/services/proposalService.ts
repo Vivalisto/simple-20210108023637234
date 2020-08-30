@@ -3,6 +3,16 @@ import * as mongoose from 'mongoose';
 
 import { ProposalStatus } from '../enums/proposal-status.enum';
 import { ProposalStage } from '../enums/proposal-stage.enum';
+import { query } from 'express';
+
+const proposalUserFields = [
+  'name',
+  'isBroker',
+  'isOrganization',
+  'email',
+  'cellphone',
+  'creci',
+];
 
 class ProposalService {
   async create(proposal: any) {
@@ -10,18 +20,11 @@ class ProposalService {
   }
 
   async get(userId: mongoose.Schema.Types.ObjectId) {
-    // const query = {user: { _id: userId }, }
+    // const filter = {user: { _id: userId },  }
 
     return await ProposalRepository.find({
       user: { _id: userId },
-    }).populate('user', [
-      'name',
-      'isBroker',
-      'isOrganization',
-      'email',
-      'cellphone',
-      'creci',
-    ]);
+    }).populate('user', proposalUserFields);
   }
 
   async getById(_id: string) {
@@ -41,11 +44,18 @@ class ProposalService {
   async updateStatus(_id: string, proposalStatus: any) {
     let proposalUpdate = proposalStatus;
 
-    if (proposalStatus.status === ProposalStatus.EmNegociacao) {
+    if (proposalStatus.status === ProposalStatus.EmviadaContratacao) {
       proposalUpdate = { ...proposalStatus, stage: ProposalStage.Documental };
     }
 
     return await this.update(_id, proposalUpdate);
+  }
+
+  async getSignings(userId: mongoose.Schema.Types.ObjectId) {
+    return await ProposalRepository.find({
+      user: { _id: userId },
+      stage: { $gt: 0 },
+    }).populate('user', proposalUserFields);
   }
 }
 
