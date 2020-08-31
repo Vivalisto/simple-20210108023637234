@@ -4,6 +4,7 @@ import * as mongoose from 'mongoose';
 import { ProposalStatus } from '../enums/proposal-status.enum';
 import { ProposalStage } from '../enums/proposal-stage.enum';
 import { query } from 'express';
+import AppError from '../errors/AppError';
 
 const proposalUserFields = [
   'name',
@@ -49,6 +50,18 @@ class ProposalService {
     }
 
     return await this.update(_id, proposalUpdate);
+  }
+
+  async updateStage(proposalId: string, dataStage: any) {
+    let proposalUpdate = dataStage;
+
+    if (dataStage.status === ProposalStage.Criacao) {
+      throw new AppError(
+        'Proposta em contratação. Não é possível retornar para negociação!'
+      );
+    }
+
+    return await this.update(proposalId, proposalUpdate);
   }
 
   async getSignings(userId: mongoose.Schema.Types.ObjectId) {

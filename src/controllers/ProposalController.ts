@@ -63,6 +63,19 @@ class ProposalController {
     }
   }
 
+  async updateStage(req: Request | any, res: Response) {
+    const { userId } = req;
+    const { id } = req.params;
+    const proposalStage = req.body;
+
+    try {
+      const proposal = await proposalService.updateStage(id, proposalStage);
+      Helper.sendResponse(res, HttpStatus.OK, { proposal });
+    } catch (error) {
+      console.error.bind(console, `Error ${error}`);
+    }
+  }
+
   async getSignings(req: Request | any, res: Response) {
     try {
       const proposals = await proposalService.getSignings(req.userId);
