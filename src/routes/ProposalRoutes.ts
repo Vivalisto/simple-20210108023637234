@@ -12,7 +12,7 @@ proposalRouter.get('/:id', ProposalController.getById);
 
 proposalRouter.post('/', ProposalController.create);
 
-proposalRouter.put('/', ProposalController.update);
+proposalRouter.put('/:id', ProposalController.update);
 proposalRouter.put('/:id/status', ProposalController.updateStatus);
 proposalRouter.put('/:id/stage', ProposalController.updateStage);
 // proposalRouter.delete('/:id', ProposalController.delete);
