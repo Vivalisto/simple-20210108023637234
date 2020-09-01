@@ -157,12 +157,9 @@ const proposalStage: mongoose.Schema = new mongoose.Schema({
 const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   stage: {
     type: Number,
-    required: true,
-  },
-  seq: {
-    type: Number,
     default: 0,
   },
+  seq: { type: Number, default: 0, unique: true },
   type: {
     type: String,
     required: true,
@@ -198,6 +195,31 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+});
+
+let CounterSchema = new mongoose.Schema({
+  _id: { type: String, required: true },
+  seq: { type: Number, default: 0 },
+});
+
+let counter = mongoose.model('counter', CounterSchema);
+
+ProposalSchema.pre('save', function (next) {
+  let proposal: any = this;
+  counter
+    .findByIdAndUpdate(
+      { _id: 'entityId' },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    )
+    .then(function (count: any) {
+      proposal.seq = count.seq;
+      next();
+    })
+    .catch(function (error) {
+      console.error('counter error-> : ' + error);
+      throw error;
+    });
 });
 
 export default ProposalSchema;
