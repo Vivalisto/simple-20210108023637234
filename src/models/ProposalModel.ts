@@ -159,6 +159,10 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  seq: {
+    type: Number,
+    default: 0,
+  },
   type: {
     type: String,
     required: true,
@@ -182,6 +186,9 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   sendMail: {
     type: Boolean,
     default: false,
+  },
+  followers: {
+    type: [String],
   },
   proponent: ProponentSchema,
   immobile: ImmobileSchema,
