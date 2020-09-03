@@ -187,10 +187,18 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   followers: {
     type: [String],
   },
-  proponent: ProponentSchema,
   immobile: ImmobileSchema,
   contract: ContractSchema,
-  locator: LocatorSchema,
+  proponent: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'customer',
+    required: true,
+  },
+  locator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'customer',
+    required: true,
+  },
   created: {
     type: Date,
     default: Date.now(),
