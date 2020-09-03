@@ -1,8 +1,9 @@
 import * as mongoose from 'mongoose';
 
 import { PersonType } from '../enums/person-type.enum';
+import { CustomerType } from '../enums/customer-type.enum';
 
-const ProponentSchema: mongoose.Schema = new mongoose.Schema({
+const CustomerSchema: mongoose.Schema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -17,9 +18,9 @@ const ProponentSchema: mongoose.Schema = new mongoose.Schema({
   },
   personType: {
     type: String,
-    required: true,
     uppercase: true,
     enum: Object.values(PersonType),
+    default: PersonType.PessoaFisica,
   },
   organizationName: {
     type: String,
@@ -27,6 +28,11 @@ const ProponentSchema: mongoose.Schema = new mongoose.Schema({
   activityBranch: {
     type: String,
   },
+  type: {
+    type: String,
+    required: true,
+    enum: Object.values(CustomerType),
+  },
 });
 
-export default ProponentSchema;
+export default CustomerSchema;

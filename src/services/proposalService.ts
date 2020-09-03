@@ -1,8 +1,10 @@
-import ProposalRepository from '../repositories/proposalRepository';
 import * as mongoose from 'mongoose';
+import ProposalRepository from '../repositories/proposalRepository';
+import CustomerRepository from '../repositories/customerRepository';
 
 import { ProposalStatus } from '../enums/proposal-status.enum';
 import { ProposalStage } from '../enums/proposal-stage.enum';
+import { CustomerType } from '../enums/customer-type.enum';
 import { query } from 'express';
 import AppError from '../errors/AppError';
 
@@ -17,7 +19,30 @@ const proposalUserFields = [
 
 class ProposalService {
   async create(proposal: any) {
-    return await ProposalRepository.create(proposal);
+    try {
+      const { proponent, locator, user } = proposal;
+
+      const proponentData = await CustomerRepository.create({
+        ...proponent,
+        type: CustomerType.Proponent,
+      });
+
+      const locatorData = await CustomerRepository.create({
+        ...locator,
+        type: CustomerType.Locator,
+      });
+
+      const proposalRepository = await ProposalRepository.create({
+        ...proposal,
+        proponent: proponentData._id,
+        locator: locatorData._id,
+      });
+
+      return proposalRepository;
+    } catch (error) {
+      console.log(error);
+    }
+    return;
   }
 
   async get(userId: mongoose.Schema.Types.ObjectId) {
@@ -25,17 +50,24 @@ class ProposalService {
 
     return await ProposalRepository.find({
       user: { _id: userId },
-    }).populate('user', proposalUserFields);
+    })
+      .populate('locator')
+      .populate('proponent')
+      .populate('user');
   }
 
   async getById(_id: string) {
-    return await ProposalRepository.findById(_id); //.populate('user')
+    return await ProposalRepository.findById(_id)
+      .populate('locator')
+      .populate('proponent');
   }
 
   async update(_id: string, proposal: any) {
     return await ProposalRepository.findByIdAndUpdate(_id, proposal, {
       new: true,
-    });
+    })
+      .populate('locator')
+      .populate('proponent');
   }
 
   async delete(_id: string) {
@@ -68,7 +100,10 @@ class ProposalService {
     return await ProposalRepository.find({
       user: { _id: userId },
       stage: { $gt: 0 },
-    }).populate('user', proposalUserFields);
+    })
+      .populate('user', proposalUserFields)
+      .populate('locator')
+      .populate('proponent');
   }
 }
 
