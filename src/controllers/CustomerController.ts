@@ -10,8 +10,8 @@ class CustomerController {
     const stageRequest = req.body;
 
     try {
-      let stage = await customerService.create(stageRequest);
-      Helper.sendResponse(res, HttpStatus.OK, { stage });
+      let customers = await customerService.create(stageRequest);
+      Helper.sendResponse(res, HttpStatus.OK, { customers });
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
     }
@@ -19,8 +19,8 @@ class CustomerController {
 
   async get(req: Request | any, res: Response) {
     try {
-      const stage = await customerService.get();
-      Helper.sendResponse(res, HttpStatus.OK, { stage });
+      const customers = await customerService.get();
+      Helper.sendResponse(res, HttpStatus.OK, { customers });
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
     }
@@ -30,8 +30,8 @@ class CustomerController {
     const { id } = req.params;
 
     try {
-      const stage = await customerService.getById(id);
-      Helper.sendResponse(res, httpStatus.OK, { stage });
+      const customers = await customerService.getById(id);
+      Helper.sendResponse(res, httpStatus.OK, { customers });
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
     }
@@ -54,7 +54,7 @@ class CustomerController {
 
     try {
       await customerService.delete(id);
-      Helper.sendResponse(res, httpStatus.OK, 'Stage deletado com sucesso');
+      Helper.sendResponse(res, httpStatus.OK, 'customers deletado com sucesso');
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
     }
