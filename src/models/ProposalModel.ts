@@ -121,38 +121,38 @@ const ContractSchema: mongoose.Schema = new mongoose.Schema({
   },
 });
 
-const LocatorSchema: mongoose.Schema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  phone: {
-    type: String,
-    required: true,
-  },
-});
+// const LocatorSchema: mongoose.Schema = new mongoose.Schema({
+//   name: {
+//     type: String,
+//     required: true,
+//   },
+//   email: {
+//     type: String,
+//     required: true,
+//   },
+//   phone: {
+//     type: String,
+//     required: true,
+//   },
+// });
 
-const proposalStage: mongoose.Schema = new mongoose.Schema({
-  stage: {
-    type: Number,
-    required: true,
-    default: 0,
-    unique: true,
-  },
-  completed: {
-    type: Boolean,
-    required: true,
-    default: false,
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-});
+// const proposalStage: mongoose.Schema = new mongoose.Schema({
+//   stage: {
+//     type: Number,
+//     required: true,
+//     default: 0,
+//     unique: true,
+//   },
+//   completed: {
+//     type: Boolean,
+//     required: true,
+//     default: false,
+//   },
+//   title: {
+//     type: String,
+//     required: true,
+//   },
+// });
 
 const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   stage: {
