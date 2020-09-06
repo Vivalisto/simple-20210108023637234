@@ -6,15 +6,12 @@ import { CustomerType } from '../enums/customer-type.enum';
 const CustomerSchema: mongoose.Schema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
   },
   phone: {
     type: String,
-    required: true,
   },
   email: {
     type: String,
-    required: true,
   },
   personType: {
     type: String,
@@ -30,7 +27,7 @@ const CustomerSchema: mongoose.Schema = new mongoose.Schema({
   },
   type: {
     type: String,
-    required: true,
+
     enum: Object.values(CustomerType),
   },
 });
