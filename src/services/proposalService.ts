@@ -22,7 +22,7 @@ class ProposalService {
     try {
       const proposalRepository = await ProposalRepository.create(proposal);
 
-      return proposalRepository;
+      return await proposalRepository.populate('proponent').execPopulate();
     } catch (error) {
       console.log(error);
     }
@@ -111,19 +111,19 @@ class ProposalService {
         });
       }
 
-      this.create({
+      return this.create({
         ...proposal,
         proponent: proponentData._id,
         locator: locatorData._id,
       });
 
-      const proposalRepository = await ProposalRepository.create({
-        ...proposal,
-        proponent: proponentData._id,
-        locator: locatorData._id,
-      });
+      // const proposalRepository = await ProposalRepository.create({
+      //   ...proposal,
+      //   proponent: proponentData._id,
+      //   locator: locatorData._id,
+      // });
 
-      return proposalRepository;
+      // return proposalRepository;
     } catch (error) {
       console.log(error);
     }
@@ -141,6 +141,17 @@ class ProposalService {
         ...proponent,
         type: CustomerType.Proponent,
       });
+
+      return await ProposalRepository.findByIdAndUpdate(
+        _id,
+        {
+          ...proposal,
+          proponent: proponentData._id,
+        },
+        {
+          new: true,
+        }
+      ).populate('proponent');
     }
 
     if (locator) {
@@ -148,14 +159,23 @@ class ProposalService {
         ...locator,
         type: CustomerType.Locator,
       });
+
+      return await ProposalRepository.findByIdAndUpdate(
+        _id,
+        {
+          ...proposal,
+          locator: locatorData._id,
+        },
+        {
+          new: true,
+        }
+      ).populate('locator');
     }
 
     return await ProposalRepository.findByIdAndUpdate(
       _id,
       {
         ...proposal,
-        proponent: proponentData._id,
-        locator: locatorData._id,
       },
       {
         new: true,
