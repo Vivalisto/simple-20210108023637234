@@ -97,6 +97,10 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
     enum: Object.values(ProposalStatus),
     default: ProposalStatus.Pendente,
   },
+  completeSteps: {
+    type: Number,
+    default: 1,
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
