@@ -7,80 +7,44 @@ import { ImmobileType } from '../enums/immobile-type.enum';
 import { ProposalStatus } from '../enums/proposal-status.enum';
 import { ProposalPackegeType } from '../enums/proposal-packege-type.enum';
 
-const ProponentSchema: mongoose.Schema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  phone: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  personType: {
-    type: String,
-    required: true,
-    uppercase: true,
-    enum: Object.values(PersonType),
-  },
-  organizationName: {
-    type: String,
-  },
-  activityBranch: {
-    type: String,
-  },
-});
-
 const ImmobileSchema: mongoose.Schema = new mongoose.Schema({
   code: {
     type: Number,
   },
   type: {
     type: String,
-    required: true,
     uppercase: true,
     enum: Object.values(ImmobileType),
   },
   subtype: {
     type: String,
-    required: true,
   },
   cep: {
     type: String,
-    required: true,
   },
   publicPlace: {
     type: String,
-    required: true,
   },
   number: {
     type: String,
-    required: true,
   },
   complement: {
     type: String,
   },
   neighborhood: {
     type: String,
-    required: true,
   },
   city: {
     type: String,
-    required: true,
   },
   state: {
     type: String,
-    required: true,
   },
 });
 
 const PackegeSchema: mongoose.Schema = new mongoose.Schema({
   type: {
     type: String,
-    required: true,
     uppercase: true,
     enum: Object.values(ProposalPackegeType),
   },
@@ -92,7 +56,6 @@ const PackegeSchema: mongoose.Schema = new mongoose.Schema({
 const ContractSchema: mongoose.Schema = new mongoose.Schema({
   escrow: {
     type: String,
-    required: true,
     enum: Object.values(Escrow),
   },
   escrow_turn: {
@@ -106,53 +69,17 @@ const ContractSchema: mongoose.Schema = new mongoose.Schema({
   },
   duration: {
     type: Number,
-    required: true,
   },
   value: {
     type: Number,
-    required: true,
   },
   payDay: {
     type: Number,
-    required: true,
   },
   package: {
     type: [PackegeSchema],
   },
 });
-
-// const LocatorSchema: mongoose.Schema = new mongoose.Schema({
-//   name: {
-//     type: String,
-//     required: true,
-//   },
-//   email: {
-//     type: String,
-//     required: true,
-//   },
-//   phone: {
-//     type: String,
-//     required: true,
-//   },
-// });
-
-// const proposalStage: mongoose.Schema = new mongoose.Schema({
-//   stage: {
-//     type: Number,
-//     required: true,
-//     default: 0,
-//     unique: true,
-//   },
-//   completed: {
-//     type: Boolean,
-//     required: true,
-//     default: false,
-//   },
-//   title: {
-//     type: String,
-//     required: true,
-//   },
-// });
 
 const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   stage: {
@@ -162,20 +89,21 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   seq: { type: Number, default: 0, unique: true },
   type: {
     type: String,
-    required: true,
     enum: Object.values(ProposalType),
   },
   status: {
     type: String,
-    required: true,
     uppercase: true,
     enum: Object.values(ProposalStatus),
     default: ProposalStatus.Pendente,
   },
+  completeSteps: {
+    type: Number,
+    default: 1,
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
-    required: true,
   },
   comments: {
     type: String,
@@ -192,12 +120,10 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   proponent: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'customer',
-    required: true,
   },
   locator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'customer',
-    required: true,
   },
   created: {
     type: Date,

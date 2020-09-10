@@ -20,25 +20,9 @@ const proposalUserFields = [
 class ProposalService {
   async create(proposal: any) {
     try {
-      const { proponent, locator, user } = proposal;
+      const proposalRepository = await ProposalRepository.create(proposal);
 
-      const proponentData = await CustomerRepository.create({
-        ...proponent,
-        type: CustomerType.Proponent,
-      });
-
-      const locatorData = await CustomerRepository.create({
-        ...locator,
-        type: CustomerType.Locator,
-      });
-
-      const proposalRepository = await ProposalRepository.create({
-        ...proposal,
-        proponent: proponentData._id,
-        locator: locatorData._id,
-      });
-
-      return proposalRepository;
+      return await proposalRepository.populate('proponent').execPopulate();
     } catch (error) {
       console.log(error);
     }
@@ -104,6 +88,99 @@ class ProposalService {
       .populate('user', proposalUserFields)
       .populate('locator')
       .populate('proponent');
+  }
+
+  async createProposalParts(proposal: any) {
+    try {
+      let proponentData: any = {};
+      let locatorData: any = {};
+
+      const { proponent, locator, user } = proposal;
+
+      if (proponent) {
+        proponentData = await CustomerRepository.create({
+          ...proponent,
+          type: CustomerType.Proponent,
+        });
+      }
+
+      if (locator) {
+        locatorData = await CustomerRepository.create({
+          ...locator,
+          type: CustomerType.Locator,
+        });
+      }
+
+      return this.create({
+        ...proposal,
+        proponent: proponentData._id,
+        locator: locatorData._id,
+      });
+
+      // const proposalRepository = await ProposalRepository.create({
+      //   ...proposal,
+      //   proponent: proponentData._id,
+      //   locator: locatorData._id,
+      // });
+
+      // return proposalRepository;
+    } catch (error) {
+      console.log(error);
+    }
+    return;
+  }
+
+  async updateProposalParts(_id: string, proposal: any) {
+    let proponentData: any = {};
+    let locatorData: any = {};
+
+    const { proponent, locator, user } = proposal;
+
+    if (proponent) {
+      proponentData = await CustomerRepository.create({
+        ...proponent,
+        type: CustomerType.Proponent,
+      });
+
+      return await ProposalRepository.findByIdAndUpdate(
+        _id,
+        {
+          ...proposal,
+          proponent: proponentData._id,
+        },
+        {
+          new: true,
+        }
+      ).populate('proponent');
+    }
+
+    if (locator) {
+      locatorData = await CustomerRepository.create({
+        ...locator,
+        type: CustomerType.Locator,
+      });
+
+      return await ProposalRepository.findByIdAndUpdate(
+        _id,
+        {
+          ...proposal,
+          locator: locatorData._id,
+        },
+        {
+          new: true,
+        }
+      ).populate('locator');
+    }
+
+    return await ProposalRepository.findByIdAndUpdate(
+      _id,
+      {
+        ...proposal,
+      },
+      {
+        new: true,
+      }
+    ).populate('locator');
   }
 }
 

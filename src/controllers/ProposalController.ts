@@ -10,7 +10,10 @@ class ProposalController {
     const proposalRequest = req.body;
 
     try {
-      let proposal = await proposalService.create({ ...proposalRequest, user });
+      let proposal = await proposalService.createProposalParts({
+        ...proposalRequest,
+        user,
+      });
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
       console.log('error', error);
@@ -43,7 +46,10 @@ class ProposalController {
     const ProposalUpdate = req.body;
 
     try {
-      const proposal = await proposalService.update(id, ProposalUpdate);
+      const proposal = await proposalService.updateProposalParts(
+        id,
+        ProposalUpdate
+      );
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
