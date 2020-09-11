@@ -42,6 +42,28 @@ const ImmobileSchema: mongoose.Schema = new mongoose.Schema({
   },
 });
 
+const ValueExchangeSchema: mongoose.Schema = new mongoose.Schema({
+  value: {
+    type: Number,
+  },
+  exchange: {
+    type: Boolean,
+  },
+  propertyPrice: {
+    type: Number,
+  },
+  commissionValue: {
+    type: Number,
+  },
+  adreess: {
+    type: ImmobileSchema,
+  },
+});
+
+const PaymentSchema: mongoose.Schema = new mongoose.Schema({
+  value: Number,
+});
+
 const PackegeSchema: mongoose.Schema = new mongoose.Schema({
   type: {
     type: String,
@@ -117,6 +139,8 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   },
   immobile: ImmobileSchema,
   contract: ContractSchema,
+  valueExchange: ValueExchangeSchema,
+  payment: PaymentSchema,
   proponent: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'customer',
