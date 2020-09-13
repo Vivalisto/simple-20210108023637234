@@ -23,7 +23,8 @@ class ProposalController {
 
   async get(req: Request | any, res: Response) {
     try {
-      const proposals = await proposalService.get(req.userId);
+      const { type } = req.query;
+      const proposals = await proposalService.get(req.userId, type);
       Helper.sendResponse(res, HttpStatus.OK, { proposals });
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
@@ -83,8 +84,9 @@ class ProposalController {
   }
 
   async getSignings(req: Request | any, res: Response) {
+    const { type } = req.query;
     try {
-      const proposals = await proposalService.getSignings(req.userId);
+      const proposals = await proposalService.getSignings(req.userId, type);
       Helper.sendResponse(res, HttpStatus.OK, { proposals });
     } catch (error) {
       Helper.sendResponse(

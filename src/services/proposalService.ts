@@ -4,6 +4,7 @@ import CustomerRepository from '../repositories/customerRepository';
 
 import { ProposalStatus } from '../enums/proposal-status.enum';
 import { ProposalStage } from '../enums/proposal-stage.enum';
+import { ProposalType } from '../enums/proposal-type.enum';
 import { CustomerType } from '../enums/customer-type.enum';
 import { query } from 'express';
 import AppError from '../errors/AppError';
@@ -29,12 +30,20 @@ class ProposalService {
     return;
   }
 
-  async get(userId: mongoose.Schema.Types.ObjectId) {
-    // const filter = {user: { _id: userId },  }
+  async get(userId: mongoose.Schema.Types.ObjectId, type: String) {
+    let query = [];
+
+    if (type === ProposalType.Aluguel || type === ProposalType.CompraVenda) {
+      query.push(type);
+    } else {
+      query = [ProposalType.Aluguel, ProposalType.CompraVenda];
+    }
 
     return await ProposalRepository.find({
       user: { _id: userId },
     })
+      .where('type')
+      .equals(query)
       .populate('locator')
       .populate('proponent')
       .populate('user');
@@ -80,11 +89,21 @@ class ProposalService {
     return await this.update(proposalId, proposalUpdate);
   }
 
-  async getSignings(userId: mongoose.Schema.Types.ObjectId) {
+  async getSignings(userId: mongoose.Schema.Types.ObjectId, type: String) {
+    let query = [];
+
+    if (type === ProposalType.Aluguel || type === ProposalType.CompraVenda) {
+      query.push(type);
+    } else {
+      query = [ProposalType.Aluguel, ProposalType.CompraVenda];
+    }
+
     return await ProposalRepository.find({
       user: { _id: userId },
       stage: { $gt: 0 },
     })
+      .where('type')
+      .equals(query)
       .populate('user', proposalUserFields)
       .populate('locator')
       .populate('proponent');
