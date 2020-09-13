@@ -99,7 +99,7 @@ const ContractSchema: mongoose.Schema = new mongoose.Schema({
     type: Number,
   },
   package: {
-    type: [PackegeSchema],
+    type: PackegeSchema,
   },
 });
 
