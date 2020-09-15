@@ -65,7 +65,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
   },
   active: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   isBroker: {
     type: Boolean,
