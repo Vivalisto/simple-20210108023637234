@@ -10,7 +10,7 @@ import AppError from '../errors/AppError';
 
 class UserService {
   async get() {
-    return await UserRepository.find();
+    return await UserRepository.find().select('-avatar');
   }
 
   async getById(_id: string) {
