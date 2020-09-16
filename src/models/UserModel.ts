@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs';
 import { NextFunction } from 'express';
 import { object, boolean, string } from 'yup';
 
+import { UserSituation } from '../enums/user-situation.enum';
+
 // corretor autonomo
 interface IUser {
   name: string;
@@ -63,9 +65,10 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
   creci: {
     type: String,
   },
-  active: {
-    type: Boolean,
-    default: true,
+  situation: {
+    type: String,
+    default: UserSituation.Ativo,
+    enum: Object.values(UserSituation),
   },
   isBroker: {
     type: Boolean,
