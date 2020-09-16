@@ -11,6 +11,8 @@ userRouter.get('/', UserController.get);
 userRouter.get('/:id', UserController.getById);
 userRouter.post('/', UserController.create);
 userRouter.put('/', UserController.update);
+userRouter.put('/:id/situation', UserController.updateSituation);
+
 userRouter.delete('/:id', UserController.delete);
 
 export default userRouter;

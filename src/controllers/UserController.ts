@@ -38,7 +38,7 @@ class UserController {
       let response = await UserService.create(userRequest);
       Helper.sendResponse(res, HttpStatus.OK, 'Usuário cadastrado com sucesso');
     } catch (error) {
-      console.error.bind(console, `Error ${error}`);
+      Helper.sendResponse(res, error.statusCode, error.message);
     }
   }
 
@@ -50,7 +50,19 @@ class UserController {
       const user = await UserService.update(id, userUpdate);
       Helper.sendResponse(res, HttpStatus.OK, user);
     } catch (error) {
-      console.error.bind(console, `Error ${error}`);
+      Helper.sendResponse(res, error.statusCode, error.message);
+    }
+  }
+
+  async updateSituation(req: Request | any, res: Response) {
+    const { id } = req.params;
+    const userNewStatus = req.body.situation;
+
+    try {
+      const user = await UserService.updateSituation(id, userNewStatus);
+      Helper.sendResponse(res, HttpStatus.OK, { user });
+    } catch (error) {
+      Helper.sendResponse(res, error.statusCode, error.message);
     }
   }
 
@@ -61,7 +73,7 @@ class UserController {
       await UserService.delete(id);
       Helper.sendResponse(res, httpStatus.OK, 'Usuário deletado com sucesso');
     } catch (error) {
-      console.error.bind(console, `Error ${error}`);
+      Helper.sendResponse(res, error.statusCode, error.message);
     }
   }
 }

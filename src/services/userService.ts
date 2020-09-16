@@ -8,6 +8,8 @@ import Mail from '../services/emailService';
 
 import AppError from '../errors/AppError';
 
+import { UserSituation } from '../enums/user-situation.enum';
+
 class UserService {
   async get() {
     return await UserRepository.find().select('-avatar');
@@ -45,6 +47,13 @@ class UserService {
 
     const user = await UserRepository.findOne({ email });
     return user;
+  }
+
+  async updateSituation(_id: string, situation: string) {
+    if (!['A', 'I', 'P'].includes(situation)) {
+      throw new AppError('Situação inválida');
+    }
+    return await this.update(_id, { situation });
   }
 
   async userExistWithFields(email: string, withFields?: string) {
