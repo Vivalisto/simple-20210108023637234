@@ -6,6 +6,7 @@ import { Escrow, EscrowType } from '../enums/escrow.enum';
 import { ImmobileType } from '../enums/immobile-type.enum';
 import { ProposalStatus } from '../enums/proposal-status.enum';
 import { ProposalPackegeType } from '../enums/proposal-packege-type.enum';
+import { boolean } from 'yup';
 
 const ImmobileSchema: mongoose.Schema = new mongoose.Schema({
   code: {
@@ -52,6 +53,9 @@ const ValueExchangeSchema: mongoose.Schema = new mongoose.Schema({
   propertyPrice: {
     type: Number,
   },
+  commission: {
+    type: Boolean,
+  },
   commissionValue: {
     type: Number,
   },
@@ -62,6 +66,10 @@ const ValueExchangeSchema: mongoose.Schema = new mongoose.Schema({
 
 const PaymentSchema: mongoose.Schema = new mongoose.Schema({
   value: Number,
+  type: String,
+  amountInput: Number,
+  index: String,
+  parcels: Number,
 });
 
 const PackegeSchema: mongoose.Schema = new mongoose.Schema({
