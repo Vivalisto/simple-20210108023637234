@@ -77,16 +77,32 @@ class ProposalService {
     return await this.update(_id, proposalUpdate);
   }
 
-  async updateStage(proposalId: string, dataStage: any) {
-    let proposalUpdate = dataStage;
+  async updateStage(proposalId: string, action: String) {
+    let stageUpdate: Number;
 
-    if (dataStage.status === ProposalStage.Criacao) {
+    let proposal: any = await this.getById(proposalId);
+
+    if (action === 'next') {
+      stageUpdate = proposal.stage + 1;
+    } else if (action === 'previous') {
+      stageUpdate = proposal.stage - 1;
+    } else {
+      throw new AppError(
+        `Ação não permitida. Não foi possível atualizar o passo da proposta`
+      );
+    }
+
+    if (stageUpdate === ProposalStage.Criacao) {
       throw new AppError(
         'Proposta em contratação. Não é possível retornar para negociação!'
       );
     }
 
-    return await this.update(proposalId, proposalUpdate);
+    if (proposal.stage === ProposalStage.ContratacaoConcluida) {
+      throw new AppError('Proposta já concluída. Não existe mais passos!');
+    }
+
+    return await this.update(proposalId, { stage: stageUpdate });
   }
 
   async getSignings(userId: mongoose.Schema.Types.ObjectId, type: String) {

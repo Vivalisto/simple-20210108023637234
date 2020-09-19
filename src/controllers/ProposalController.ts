@@ -73,13 +73,13 @@ class ProposalController {
   async updateStage(req: Request | any, res: Response) {
     const { userId } = req;
     const { id } = req.params;
-    const proposalStage = req.body;
+    const { action } = req.body;
 
     try {
-      const proposal = await proposalService.updateStage(id, proposalStage);
+      const proposal = await proposalService.updateStage(id, action);
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
-      console.error.bind(console, `Error ${error}`);
+      Helper.sendResponse(res, HttpStatus.BAD_REQUEST, error);
     }
   }
 
