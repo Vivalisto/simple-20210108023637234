@@ -8,6 +8,7 @@ export enum ProposalStage {
   Contrato,
   Vistoria,
   EntregaChaves,
-  ContratacaoConcluida,
+  Conclusao,
+  Finalizada,
   ContratacaoCancelada,
 }

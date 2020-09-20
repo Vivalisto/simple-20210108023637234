@@ -98,7 +98,7 @@ class ProposalService {
       );
     }
 
-    if (proposal.stage === ProposalStage.ContratacaoConcluida) {
+    if (proposal.stage === ProposalStage.Finalizada) {
       throw new AppError('Proposta já concluída. Não existe mais passos!');
     }
 

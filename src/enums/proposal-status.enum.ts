@@ -9,5 +9,5 @@ export enum ProposalStatus {
   Cancelada = 'CANCELADA',
   EmviadaContratacao = 'ENVIADA_PARA_CONTRATACAO',
   ContratacaoCancelada = 'CONTRATACAO_CANCELADA',
-  ContratacaoConcluida = 'CONTRATACAO_CONCLUIDA',
+  Conclusao = 'CONTRATACAO_CONCLUIDA',
 }
