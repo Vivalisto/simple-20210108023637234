@@ -2,6 +2,8 @@ import * as mongoose from 'mongoose';
 import ProposalRepository from '../repositories/proposalRepository';
 import CustomerRepository from '../repositories/customerRepository';
 
+import CustomerService from '../services/customerService';
+
 import { ProposalStatus } from '../enums/proposal-status.enum';
 import { ProposalStage } from '../enums/proposal-stage.enum';
 import { ProposalType } from '../enums/proposal-type.enum';
@@ -133,7 +135,7 @@ class ProposalService {
       const { proponent, locator, user } = proposal;
 
       if (proponent) {
-        proponentData = await CustomerRepository.create({
+        proponentData = await CustomerService.create({
           ...proponent,
           type: CustomerType.Proponent,
         });
@@ -172,10 +174,24 @@ class ProposalService {
     const { proponent, locator, user } = proposal;
 
     if (proponent) {
-      proponentData = await CustomerRepository.create({
-        ...proponent,
+      let customerFind = await CustomerRepository.find({
+        email: proponent.email,
         type: CustomerType.Proponent,
       });
+
+      if (customerFind[0]) {
+        let proponentId = customerFind[0]._id;
+        proponentData = await CustomerRepository.findOneAndUpdate(
+          proponentId,
+          proponent,
+          { new: true }
+        );
+      } else {
+        proponentData = await CustomerRepository.create({
+          ...proponent,
+          type: CustomerType.Proponent,
+        });
+      }
 
       return await ProposalRepository.findByIdAndUpdate(
         _id,
