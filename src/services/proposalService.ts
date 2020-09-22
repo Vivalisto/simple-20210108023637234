@@ -135,17 +135,35 @@ class ProposalService {
       const { proponent, locator, user } = proposal;
 
       if (proponent) {
-        proponentData = await CustomerService.create({
-          ...proponent,
+        let customerFind = await CustomerRepository.find({
+          email: proponent.email,
           type: CustomerType.Proponent,
         });
+
+        if (customerFind[0]) {
+          proponentData = customerFind[0];
+        } else {
+          proponentData = await CustomerService.create({
+            ...proponent,
+            type: CustomerType.Proponent,
+          });
+        }
       }
 
       if (locator) {
-        locatorData = await CustomerRepository.create({
-          ...locator,
+        let customerFind = await CustomerRepository.find({
+          email: proponent.email,
           type: CustomerType.Locator,
         });
+
+        if (customerFind[0]) {
+          locatorData = customerFind[0];
+        } else {
+          locatorData = await CustomerRepository.create({
+            ...locator,
+            type: CustomerType.Locator,
+          });
+        }
       }
 
       return this.create({
@@ -153,14 +171,6 @@ class ProposalService {
         proponent: proponentData._id,
         locator: locatorData._id,
       });
-
-      // const proposalRepository = await ProposalRepository.create({
-      //   ...proposal,
-      //   proponent: proponentData._id,
-      //   locator: locatorData._id,
-      // });
-
-      // return proposalRepository;
     } catch (error) {
       console.log(error);
     }
@@ -180,58 +190,46 @@ class ProposalService {
       });
 
       if (customerFind[0]) {
-        let proponentId = customerFind[0]._id;
-        proponentData = await CustomerRepository.findOneAndUpdate(
-          proponentId,
-          proponent,
-          { new: true }
-        );
+        proponentData = customerFind[0];
       } else {
         proponentData = await CustomerRepository.create({
           ...proponent,
           type: CustomerType.Proponent,
+        }).catch(() => {
+          throw new AppError('Erro ao atualizar a proposta');
         });
       }
 
-      return await ProposalRepository.findByIdAndUpdate(
-        _id,
-        {
-          ...proposal,
-          proponent: proponentData._id,
-        },
-        {
-          new: true,
-        }
-      ).populate('proponent');
+      return await this.update(_id, {
+        ...proposal,
+        proponent: proponentData._id,
+      });
     }
 
     if (locator) {
-      locatorData = await CustomerRepository.create({
-        ...locator,
+      let customerFind = await CustomerRepository.find({
+        email: locator.email,
         type: CustomerType.Locator,
       });
 
-      return await ProposalRepository.findByIdAndUpdate(
-        _id,
-        {
-          ...proposal,
-          locator: locatorData._id,
-        },
-        {
-          new: true,
-        }
-      ).populate('locator');
+      if (customerFind[0]) {
+        locatorData = customerFind[0];
+      } else {
+        locatorData = await CustomerRepository.create({
+          ...locator,
+          type: CustomerType.Locator,
+        });
+      }
+
+      return await this.update(_id, {
+        ...proposal,
+        locator: locatorData._id,
+      });
     }
 
-    return await ProposalRepository.findByIdAndUpdate(
-      _id,
-      {
-        ...proposal,
-      },
-      {
-        new: true,
-      }
-    ).populate('locator');
+    return await this.update(_id, {
+      ...proposal,
+    });
   }
 }
 
