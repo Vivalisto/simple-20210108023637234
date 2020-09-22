@@ -135,33 +135,39 @@ class ProposalService {
       const { proponent, locator, user } = proposal;
 
       if (proponent) {
-        let customerFind = await CustomerRepository.find({
+        let customerFind: any = await CustomerRepository.find({
           email: proponent.email,
-          type: CustomerType.Proponent,
         });
 
         if (customerFind[0]) {
+          if (!customerFind[0].type.includes(CustomerType.Proponent)) {
+            customerFind[0].type.push(CustomerType.Proponent);
+            await customerFind[0].save();
+          }
           proponentData = customerFind[0];
         } else {
           proponentData = await CustomerService.create({
             ...proponent,
-            type: CustomerType.Proponent,
+            type: [CustomerType.Proponent],
           });
         }
       }
 
       if (locator) {
-        let customerFind = await CustomerRepository.find({
+        let customerFind: any = await CustomerRepository.find({
           email: proponent.email,
-          type: CustomerType.Locator,
         });
 
         if (customerFind[0]) {
+          if (!customerFind[0].type.includes(CustomerType.Proponent)) {
+            customerFind[0].type.push(CustomerType.Locator);
+            await customerFind[0].save();
+          }
           locatorData = customerFind[0];
         } else {
           locatorData = await CustomerRepository.create({
             ...locator,
-            type: CustomerType.Locator,
+            type: [CustomerType.Locator],
           });
         }
       }
@@ -184,17 +190,20 @@ class ProposalService {
     const { proponent, locator, user } = proposal;
 
     if (proponent) {
-      let customerFind = await CustomerRepository.find({
+      let customerFind: any = await CustomerRepository.find({
         email: proponent.email,
-        type: CustomerType.Proponent,
       });
 
       if (customerFind[0]) {
+        if (!customerFind[0].type.includes(CustomerType.Proponent)) {
+          customerFind[0].type.push(CustomerType.Proponent);
+          await customerFind[0].save();
+        }
         proponentData = customerFind[0];
       } else {
         proponentData = await CustomerRepository.create({
           ...proponent,
-          type: CustomerType.Proponent,
+          type: [CustomerType.Proponent],
         }).catch(() => {
           throw new AppError('Erro ao atualizar a proposta');
         });
@@ -207,17 +216,20 @@ class ProposalService {
     }
 
     if (locator) {
-      let customerFind = await CustomerRepository.find({
+      let customerFind: any = await CustomerRepository.find({
         email: locator.email,
-        type: CustomerType.Locator,
       });
 
       if (customerFind[0]) {
+        if (!customerFind[0].type.includes(CustomerType.Locator)) {
+          customerFind[0].type.push(CustomerType.Locator);
+          await customerFind[0].save();
+        }
         locatorData = customerFind[0];
       } else {
         locatorData = await CustomerRepository.create({
           ...locator,
-          type: CustomerType.Locator,
+          type: [CustomerType.Locator],
         });
       }
 
