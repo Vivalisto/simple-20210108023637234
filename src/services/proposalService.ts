@@ -178,7 +178,7 @@ class ProposalService {
         locator: locatorData._id,
       });
     } catch (error) {
-      console.log(error);
+      throw new AppError(`Erro na criação da proposta`);
     }
     return;
   }
@@ -242,6 +242,23 @@ class ProposalService {
     return await this.update(_id, {
       ...proposal,
     });
+  }
+
+  async getByCustomer(customerId: string) {
+    try {
+      let Customer = await CustomerService.getById(customerId);
+
+      if (!Customer) {
+        throw new AppError(`Cliente não encontrado`);
+      }
+
+      return await ProposalRepository.find()
+        .or([{ locator: customerId }, { proponent: customerId }])
+        .populate('locator')
+        .populate('proponent');
+    } catch (error) {
+      throw new AppError(`Problema ao carregar as propostas`);
+    }
   }
 }
 

@@ -16,8 +16,7 @@ class ProposalController {
       });
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
-      console.log('error', error);
-      // console.error.bind(console, `Error ${error}`);
+      Helper.sendResponse(res, HttpStatus.BAD_REQUEST, error);
     }
   }
 
@@ -27,7 +26,7 @@ class ProposalController {
       const proposals = await proposalService.get(req.userId, type);
       Helper.sendResponse(res, HttpStatus.OK, { proposals });
     } catch (error) {
-      console.error.bind(console, `Error ${error}`);
+      Helper.sendResponse(res, HttpStatus.BAD_REQUEST, error);
     }
   }
 
@@ -38,7 +37,7 @@ class ProposalController {
       const proposal = await proposalService.getById(id);
       Helper.sendResponse(res, httpStatus.OK, { proposal });
     } catch (error) {
-      console.error.bind(console, `Error ${error}`);
+      Helper.sendResponse(res, HttpStatus.BAD_REQUEST, error);
     }
   }
 
@@ -53,7 +52,7 @@ class ProposalController {
       );
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
-      console.error.bind(console, `Error ${error}`);
+      Helper.sendResponse(res, HttpStatus.BAD_REQUEST, error);
     }
   }
 
@@ -66,7 +65,7 @@ class ProposalController {
       const proposal = await proposalService.updateStatus(id, proposalStatus);
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
-      console.error.bind(console, `Error ${error}`);
+      Helper.sendResponse(res, HttpStatus.BAD_REQUEST, error);
     }
   }
 
@@ -96,6 +95,18 @@ class ProposalController {
       );
     }
   }
+
+  async getByCustomer(req: Request, res: Response) {
+    const { id } = req.params;
+
+    try {
+      const proposals = await proposalService.getByCustomer(id);
+      Helper.sendResponse(res, httpStatus.OK, { proposals });
+    } catch (error) {
+      Helper.sendResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, error);
+    }
+  }
+
   // async delete(req: Request, res: Response) {
   //   const { id } = req.params;
 

@@ -7,6 +7,7 @@ const proposalRouter = express.Router();
 proposalRouter.use(authMiddleware);
 
 proposalRouter.get('/signings', ProposalController.getSignings);
+proposalRouter.get('/customer/:id', ProposalController.getByCustomer);
 proposalRouter.get('/', ProposalController.get);
 proposalRouter.get('/:id', ProposalController.getById);
 
