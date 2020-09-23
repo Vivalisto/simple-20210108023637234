@@ -27,6 +27,7 @@
     "express": "^4.17.1",
     "http-status": "^1.4.2",
     "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.2",
     "mongoose": "^5.9.18",
     "nodemailer": "^6.4.10",
     "nodemailer-express-handlebars": "^4.0.0",
