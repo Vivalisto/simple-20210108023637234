@@ -139,7 +139,7 @@ class ProposalService {
           email: proponent.email,
         });
 
-        if (customerFind[0]) {
+        if (customerFind?.length && customerFind[0]) {
           if (!customerFind[0].type.includes(CustomerType.Proponent)) {
             customerFind[0].type.push(CustomerType.Proponent);
             await customerFind[0].save();
@@ -158,7 +158,7 @@ class ProposalService {
           email: proponent.email,
         });
 
-        if (customerFind[0]) {
+        if (customerFind?.length && customerFind[0]) {
           if (!customerFind[0].type.includes(CustomerType.Proponent)) {
             customerFind[0].type.push(CustomerType.Locator);
             await customerFind[0].save();
@@ -194,7 +194,7 @@ class ProposalService {
         email: proponent.email,
       });
 
-      if (customerFind[0]) {
+      if (customerFind?.length && customerFind[0]) {
         if (!customerFind[0].type.includes(CustomerType.Proponent)) {
           customerFind[0].type.push(CustomerType.Proponent);
           await customerFind[0].save();
@@ -220,7 +220,7 @@ class ProposalService {
         email: locator.email,
       });
 
-      if (customerFind[0]) {
+      if (customerFind?.length && customerFind[0]) {
         if (!customerFind[0].type.includes(CustomerType.Locator)) {
           customerFind[0].type.push(CustomerType.Locator);
           await customerFind[0].save();
