@@ -12,6 +12,7 @@ const CustomerSchema: mongoose.Schema = new mongoose.Schema({
   },
   email: {
     type: String,
+    unique: true,
   },
   personType: {
     type: String,
@@ -26,9 +27,7 @@ const CustomerSchema: mongoose.Schema = new mongoose.Schema({
     type: String,
   },
   type: {
-    type: String,
-
-    enum: Object.values(CustomerType),
+    type: [String],
   },
 });
 
