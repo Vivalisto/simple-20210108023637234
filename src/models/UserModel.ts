@@ -81,6 +81,9 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  url: {
+    type: String,
+  },
   organization: {
     document: {
       type: String,
@@ -92,6 +95,18 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
       type: String,
     },
     image: {
+      type: String,
+    },
+    cellphone: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+    },
+    organizationName: {
       type: String,
     },
   },
