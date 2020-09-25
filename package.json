@@ -5,8 +5,9 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev --inspect --transpileOnly --ignore-watch node_modules src/server.ts",
-    "build": "tsc",
-    "start": "node ./dist/server.js"
+    "build": "tsc && npm run copy:certificado",
+    "start": "node ./dist/server.js",
+    "copy:certificado": "cp src/config/certificado/* ./dist/config/certificado/"
   },
   "repository": {
     "type": "git",
