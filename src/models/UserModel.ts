@@ -95,6 +95,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
       type: String,
     },
   },
+  roles: {},
   created: {
     type: Date,
     default: Date.now(),
