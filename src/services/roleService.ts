@@ -35,18 +35,9 @@ class RoleService {
 
       return this.parseRole(role[0]);
     } catch (error) {
-      console.log(error);
       throw new AppError(`Ocorreu um problema ao carregar a regra`);
     }
   }
-
-  // [
-  //   "posts:list",
-  //   "posts:create",
-  //   "users:getSelf",
-  //   "home-page:visit",
-  //   "dashboard-page:visit"
-  // ]
 
   async update(_id: string, role: any) {
     return await RoleRepository.findByIdAndUpdate(_id, role, {

@@ -4,6 +4,7 @@ import { NextFunction } from 'express';
 import { object, boolean, string } from 'yup';
 
 import { UserSituation } from '../enums/user-situation.enum';
+import { GroupType, ProfileType } from '../enums/access-control.enum';
 
 // corretor autonomo
 interface IUser {
@@ -25,6 +26,21 @@ interface IUser {
     image?: string;
   };
 }
+
+const UserAccessSchema: mongoose.Schema = new mongoose.Schema({
+  group: {
+    type: String,
+    default: GroupType.Autonomo,
+    required: true,
+    enum: Object.values(GroupType),
+  },
+  profile: {
+    type: String,
+    default: ProfileType.Master,
+    required: true,
+    enum: Object.values(ProfileType),
+  },
+});
 
 const UserSchema: mongoose.Schema = new mongoose.Schema({
   name: {
@@ -108,7 +124,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
       type: String,
     },
   },
-  roles: {},
+  roles: UserAccessSchema,
   created: {
     type: Date,
     default: Date.now(),
