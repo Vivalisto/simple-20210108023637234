@@ -126,7 +126,10 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
       type: String,
     },
   },
-  roles: UserAccessSchema,
+  roles: {
+    type: UserAccessSchema,
+    default: { group: GroupType.Autonomo, profile: ProfileType.Master },
+  },
   created: {
     type: Date,
     default: Date.now(),

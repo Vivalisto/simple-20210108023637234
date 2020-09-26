@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs';
 import UserService from '../services/userService';
 import AppError from '../errors/AppError';
 
+import RoleService from './roleService';
+
 class AuthService {
   async register(userRequest: any) {
     const userExist = await UserService.userExist(userRequest.email);
@@ -27,9 +29,21 @@ class AuthService {
       throw new AppError('Senha inválida');
     }
 
+    const roles = await RoleService.getByGroupProfile(
+      userAuth?._doc?.roles.group,
+      userAuth?._doc?.roles.profile
+    );
+
     const token = await UserService.generateToken(userAuth);
 
-    return { user: { ...userAuth?._doc, password: '******' }, token };
+    return {
+      user: {
+        ...userAuth?._doc,
+        password: '******',
+        roles: roles ? roles : {},
+      },
+      token,
+    };
   }
 }
 
