@@ -7,7 +7,7 @@ import userRouter from './routes/UserRoutes';
 import authRouter from './routes/AuthRoutes';
 import proposalRoutes from './routes/ProposalRoutes';
 import stageRouter from './routes/StageRoutes';
-import roleRouter from './routes/RoleRoutes';
+import ruleRouter from './routes/RuleRoutes';
 import customerRouter from './routes/CustomerRoutes';
 import authMiddleware from './middlewares/auth';
 
@@ -42,7 +42,7 @@ class StartUp {
     this.app.use('/api/v1/users', userRouter);
     this.app.use('/api/v1/proposals', proposalRoutes);
     this.app.use('/api/v1/stage', stageRouter);
-    this.app.use('/api/v1/role', roleRouter);
+    this.app.use('/api/v1/rule', ruleRouter);
     this.app.use('/api/v1/customer', customerRouter);
 
     this.app.route('/').get((req: Request, res: Response) => {

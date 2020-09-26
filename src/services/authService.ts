@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import UserService from '../services/userService';
 import AppError from '../errors/AppError';
 
-import RoleService from './roleService';
+import RoleService from './ruleService';
 
 class AuthService {
   async register(userRequest: any) {
@@ -29,10 +29,9 @@ class AuthService {
       throw new AppError('Senha inválida');
     }
 
-    const roles = await RoleService.getByGroupProfile(
-      userAuth?._doc?.roles.group,
-      userAuth?._doc?.roles.profile
-    );
+    const rule = userAuth?._doc?.rules;
+
+    const rules = await RoleService.getByGroupProfile(rule.group, rule.profile);
 
     const token = await UserService.generateToken(userAuth);
 
@@ -40,7 +39,13 @@ class AuthService {
       user: {
         ...userAuth?._doc,
         password: '******',
-        roles: roles ? roles : {},
+        rules: rules
+          ? rules
+          : {
+              group: rule.group,
+              profile: rule.profile,
+              message: 'Regras não definidas para grupo e perfil',
+            },
       },
       token,
     };

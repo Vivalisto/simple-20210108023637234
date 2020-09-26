@@ -126,7 +126,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
       type: String,
     },
   },
-  roles: {
+  rules: {
     type: UserAccessSchema,
     default: { group: GroupType.Autonomo, profile: ProfileType.Master },
   },
