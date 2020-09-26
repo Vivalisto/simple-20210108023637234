@@ -11,7 +11,6 @@ const ResourceSchema: mongoose.Schema = new mongoose.Schema({
     type: String,
     required: true,
     uppercase: true,
-    unique: true,
     enum: Object.values(ResourceControl),
   },
   action: {
@@ -24,7 +23,6 @@ const ProfileSchema: mongoose.Schema = new mongoose.Schema({
     type: String,
     required: true,
     uppercase: true,
-    unique: true,
     enum: Object.values(ProfileType),
   },
   resource: [ResourceSchema],
@@ -33,7 +31,6 @@ const ProfileSchema: mongoose.Schema = new mongoose.Schema({
 const RoleSchema: mongoose.Schema = new mongoose.Schema({
   group: {
     type: String,
-    unique: true,
     required: true,
     uppercase: true,
     enum: Object.values(GroupType),

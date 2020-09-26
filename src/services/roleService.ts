@@ -1,14 +1,26 @@
 import RoleRepository from '../repositories/roleRepository';
 
+import { GroupType, ProfileType } from '../enums/access-control.enum';
+
 import AppError from '../errors/AppError';
 
 class RoleService {
   async create(role: any) {
-    try {
-      return await RoleRepository.create(role);
-    } catch (error) {
-      throw new AppError('Ocorreu um erro ao criar a regra de acesso.');
+    if (!Object.values(GroupType).includes(role.group)) {
+      throw new AppError(`Grupo inválido`);
     }
+
+    if (!Object.values(ProfileType).includes(role.profile.type)) {
+      throw new AppError(`Tipo do perfil inválido`);
+    }
+
+    let roleExist = await this.getByGroupProfile(role.group, role.profile.type);
+
+    if (roleExist) {
+      throw new AppError(`Grupo e perfil já existe`);
+    }
+
+    return await RoleRepository.create(role);
   }
 
   async get() {
@@ -32,11 +44,11 @@ class RoleService {
         'profile.type': profileType,
       });
 
-      if (!role[0]) {
-        throw new AppError(`Regra não encontrada`);
+      if (role[0]) {
+        return this.parseRole(role[0]);
       }
 
-      return this.parseRole(role[0]);
+      return undefined;
     } catch (error) {
       throw new AppError(`Ocorreu um problema ao carregar a regra`);
     }
