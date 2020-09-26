@@ -11,13 +11,13 @@ export enum ProfileType {
   Corretor = 'CORRETOR',
 }
 
-export enum ResourcesControl {
+export enum ResourceControl {
   Proposal = 'PROPOSAL', //PROPOSTAS
-  Signings = 'SIGNINGS', //CONTRATACOES
+  Signing = 'SIGNING', //CONTRATACOES
   RegistrationData = 'REGISTRATION_DATA', //DADOS CADASTRAIS
-  Settings = 'SETTINGS', //CONFIGURACOES
-  Users = 'Users', //USUARIOS
-  Customers = 'Customers', //CLIENTES
+  Setting = 'SETTING', //CONFIGURACOES
+  User = 'User', //USUARIOS
+  Customer = 'Customer', //CLIENTES
 }
 
 export enum actionControl {
