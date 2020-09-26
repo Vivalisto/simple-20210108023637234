@@ -4,7 +4,11 @@ import AppError from '../errors/AppError';
 
 class RoleService {
   async create(role: any) {
-    return await RoleRepository.create(role);
+    try {
+      return await RoleRepository.create(role);
+    } catch (error) {
+      throw new AppError('Ocorreu um erro ao criar a regra de acesso.');
+    }
   }
 
   async get() {
@@ -17,7 +21,6 @@ class RoleService {
 
       return this.parseRole(role);
     } catch (error) {
-      console.log(error);
       throw new AppError(`Ocorreu um problema ao carregar a regra`);
     }
   }

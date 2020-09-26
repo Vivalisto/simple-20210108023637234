@@ -9,6 +9,7 @@ export enum ProfileType {
   Gerente = 'GERENTE',
   Coordenador = 'COORDENADOR',
   Corretor = 'CORRETOR',
+  Operacional = 'OPERACIONAL',
 }
 
 export enum ResourceControl {

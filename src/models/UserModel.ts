@@ -32,11 +32,13 @@ const UserAccessSchema: mongoose.Schema = new mongoose.Schema({
     type: String,
     default: GroupType.Autonomo,
     required: true,
+    uppercase: true,
     enum: Object.values(GroupType),
   },
   profile: {
     type: String,
     default: ProfileType.Master,
+    uppercase: true,
     required: true,
     enum: Object.values(ProfileType),
   },
