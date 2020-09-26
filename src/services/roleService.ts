@@ -29,6 +29,10 @@ class RoleService {
         'profile.type': profileType,
       });
 
+      if (!role[0]) {
+        throw new AppError(`Regra não encontrada`);
+      }
+
       return this.parseRole(role[0]);
     } catch (error) {
       console.log(error);

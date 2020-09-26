@@ -15,21 +15,21 @@ class AuthService {
   }
 
   async authenticate(email: string, password: string) {
-    const user: any = await UserService.userExist(email, true);
+    const userAuth: any = await UserService.userExist(email, true);
 
-    if (!user) {
+    if (!userAuth) {
       throw new AppError('usuário não cadastrado');
     }
 
-    const validPassword = await bcrypt.compare(password, user.password);
+    const validPassword = await bcrypt.compare(password, userAuth.password);
 
     if (!validPassword) {
       throw new AppError('Senha inválida');
     }
 
-    const token = await UserService.generateToken(user);
+    const token = await UserService.generateToken(userAuth);
 
-    return { user, token };
+    return { user: { ...userAuth?._doc, password: '******' }, token };
   }
 }
 
