@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import UserService from '../services/userService';
 import AppError from '../errors/AppError';
 
-import RoleService from './ruleService';
+import RuleService from './ruleService';
 
 class AuthService {
   async register(userRequest: any) {
@@ -31,7 +31,7 @@ class AuthService {
 
     const rule = userAuth?._doc?.rules;
 
-    const rules = await RoleService.getByGroupProfile(rule.group, rule.profile);
+    const rules = await RuleService.getByGroupProfile(rule.group, rule.profile);
 
     const token = await UserService.generateToken(userAuth);
 

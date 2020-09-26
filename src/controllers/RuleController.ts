@@ -7,10 +7,10 @@ import Helper from '../utils/helper';
 class RoleController {
   async create(req: Request | any, res: Response) {
     const user = req.userId;
-    const roleRequest = req.body;
+    const ruleRequest = req.body;
 
     try {
-      let rule = await ruleService.create(roleRequest);
+      let rule = await ruleService.create(ruleRequest);
       Helper.sendResponse(res, HttpStatus.OK, { rule });
     } catch (error) {
       Helper.sendResponse(res, httpStatus.BAD_REQUEST, error);
