@@ -1,5 +1,7 @@
 import RoleRepository from '../repositories/roleRepository';
 
+import AppError from '../errors/AppError';
+
 class RoleService {
   async create(role: any) {
     return await RoleRepository.create(role);
@@ -13,20 +15,25 @@ class RoleService {
     try {
       const role: any = await RoleRepository.findById(_id);
 
-      let autorization = {
-        group: role.group,
-        type: role.profile.type,
-        authorities: role.profile.resource.map((resource: any) => {
-          let auth = resource.action.map(
-            (action: any) => `${resource.name}:${action}`
-          );
-          return auth;
-        }),
-      };
-      return autorization;
-    } catch (error) {}
+      return this.parseRole(role);
+    } catch (error) {
+      console.log(error);
+      throw new AppError(`Ocorreu um problema ao carregar a regra`);
+    }
+  }
 
-    return;
+  async getByGroupProfile(group: string, profileType: string) {
+    try {
+      const role: any = await RoleRepository.find({
+        group: group,
+        'profile.type': profileType,
+      });
+
+      return this.parseRole(role[0]);
+    } catch (error) {
+      console.log(error);
+      throw new AppError(`Ocorreu um problema ao carregar a regra`);
+    }
   }
 
   // [
@@ -45,6 +52,21 @@ class RoleService {
 
   async delete(_id: string) {
     return await RoleRepository.findByIdAndRemove(_id);
+  }
+
+  parseRole(role: any) {
+    let autorization = {
+      group: role.group,
+      type: role.profile.type,
+      authorities: role.profile.resource.map((resource: any) => {
+        let auth = resource.action.map(
+          (action: any) => `${resource.name}:${action}`
+        );
+        return auth;
+      }),
+    };
+
+    return autorization;
   }
 }
 
