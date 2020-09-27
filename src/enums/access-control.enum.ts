@@ -21,8 +21,8 @@ export enum ResourceControl {
   Signing = 'SIGNING', //CONTRATACOES
   RegistrationData = 'REGISTRATION_DATA', //DADOS CADASTRAIS
   Setting = 'SETTING', //CONFIGURACOES
-  User = 'User', //USUARIOS
-  Customer = 'Customer', //CLIENTES
+  User = 'USER', //USUARIOS
+  Customer = 'CUTOMER', //CLIENTES
 }
 
 export enum actionControl {
@@ -32,4 +32,9 @@ export enum actionControl {
   Create = 'CREATE', //CRIAR
   Cancel = 'CANCEL', //CANCELAR
   Delete = 'DELETE', //DELETAR
+  Export = 'EXPORT', //EXPORTAR
+  Approve = 'APPROVE', //APROVAR
+  Invite = 'INVITE', //CONVIDAR
+  Enable = 'ENABLE', //HABILITAR
+  Disable = 'DISABLE', //DESABILITAR
 }
