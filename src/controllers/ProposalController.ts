@@ -24,7 +24,6 @@ class ProposalController {
     try {
       const { type } = req.query;
       const proposals = await proposalService.get(req.userId, type);
-      console.log(JSON.stringify(proposals));
       Helper.sendResponse(res, HttpStatus.OK, { proposals });
     } catch (error) {
       Helper.sendResponse(res, HttpStatus.BAD_REQUEST, error);

@@ -2,6 +2,7 @@ export enum GroupType {
   Vivalisto = 'VIVALISTO',
   Imobiliaria = 'IMOBILIARIA',
   Autonomo = 'AUTONOMO',
+  cliente = 'CLIENTE',
 }
 
 export enum ProfileType {
@@ -10,6 +11,9 @@ export enum ProfileType {
   Coordenador = 'COORDENADOR',
   Corretor = 'CORRETOR',
   Operacional = 'OPERACIONAL',
+  AdminGerente = 'ADMIN_GERENTE',
+  AdminCoordenador = 'ADMIN_COORDENADOR',
+  Admin = 'ADMIN',
 }
 
 export enum ResourceControl {
@@ -22,8 +26,10 @@ export enum ResourceControl {
 }
 
 export enum actionControl {
+  Edit = 'EDIT', //EDITAR
+  View = 'VIEW',
   List = 'LIST', //LISTAR
   Create = 'CREATE', //CRIAR
-  Edit = 'EDIT', //EDITAR
+  Cancel = 'CANCEL', //CANCELAR
   Delete = 'DELETE', //DELETAR
 }
