@@ -23,11 +23,20 @@ export enum ResourceControl {
   Setting = 'SETTING', //CONFIGURACOES
   User = 'USER', //USUARIOS
   Customer = 'CUTOMER', //CLIENTES
+  DashboardPage = 'dashboard-page', //DASHBOARD-PAGE
+  RentPage = 'rent-page', //ALUGUEL-PAGE
+  BuySellPage = 'buy_sell-page', //COMPRA_VENDA-PAGE
+  RegistrationDataPage = 'registration_data-page', //DADOS_CADASTRAIS-PAGE
+  SettingPage = 'setting-page', //CONFIGURACAO-PAGE
+  UserPage = 'user-page', //USUARIO-PAGE
+  CustomerPage = 'customer-page', //CLIENTES-PAGE
+  CPProposalPage = 'cp_proposal-page', //CONTROLE_ACESSO_PROPOSTA-PAGE
+  CPHiringPage = 'cp_hiring-page', //CONTROLE_ACESSO_CONTRATACOES
 }
 
 export enum actionControl {
   Edit = 'EDIT', //EDITAR
-  View = 'VIEW',
+  View = 'VIEW', //VISUALIZAR
   List = 'LIST', //LISTAR
   Create = 'CREATE', //CRIAR
   Cancel = 'CANCEL', //CANCELAR
