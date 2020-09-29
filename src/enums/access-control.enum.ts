@@ -23,15 +23,7 @@ export enum ResourceControl {
   Setting = 'SETTING', //CONFIGURACOES
   User = 'USER', //USUARIOS
   Customer = 'CUTOMER', //CLIENTES
-  DashboardPage = 'dashboard-page', //DASHBOARD-PAGE
-  RentPage = 'rent-page', //ALUGUEL-PAGE
-  BuySellPage = 'buy_sell-page', //COMPRA_VENDA-PAGE
-  RegistrationDataPage = 'registration_data-page', //DADOS_CADASTRAIS-PAGE
-  SettingPage = 'setting-page', //CONFIGURACAO-PAGE
-  UserPage = 'user-page', //USUARIO-PAGE
-  CustomerPage = 'customer-page', //CLIENTES-PAGE
-  CPProposalPage = 'cp_proposal-page', //CONTROLE_ACESSO_PROPOSTA-PAGE
-  CPHiringPage = 'cp_hiring-page', //CONTROLE_ACESSO_CONTRATACOES
+  Pages = 'PAGES', //CLIENTES
 }
 
 export enum actionControl {
@@ -46,4 +38,13 @@ export enum actionControl {
   Invite = 'INVITE', //CONVIDAR
   Enable = 'ENABLE', //HABILITAR
   Disable = 'DISABLE', //DESABILITAR
+  DashboardPage = 'DASHBOARD-PAGE', //DASHBOARD-PAGE
+  RentPage = 'RENT-PAGE', //ALUGUEL-PAGE
+  BuySellPage = 'BUY_SELL-PAGE', //COMPRA_VENDA-PAGE
+  RegistrationDataPage = 'REGISTRATION_data-PAGE', //DADOS_CADASTRAIS-PAGE
+  SettingPage = 'SETTING-PAGE', //CONFIGURACAO-PAGE
+  UserPage = 'USER-PAGE', //USUARIO-PAGE
+  CustomerPage = 'CUSTOMER-PAGE', //CLIENTES-PAGE
+  CPProposalPage = 'CP_PROPOSAL-PAGE', //CONTROLE_ACESSO_PROPOSTA-PAGE
+  CPHiringPage = 'CP_HIRING-PAGE', //CONTROLE_ACESSO_CONTRATACOES
 }
