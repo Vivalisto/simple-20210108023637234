@@ -126,6 +126,10 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
       type: String,
     },
   },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
+  },
   rules: {
     type: UserAccessSchema,
     default: { group: GroupType.Autonomo, profile: ProfileType.Master },
