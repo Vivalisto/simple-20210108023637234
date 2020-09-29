@@ -9,6 +9,7 @@ import Mail from '../services/emailService';
 import AppError from '../errors/AppError';
 
 import { UserSituation } from '../enums/user-situation.enum';
+import { GroupType, ProfileType } from '../enums/access-control.enum';
 
 class UserService {
   async get() {
@@ -21,12 +22,25 @@ class UserService {
 
   async create(user: any) {
     const userExist = await this.userExist(user.email);
+    let userRule = {};
 
     if (userExist) {
       throw new AppError('Usuário já cadastrado no sistema');
     }
 
-    return await UserRepository.create(user);
+    if (user.isOrganization) {
+      userRule = {
+        ...user,
+        rules: { group: GroupType.Imobiliaria, profile: ProfileType.Master },
+      };
+    } else {
+      userRule = {
+        ...user,
+        rules: { group: GroupType.Autonomo, profile: ProfileType.Master },
+      };
+    }
+
+    return await UserRepository.create(userRule);
   }
 
   async update(_id: string, user: any) {
