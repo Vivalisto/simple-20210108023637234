@@ -129,6 +129,33 @@ class UserService {
     user.save();
   }
 
+  async sendInvite(email: string) {
+    const token = await crypto.randomBytes(20).toString('hex');
+    const now = new Date();
+
+    now.setHours(now.getHours() + 1);
+
+    const user: any = await this.userExist(email);
+
+    if (!user) {
+      throw new AppError('Usuário não cadastrado');
+    }
+
+    await UserRepository.findByIdAndUpdate(user._id, {
+      $set: {
+        passwordResetToken: token,
+        passwordResetExpires: now,
+      },
+    });
+
+    Mail.to = user.email;
+    Mail.subject = 'Redefinição senha sistema Vivalisto';
+    Mail.message = `Solicitação de alteração de senha. <a href=http://150.238.42.242:30080/reset-password/${user.email}/${token}> Clique aqui para alterar sua senha</a>`;
+    await Mail.sendMail();
+
+    return;
+  }
+
   async generateToken(user: any) {
     return jwt.sign({ id: user._id }, keys.secretOrKey, {
       expiresIn: 86400,

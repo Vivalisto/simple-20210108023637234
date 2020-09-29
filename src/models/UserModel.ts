@@ -70,7 +70,6 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
   },
   cpf: {
     type: String,
-    required: true,
   },
   cellphone: {
     type: String,
@@ -78,7 +77,6 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
   },
   birthDate: {
     type: Date,
-    required: true,
   },
   creci: {
     type: String,
@@ -101,6 +99,14 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
   },
   url: {
     type: String,
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
+  },
+  rules: {
+    type: UserAccessSchema,
+    default: { group: GroupType.Autonomo, profile: ProfileType.Master },
   },
   organization: {
     document: {
@@ -125,14 +131,6 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
     organizationName: {
       type: String,
     },
-  },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
-  },
-  rules: {
-    type: UserAccessSchema,
-    default: { group: GroupType.Autonomo, profile: ProfileType.Master },
   },
   created: {
     type: Date,
