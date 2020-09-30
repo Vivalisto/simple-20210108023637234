@@ -8,12 +8,12 @@ import Mail from '../services/emailService';
 
 import AppError from '../errors/AppError';
 
-import { UserSituation } from '../enums/user-situation.enum';
-import { GroupType, ProfileType } from '../enums/access-control.enum';
+import { apiServer } from '../config/api';
+import { sendMail } from '../utils/sendMail';
 
 class UserService {
-  async get() {
-    return await UserRepository.find().select('-avatar');
+  async get(owner: string) {
+    return await UserRepository.find({ owner }).select('-avatar');
   }
 
   async getById(_id: string) {
@@ -22,25 +22,13 @@ class UserService {
 
   async create(user: any) {
     const userExist = await this.userExist(user.email);
-    let userRule = {};
 
     if (userExist) {
       throw new AppError('Usuário já cadastrado no sistema');
     }
-
-    if (user.isOrganization) {
-      userRule = {
-        ...user,
-        rules: { group: GroupType.Imobiliaria, profile: ProfileType.Master },
-      };
-    } else {
-      userRule = {
-        ...user,
-        rules: { group: GroupType.Autonomo, profile: ProfileType.Master },
-      };
-    }
-
-    return await UserRepository.create(userRule);
+    return await UserRepository.create(user).catch((error) =>
+      console.log(error)
+    );
   }
 
   async update(_id: string, user: any) {
@@ -78,7 +66,7 @@ class UserService {
     return this.userExist(email);
   }
 
-  async forgotPassword(email: string) {
+  async alterPasswordByEmail(email: string) {
     const token = await crypto.randomBytes(20).toString('hex');
     const now = new Date();
 
@@ -99,7 +87,7 @@ class UserService {
 
     Mail.to = user.email;
     Mail.subject = 'Redefinição senha sistema Vivalisto';
-    Mail.message = `Solicitação de alteração de senha. <a href=http://150.238.42.242:30080/reset-password/${user.email}/${token}> Clique aqui para alterar sua senha</a>`;
+    Mail.message = `Solicitação de alteração de senha. <a href=${apiServer.prod}/reset-password/${user.email}/${token}> Clique aqui para alterar sua senha</a>`;
     await Mail.sendMail();
 
     return;
@@ -130,7 +118,7 @@ class UserService {
   }
 
   async sendInvite(email: string) {
-    const token = await crypto.randomBytes(20).toString('hex');
+    const token = crypto.randomBytes(20).toString('hex');
     const now = new Date();
 
     now.setHours(now.getHours() + 1);
@@ -148,11 +136,11 @@ class UserService {
       },
     });
 
-    Mail.to = user.email;
-    Mail.subject = 'Redefinição senha sistema Vivalisto';
-    Mail.message = `Solicitação de alteração de senha. <a href=http://150.238.42.242:30080/reset-password/${user.email}/${token}> Clique aqui para alterar sua senha</a>`;
-    await Mail.sendMail();
-
+    await sendMail(
+      user.email,
+      'VIVALISTO - Liberação de acesso',
+      `Olá! Você foi convidado para acessar o sistema Vivalisto. Clique no link a seguir e defina uma senha <a href=${apiServer.prod}/reset-password/${user.email}/${token}> Clique aqui para Definir uma senha.</a>`
+    );
     return;
   }
 

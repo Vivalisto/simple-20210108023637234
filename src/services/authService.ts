@@ -5,15 +5,36 @@ import AppError from '../errors/AppError';
 
 import RuleService from './ruleService';
 
+import { UserSituation } from '../enums/user-situation.enum';
+import { GroupType, ProfileType } from '../enums/access-control.enum';
+
 class AuthService {
   async register(userRequest: any) {
-    const userExist = await UserService.userExist(userRequest.email);
+    let userRule = {};
 
-    if (userExist) {
-      throw new AppError('Usuário já cadastrado no sistema');
+    if (userRequest.isOrganization) {
+      userRule = {
+        ...userRequest,
+        rules: { group: GroupType.Imobiliaria, profile: ProfileType.Master },
+      };
+    } else {
+      userRule = {
+        ...userRequest,
+        rules: { group: GroupType.Autonomo, profile: ProfileType.Master },
+      };
     }
 
-    return await UserService.create(userRequest);
+    return await UserService.create(userRule);
+  }
+
+  async registerInvite(userRequest: any, owner: string) {
+    let userIvite = { ...userRequest, owner, password: '12345' };
+    const newUser = await UserService.create(userIvite);
+
+    if (newUser) {
+      await UserService.sendInvite(userIvite.email);
+    }
+    return newUser;
   }
 
   async authenticate(email: string, password: string) {

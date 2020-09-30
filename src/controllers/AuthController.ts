@@ -8,9 +8,9 @@ import {
   authenticateValidation,
   registerValidation,
 } from '../validation/authValidation';
-import { request } from 'http';
-import AuthService from '../services/authService';
 
+import { inviteValidation } from '../validation/inviteValidation';
+import AuthService from '../services/authService';
 import AppError from '../errors/AppError';
 
 const schema = Yup.object().shape({
@@ -51,7 +51,7 @@ class AuthController {
     const { email } = req.body;
 
     try {
-      await UserService.forgotPassword(email);
+      await UserService.alterPasswordByEmail(email);
 
       Helper.sendResponse(res, HttpStatus.OK, {
         message: `Link de alteração de senha enviado para o email ${email}.`,
@@ -80,6 +80,20 @@ class AuthController {
         error.statusCode,
         error.message || 'Erro inesperado'
       );
+    }
+  }
+
+  async invite(req: Request | any, res: Response) {
+    const userRequest = req.body;
+
+    try {
+      await inviteValidation(req.body);
+      const user = await AuthService.registerInvite(userRequest, req.userId);
+      Helper.sendResponse(res, HttpStatus.OK, {
+        message: 'Usuário cadastrado com sucesso',
+      });
+    } catch (error) {
+      Helper.sendResponse(res, error.statusCode, error.message);
     }
   }
 }
