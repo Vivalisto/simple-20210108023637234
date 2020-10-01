@@ -23,6 +23,7 @@ export enum ResourceControl {
   Setting = 'SETTING', //CONFIGURACOES
   User = 'USER', //USUARIOS
   Customer = 'CUTOMER', //CLIENTES
+  CPHiring = 'CP_HIRING',
   Pages = 'PAGES', //CLIENTES
 }
 

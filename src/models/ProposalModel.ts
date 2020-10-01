@@ -116,6 +116,9 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  stageStatus: {
+    type: String,
+  },
   seq: { type: Number, default: 0, unique: true },
   type: {
     type: String,
@@ -134,6 +137,10 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
   },
   comments: {
     type: String,

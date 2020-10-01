@@ -139,7 +139,7 @@ class UserService {
     await sendMail(
       user.email,
       'VIVALISTO - Liberação de acesso',
-      `Olá! Você foi convidado para acessar o sistema Vivalisto. Clique no link a seguir e defina uma senha <a href=${apiServer.prod}/reset-password/${user.email}/${token}> Clique aqui para Definir uma senha.</a>`
+      `Olá, ${user.name}, Bem-vindo à Vivalisto, a sua nova plataforma de negócios. Para prosseguir com seu cadastro. <a href=${apiServer.prod}/reset-password/${user.email}/${token}> Clique aqui para Definir uma senha.</a>`
     );
     return;
   }
