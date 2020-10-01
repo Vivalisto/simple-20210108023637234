@@ -32,7 +32,7 @@ class CustomerController {
     const user = req.userId;
 
     try {
-      const customers = await customerService.getById(id, user);
+      const customers = await customerService.getById(id);
       Helper.sendResponse(res, httpStatus.OK, { customers });
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
