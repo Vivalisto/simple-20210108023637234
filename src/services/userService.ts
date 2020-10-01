@@ -44,7 +44,10 @@ class UserService {
     return await UserRepository.create({
       ...user,
       organization: organization.id,
-    }).catch((error) => console.log(error));
+    }).catch((error) => {
+      console.log(error);
+      throw new AppError('Erro no cadastro, verifique seus dados');
+    });
   }
 
   async update(_id: string, user: any) {
