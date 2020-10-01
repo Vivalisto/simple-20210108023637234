@@ -49,7 +49,8 @@ class ProposalController {
     try {
       const proposal = await proposalService.updateProposalParts(
         id,
-        ProposalUpdate
+        ProposalUpdate,
+        user
       );
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
