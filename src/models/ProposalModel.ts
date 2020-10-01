@@ -142,6 +142,10 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
   },
+  organization: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'organization',
+  },
   comments: {
     type: String,
   },

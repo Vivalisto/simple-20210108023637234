@@ -5,11 +5,11 @@ class CustomerService {
     return await CustomerRepository.create(customer);
   }
 
-  async get() {
-    return await CustomerRepository.find();
+  async get(user: string) {
+    return await CustomerRepository.find({ user });
   }
 
-  async getById(_id: string) {
+  async getById(_id: string, user: string) {
     return await CustomerRepository.findById(_id); //.populate('user')
   }
 

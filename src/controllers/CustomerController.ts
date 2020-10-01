@@ -18,19 +18,21 @@ class CustomerController {
   }
 
   async get(req: Request | any, res: Response) {
+    const user = req.userId;
     try {
-      const customers = await customerService.get();
+      const customers = await customerService.get(user);
       Helper.sendResponse(res, HttpStatus.OK, { customers });
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
     }
   }
 
-  async getById(req: Request, res: Response) {
+  async getById(req: Request | any, res: Response) {
     const { id } = req.params;
+    const user = req.userId;
 
     try {
-      const customers = await customerService.getById(id);
+      const customers = await customerService.getById(id, user);
       Helper.sendResponse(res, httpStatus.OK, { customers });
     } catch (error) {
       console.error.bind(console, `Error ${error}`);

@@ -149,6 +149,7 @@ class ProposalService {
           proponentData = await CustomerService.create({
             ...proponent,
             type: [CustomerType.Proponent],
+            user,
           });
         }
       }
@@ -230,6 +231,7 @@ class ProposalService {
         locatorData = await CustomerRepository.create({
           ...locator,
           type: [CustomerType.Locator],
+          user,
         });
       }
 

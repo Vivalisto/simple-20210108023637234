@@ -29,6 +29,14 @@ const CustomerSchema: mongoose.Schema = new mongoose.Schema({
   type: {
     type: [String],
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
+  },
+  organization: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'organization',
+  },
 });
 
 export default CustomerSchema;
