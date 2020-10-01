@@ -109,28 +109,8 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
     default: { group: GroupType.Autonomo, profile: ProfileType.Master },
   },
   organization: {
-    document: {
-      type: String,
-    },
-    name: {
-      type: String,
-    },
-    creci: {
-      type: String,
-    },
-    image: {
-      type: String,
-    },
-    cellphone: {
-      type: String,
-    },
-    email: {
-      type: String,
-      lowercase: true,
-    },
-    organizationName: {
-      type: String,
-    },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'organization',
   },
   created: {
     type: Date,

@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
 import UserRepository from '../repositories/userRepository';
+import OrganizationService from '../services/organizationService';
 import keys from '../config/keys-dev';
 import Mail from '../services/emailService';
 
@@ -22,13 +23,28 @@ class UserService {
 
   async create(user: any) {
     const userExist = await this.userExist(user.email);
+    let organization: any;
 
     if (userExist) {
       throw new AppError('Usuário já cadastrado no sistema');
     }
-    return await UserRepository.create(user).catch((error) =>
-      console.log(error)
-    );
+
+    if (user.isOrganization) {
+      const organizationExist = await OrganizationService.exist(
+        user.organization.document
+      );
+
+      if (organizationExist) {
+        throw new AppError('Imobiliária já cadastrada no sistema');
+      }
+
+      organization = await OrganizationService.create(user.organization);
+    }
+
+    return await UserRepository.create({
+      ...user,
+      organization: organization.id,
+    }).catch((error) => console.log(error));
   }
 
   async update(_id: string, user: any) {
@@ -41,9 +57,9 @@ class UserService {
 
   async userExist(email: string, withPassworld?: boolean) {
     if (withPassworld) {
-      const userPass = await UserRepository.findOne({ email }).select(
-        '+password'
-      );
+      const userPass = await UserRepository.findOne({ email })
+        .select('+password')
+        .populate('organization');
       return userPass;
     }
 
