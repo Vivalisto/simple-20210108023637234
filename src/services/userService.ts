@@ -22,6 +22,7 @@ class UserService {
   }
 
   async create(user: any) {
+    let userAux: any;
     const userExist = await this.userExist(user.email);
     let organization: any;
 
@@ -39,12 +40,15 @@ class UserService {
       }
 
       organization = await OrganizationService.create(user.organization);
+      userAux = {
+        ...user,
+        organization: organization.id,
+      };
+    } else {
+      userAux = user;
     }
 
-    return await UserRepository.create({
-      ...user,
-      organization: organization.id,
-    }).catch((error) => {
+    return await UserRepository.create(userAux).catch((error) => {
       console.log(error);
       throw new AppError('Erro no cadastro, verifique seus dados');
     });
