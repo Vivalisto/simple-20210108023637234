@@ -9,7 +9,7 @@ class CustomerService {
     return await CustomerRepository.find({ user });
   }
 
-  async getById(_id: string, user: string) {
+  async getById(_id: string) {
     return await CustomerRepository.findById(_id); //.populate('user')
   }
 
