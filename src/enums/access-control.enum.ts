@@ -42,7 +42,7 @@ export enum actionControl {
   DashboardPage = 'DASHBOARD-PAGE', //DASHBOARD-PAGE
   RentPage = 'RENT-PAGE', //ALUGUEL-PAGE
   BuySellPage = 'BUY_SELL-PAGE', //COMPRA_VENDA-PAGE
-  RegistrationDataPage = 'REGISTRATION_data-PAGE', //DADOS_CADASTRAIS-PAGE
+  RegistrationDataPage = 'REGISTRATION_DATA-PAGE', //DADOS_CADASTRAIS-PAGE
   SettingPage = 'SETTING-PAGE', //CONFIGURACAO-PAGE
   UserPage = 'USER-PAGE', //USUARIO-PAGE
   CustomerPage = 'CUSTOMER-PAGE', //CLIENTES-PAGE

@@ -12,6 +12,7 @@ const OrganizationSchema: mongoose.Schema = new mongoose.Schema({
   },
   image: {
     type: String,
+    default: '',
   },
   cellphone: {
     type: String,
