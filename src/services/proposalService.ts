@@ -149,6 +149,7 @@ class ProposalService {
           proponentData = await CustomerService.create({
             ...proponent,
             type: [CustomerType.Proponent],
+            user,
           });
         }
       }
@@ -183,11 +184,11 @@ class ProposalService {
     return;
   }
 
-  async updateProposalParts(_id: string, proposal: any) {
+  async updateProposalParts(_id: string, proposal: any, user: string) {
     let proponentData: any = {};
     let locatorData: any = {};
 
-    const { proponent, locator, user } = proposal;
+    const { proponent, locator } = proposal;
 
     if (proponent) {
       let customerFind: any = await CustomerRepository.find({
@@ -230,6 +231,7 @@ class ProposalService {
         locatorData = await CustomerRepository.create({
           ...locator,
           type: [CustomerType.Locator],
+          user,
         });
       }
 

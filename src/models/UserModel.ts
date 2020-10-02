@@ -4,6 +4,7 @@ import { NextFunction } from 'express';
 import { object, boolean, string } from 'yup';
 
 import { UserSituation } from '../enums/user-situation.enum';
+import { GroupType, ProfileType } from '../enums/access-control.enum';
 
 // corretor autonomo
 interface IUser {
@@ -25,6 +26,23 @@ interface IUser {
     image?: string;
   };
 }
+
+const UserAccessSchema: mongoose.Schema = new mongoose.Schema({
+  group: {
+    type: String,
+    default: GroupType.Autonomo,
+    required: true,
+    uppercase: true,
+    enum: Object.values(GroupType),
+  },
+  profile: {
+    type: String,
+    default: ProfileType.Master,
+    uppercase: true,
+    required: true,
+    enum: Object.values(ProfileType),
+  },
+});
 
 const UserSchema: mongoose.Schema = new mongoose.Schema({
   name: {
@@ -52,7 +70,6 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
   },
   cpf: {
     type: String,
-    required: true,
   },
   cellphone: {
     type: String,
@@ -60,7 +77,6 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
   },
   birthDate: {
     type: Date,
-    required: true,
   },
   creci: {
     type: String,
@@ -81,19 +97,20 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  url: {
+    type: String,
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
+  },
+  rules: {
+    type: UserAccessSchema,
+    default: { group: GroupType.Autonomo, profile: ProfileType.Master },
+  },
   organization: {
-    document: {
-      type: String,
-    },
-    name: {
-      type: String,
-    },
-    creci: {
-      type: String,
-    },
-    image: {
-      type: String,
-    },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'organization',
   },
   created: {
     type: Date,

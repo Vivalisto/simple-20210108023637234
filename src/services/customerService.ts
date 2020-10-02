@@ -5,8 +5,8 @@ class CustomerService {
     return await CustomerRepository.create(customer);
   }
 
-  async get() {
-    return await CustomerRepository.find();
+  async get(user: string) {
+    return await CustomerRepository.find({ user });
   }
 
   async getById(_id: string) {

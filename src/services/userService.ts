@@ -3,16 +3,18 @@ import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
 import UserRepository from '../repositories/userRepository';
+import OrganizationService from '../services/organizationService';
 import keys from '../config/keys-dev';
 import Mail from '../services/emailService';
 
 import AppError from '../errors/AppError';
 
-import { UserSituation } from '../enums/user-situation.enum';
+import { apiServer } from '../config/api';
+import { sendMail } from '../utils/sendMail';
 
 class UserService {
-  async get() {
-    return await UserRepository.find().select('-avatar');
+  async get(owner: string) {
+    return await UserRepository.find({ owner }).select('-avatar');
   }
 
   async getById(_id: string) {
@@ -20,13 +22,36 @@ class UserService {
   }
 
   async create(user: any) {
+    let userAux: any;
     const userExist = await this.userExist(user.email);
+    let organization: any;
 
     if (userExist) {
       throw new AppError('Usuário já cadastrado no sistema');
     }
 
-    return await UserRepository.create(user);
+    if (user.isOrganization) {
+      const organizationExist = await OrganizationService.exist(
+        user.organization.document
+      );
+
+      if (organizationExist) {
+        throw new AppError('Imobiliária já cadastrada no sistema');
+      }
+
+      organization = await OrganizationService.create(user.organization);
+      userAux = {
+        ...user,
+        organization: organization.id,
+      };
+    } else {
+      userAux = user;
+    }
+
+    return await UserRepository.create(userAux).catch((error) => {
+      console.log(error);
+      throw new AppError('Erro no cadastro, verifique seus dados');
+    });
   }
 
   async update(_id: string, user: any) {
@@ -39,9 +64,9 @@ class UserService {
 
   async userExist(email: string, withPassworld?: boolean) {
     if (withPassworld) {
-      const userPass = await UserRepository.findOne({ email }).select(
-        '+password'
-      );
+      const userPass = await UserRepository.findOne({ email })
+        .select('+password')
+        .populate('organization');
       return userPass;
     }
 
@@ -64,7 +89,7 @@ class UserService {
     return this.userExist(email);
   }
 
-  async forgotPassword(email: string) {
+  async alterPasswordByEmail(email: string) {
     const token = await crypto.randomBytes(20).toString('hex');
     const now = new Date();
 
@@ -85,7 +110,7 @@ class UserService {
 
     Mail.to = user.email;
     Mail.subject = 'Redefinição senha sistema Vivalisto';
-    Mail.message = `Solicitação de alteração de senha. <a href=http://150.238.42.242:30080/reset-password/${user.email}/${token}> Clique aqui para alterar sua senha</a>`;
+    Mail.message = `Solicitação de alteração de senha. <a href=${apiServer.prod}/reset-password/${user.email}/${token}> Clique aqui para alterar sua senha</a>`;
     await Mail.sendMail();
 
     return;
@@ -113,6 +138,33 @@ class UserService {
 
     user.password = password;
     user.save();
+  }
+
+  async sendInvite(email: string) {
+    const token = crypto.randomBytes(20).toString('hex');
+    const now = new Date();
+
+    now.setHours(now.getHours() + 1);
+
+    const user: any = await this.userExist(email);
+
+    if (!user) {
+      throw new AppError('Usuário não cadastrado');
+    }
+
+    await UserRepository.findByIdAndUpdate(user._id, {
+      $set: {
+        passwordResetToken: token,
+        passwordResetExpires: now,
+      },
+    });
+
+    await sendMail(
+      user.email,
+      'VIVALISTO - Liberação de acesso',
+      `Olá, ${user.name}, Bem-vindo à Vivalisto, a sua nova plataforma de negócios. Para prosseguir com seu cadastro. <a href=${apiServer.prod}/reset-password/${user.email}/${token}> Clique aqui para Definir uma senha.</a>`
+    );
+    return;
   }
 
   async generateToken(user: any) {

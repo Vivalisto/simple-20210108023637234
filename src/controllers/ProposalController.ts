@@ -43,12 +43,14 @@ class ProposalController {
 
   async update(req: Request | any, res: Response) {
     const { id } = req.params;
+    const user = req.userId;
     const ProposalUpdate = req.body;
 
     try {
       const proposal = await proposalService.updateProposalParts(
         id,
-        ProposalUpdate
+        ProposalUpdate,
+        user
       );
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
