@@ -10,6 +10,7 @@ import { ProposalType } from '../enums/proposal-type.enum';
 import { CustomerType } from '../enums/customer-type.enum';
 import { query } from 'express';
 import AppError from '../errors/AppError';
+import userService from './userService';
 
 const proposalUserFields = [
   'name',
@@ -134,6 +135,9 @@ class ProposalService {
 
       const { proponent, locator, user } = proposal;
 
+      const userRequest: any = await userService.getById(user);
+      const organization:any =  userRequest?.organization
+
       if (proponent) {
         let customerFind: any = await CustomerRepository.find({
           email: proponent.email,
@@ -177,6 +181,7 @@ class ProposalService {
         ...proposal,
         proponent: proponentData._id,
         locator: locatorData._id,
+        organization
       });
     } catch (error) {
       throw new AppError(`Erro na criação da proposta`);
