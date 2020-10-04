@@ -252,19 +252,8 @@ class ProposalService {
       ...proposal,
     });
 
-    if (sendMail && proposalUpdate) {
-      sendMailUtil({
-        to: proposalUpdate.locator.email,
-        subject: 'Parabéns! Temos uma proposta de locação para o seu imóvel.',
-        message: `Olá, ${proposalUpdate.locator.name}. Acabamos de conseguir uma proposta para o seu imóvel. `,
-      });
-
-      sendMailUtil({
-        to: proposalUpdate.proponent.email,
-        subject:
-          'Parabéns! Sua proposta foi enviada, o locador está analisando e em breve retornaremos.',
-        message: `Olá, ${proposalUpdate.proponent.name}. Sua proposta de aluguél foi gerada com sucesso.`,
-      });
+    if (sendMail && proposal) {
+      this.sendMailCreateProposal(proposalUpdate);
     }
 
     return proposalUpdate;
@@ -284,6 +273,33 @@ class ProposalService {
         .populate('proponent');
     } catch (error) {
       throw new AppError(`Problema ao carregar as propostas`);
+    }
+  }
+
+  sendMailCreateProposal(proposal: any) {
+    const { locator, proponent, followers } = proposal;
+
+    sendMailUtil({
+      to: locator.email,
+      subject: 'Parabéns! Temos uma proposta de locação para o seu imóvel.',
+      message: `Olá, ${proposal.locator.name}. Acabamos de conseguir uma proposta para o seu imóvel. `,
+    });
+
+    sendMailUtil({
+      to: proponent.email,
+      subject:
+        'Parabéns! Sua proposta foi enviada, o locador está analisando e em breve retornaremos.',
+      message: `Olá, ${proposal.proponent.name}. Sua proposta de aluguél foi gerada com sucesso.`,
+    });
+
+    if (followers?.length) {
+      followers.forEach(function (follower: any) {
+        sendMailUtil({
+          to: follower,
+          subject: 'Acompanhamento de proposta',
+          message: `Olá. Você foi vinculado para acompanhar o andamento de uma proposta`,
+        });
+      });
     }
   }
 }
