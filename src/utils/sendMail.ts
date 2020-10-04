@@ -1,6 +1,6 @@
 import Mail from '../services/emailService';
 
-export async function sendMail(to: string, subject: string, message: string) {
+export async function sendMailUtil({ to, subject, message }: any) {
   Mail.to = to;
   Mail.subject = subject;
   Mail.message = message;

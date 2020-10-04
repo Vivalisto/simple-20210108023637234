@@ -11,6 +11,8 @@ import { CustomerType } from '../enums/customer-type.enum';
 import { query } from 'express';
 import AppError from '../errors/AppError';
 import userService from './userService';
+import customerService from './customerService';
+import { sendMailUtil } from '../utils/sendMail';
 
 const proposalUserFields = [
   'name',
@@ -136,7 +138,7 @@ class ProposalService {
       const { proponent, locator, user } = proposal;
 
       const userRequest: any = await userService.getById(user);
-      const organization:any =  userRequest?.organization
+      const organization: any = userRequest?.organization;
 
       if (proponent) {
         let customerFind: any = await CustomerRepository.find({
@@ -181,7 +183,7 @@ class ProposalService {
         ...proposal,
         proponent: proponentData._id,
         locator: locatorData._id,
-        organization
+        organization,
       });
     } catch (error) {
       throw new AppError(`Erro na criação da proposta`);
@@ -193,7 +195,7 @@ class ProposalService {
     let proponentData: any = {};
     let locatorData: any = {};
 
-    const { proponent, locator } = proposal;
+    const { proponent, locator, sendMail } = proposal;
 
     if (proponent) {
       let customerFind: any = await CustomerRepository.find({
@@ -246,9 +248,26 @@ class ProposalService {
       });
     }
 
-    return await this.update(_id, {
+    let proposalUpdate: any = await this.update(_id, {
       ...proposal,
     });
+
+    if (sendMail && proposalUpdate) {
+      sendMailUtil({
+        to: proposalUpdate.locator.email,
+        subject: 'Parabéns! Temos uma proposta de locação para o seu imóvel.',
+        message: `Olá, ${proposalUpdate.locator.name}. Acabamos de conseguir uma proposta para o seu imóvel. `,
+      });
+
+      sendMailUtil({
+        to: proposalUpdate.proponent.email,
+        subject:
+          'Parabéns! Sua proposta foi enviada, o locador está analisando e em breve retornaremos.',
+        message: `Olá, ${proposalUpdate.proponent.name}. Sua proposta de aluguél foi gerada com sucesso.`,
+      });
+    }
+
+    return proposalUpdate;
   }
 
   async getByCustomer(customerId: string) {
