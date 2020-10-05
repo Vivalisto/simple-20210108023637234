@@ -10,7 +10,7 @@ import Mail from '../services/emailService';
 import AppError from '../errors/AppError';
 
 import { apiServer } from '../config/api';
-import { sendMail } from '../utils/sendMail';
+import { sendMailUtil } from '../utils/sendMail';
 
 class UserService {
   async get(owner: string) {
@@ -159,11 +159,11 @@ class UserService {
       },
     });
 
-    await sendMail(
-      user.email,
-      'VIVALISTO - Liberação de acesso',
-      `Olá, ${user.name}, Bem-vindo à Vivalisto, a sua nova plataforma de negócios. Para prosseguir com seu cadastro. <a href=${apiServer.prod}/reset-password/${user.email}/${token}> Clique aqui para Definir uma senha.</a>`
-    );
+    await sendMailUtil({
+      to: user.email,
+      subject: 'VIVALISTO - Liberação de acesso',
+      message: `Olá, ${user.name}, Bem-vindo à Vivalisto, a sua nova plataforma de negócios. Para prosseguir com seu cadastro. <a href=${apiServer.prod}/reset-password/${user.email}/${token}> Clique aqui para Definir uma senha.</a>`,
+    });
     return;
   }
 

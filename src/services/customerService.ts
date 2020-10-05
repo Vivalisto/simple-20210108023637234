@@ -1,7 +1,7 @@
 import CustomerRepository from '../repositories/customerRepository';
 
 import Mail from '../services/emailService';
-import { sendMail } from '../utils/sendMail';
+import { sendMailUtil } from '../utils/sendMail';
 
 class CustomerService {
   async create(customer: any) {
@@ -26,7 +26,7 @@ class CustomerService {
     return await CustomerRepository.findByIdAndRemove(_id);
   }
 
-  sendMail(proposal: any) {
+  sendMailUtil(proposal: any) {
     Mail.to = proposal.locator.email;
     Mail.subject = 'Parabéns! Temos uma proposta de locação para o seu imóvel.';
     Mail.message = `Olá, ${proposal.locator.name}. Acabamos de conseguir uma proposta para o seu imóvel. `;
