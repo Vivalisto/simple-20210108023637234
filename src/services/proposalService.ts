@@ -349,6 +349,36 @@ class ProposalService {
       `,
     });
 
+    sendMailUtil({
+      to: userProposal.email,
+      subject: 'Proposta enviada com sucesso!',
+      message: `
+      
+      ${userProposal.name}, parabéns!<br><br>
+
+
+      Excelente, a proposta foi gerada e encaminhada para seus clientes, inquilinos e locadores.<br>
+
+      Você poderá a qualquer momento acessar a proposta no sistema em MINHAS PROPOSTAS, alterá-la e, uma vez fechada a negociação, ENVIAR PARA CONTRATAÇÃO, para que a sua EQUIPE DE CONTRATOS VIVALISTO de andamento no processo de formalização de forma otimizada e 100% digital, permitindo que você continue focado em atender os seus clientes e em fazer mais negócios.<br><br>
+
+      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
+      Proponente: ${proponent.name}<br>
+      Locador: ${locator.name}<br><br>
+
+
+      Bons negócios e sucesso em sua negociação!<br>
+      Atenciosamente.<br><br>
+      
+      Sucesso em sua negociação!<br>
+      Atenciosamente.<br><br>
+
+      Equipe de Suporte<br><br>
+
+      powered by Vivalisto Proptech    
+      
+      `,
+    });
+
     if (followers?.length) {
       followers.forEach(function (follower: any) {
         sendMailUtil({
