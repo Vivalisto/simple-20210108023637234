@@ -8,6 +8,7 @@ import keys from '../config/keys-dev';
 
 class Mail {
   constructor(
+    public from: string = 'noreply@vivalisto.com.br',
     public to?: string,
     public subject?: string,
     public message?: string

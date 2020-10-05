@@ -253,7 +253,8 @@ class ProposalService {
     });
 
     if (sendMail && proposal) {
-      this.sendMailCreateProposal(proposalUpdate);
+      const userProposal = await userService.getById(user);
+      this.sendMailCreateProposal(proposalUpdate, userProposal);
     }
 
     return proposalUpdate;
@@ -276,20 +277,76 @@ class ProposalService {
     }
   }
 
-  sendMailCreateProposal(proposal: any) {
+  sendMailCreateProposal(proposal: any, userProposal: any) {
     const { locator, proponent, followers } = proposal;
 
     sendMailUtil({
       to: locator.email,
-      subject: 'Parabéns! Temos uma proposta de locação para o seu imóvel.',
-      message: `Olá, ${proposal.locator.name}. Acabamos de conseguir uma proposta para o seu imóvel. `,
+      subject: `Olá, temos uma proposta de ${
+        proposal.type === ProposalType.Aluguel ? 'locação' : 'compra e venda'
+      }  para o seu imóvel!`,
+      message: `
+      ${locator.name}, boas notícias!<br><br>
+
+
+      Acabamos de conseguir uma proposta para o seu imóvel, para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.<br><br>
+      Para acessar a proposta, click aqui (#link) Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp<br>
+      Imóvel: <bold>${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}</bold><br><br>
+
+      Neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade.<br>
+      Em caso de dúvida, é só entrar em contato.<br><br>
+
+      Bons negócios!<br>
+      Atenciosamente.<br><br>
+
+      ${userProposal.name}<br>
+      Telefone: ${userProposal.cellphone}<br>
+      E-mail: ${userProposal.email}<br>
+      CRECI: ${userProposal.creci}<br><br>
+
+      powered by Vivalisto Proptech
+      `,
     });
 
     sendMailUtil({
       to: proponent.email,
-      subject:
-        'Parabéns! Sua proposta foi enviada, o locador está analisando e em breve retornaremos.',
-      message: `Olá, ${proposal.proponent.name}. Sua proposta de aluguél foi gerada com sucesso.`,
+      subject: 'Proposta enviada com sucesso!',
+      message: `
+      
+      ${proponent.name}, parabéns!<br><br>
+
+
+      Sua proposta foi enviada, o locador está analisando e em breve retornaremos.<br>
+      Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições negociadas e poderá
+      compartilhar a proposta com eventuais participantes na tomada de decisão.<br>
+
+      Para acessar a proposta, click aqui (#link)<br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp <br>
+      Imóvel: <bold>${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}</bold><br><br>
+
+
+      Neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação,
+      serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua
+      locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100%
+      digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços
+      relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a
+      burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a
+      sua segurança e comodidade.<br><br>
+
+      Em breve retorno com uma posição sobre a sua proposta.<br>
+      Em caso de dúvida, é só entrar em contato.<br><br>
+      
+      Sucesso em sua negociação!<br>
+      Atenciosamente.<br><br>
+
+      ${userProposal.name}<br>
+      Telefone: ${userProposal.cellphone}<br>
+      E-mail: ${userProposal.email}<br>
+      CRECI: ${userProposal.creci}<br><br>
+
+      powered by Vivalisto Proptech    
+      
+      `,
     });
 
     if (followers?.length) {
