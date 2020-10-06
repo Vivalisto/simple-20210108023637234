@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
+import * as mongoose from 'mongoose';
 
 import UserRepository from '../repositories/userRepository';
 import OrganizationService from '../services/organizationService';
@@ -17,7 +18,7 @@ class UserService {
     return await UserRepository.find({ owner }).select('-avatar');
   }
 
-  async getById(_id: string) {
+  async getById(_id: string | mongoose.Schema.Types.ObjectId) {
     return await UserRepository.findById(_id);
   }
 

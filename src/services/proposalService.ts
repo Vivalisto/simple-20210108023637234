@@ -13,6 +13,7 @@ import AppError from '../errors/AppError';
 import userService from './userService';
 import customerService from './customerService';
 import { sendMailUtil } from '../utils/sendMail';
+import { ProfileType } from '../enums/access-control.enum';
 
 const proposalUserFields = [
   'name',
@@ -37,6 +38,8 @@ class ProposalService {
 
   async get(userId: mongoose.Schema.Types.ObjectId, type: String) {
     let query = [];
+    let search = {};
+    const userProposal: any = await userService.getById(userId);
 
     if (type === ProposalType.Aluguel || type === ProposalType.CompraVenda) {
       query.push(type);
@@ -44,9 +47,20 @@ class ProposalService {
       query = [ProposalType.Aluguel, ProposalType.CompraVenda];
     }
 
-    return await ProposalRepository.find({
-      user: { _id: userId },
-    })
+    if (
+      userProposal?.rules?.profile === ProfileType.Master &&
+      userProposal.isOrganization
+    ) {
+      search = {
+        organization: { _id: userProposal?.organization },
+      };
+    } else {
+      search = {
+        user: { _id: userId },
+      };
+    }
+
+    return await ProposalRepository.find(search)
       .where('type')
       .equals(query)
       .populate('locator')
@@ -57,7 +71,8 @@ class ProposalService {
   async getById(_id: string) {
     return await ProposalRepository.findById(_id)
       .populate('locator')
-      .populate('proponent');
+      .populate('proponent')
+      .populate('user');
   }
 
   async update(_id: string, proposal: any) {

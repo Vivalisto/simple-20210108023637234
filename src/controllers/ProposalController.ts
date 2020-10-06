@@ -109,6 +109,17 @@ class ProposalController {
     }
   }
 
+  async getByProposalAndsCustomer(req: Request, res: Response) {
+    const { id, idCust } = req.params;
+
+    try {
+      const proposal = await proposalService.getById(id);
+      Helper.sendResponse(res, httpStatus.OK, { proposal });
+    } catch (error) {
+      Helper.sendResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, error);
+    }
+  }
+
   // async delete(req: Request, res: Response) {
   //   const { id } = req.params;
 
