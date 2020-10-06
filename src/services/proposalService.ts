@@ -14,6 +14,7 @@ import userService from './userService';
 import customerService from './customerService';
 import { sendMailUtil } from '../utils/sendMail';
 import { ProfileType } from '../enums/access-control.enum';
+import { apiServer } from '../config/api';
 
 const proposalUserFields = [
   'name',
@@ -305,7 +306,7 @@ class ProposalService {
 
 
       Acabamos de conseguir uma proposta para o seu imóvel, para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.<br><br>
-      Para acessar a proposta, click aqui (#link) Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp<br>
+      Para acessar a proposta, click aqui <a href=${apiServer.prod}/proposal-view/${proposal._id}> Número da propsota: ${proposal.seq} </a> Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp<br>
       Imóvel: <bold>${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}</bold><br><br>
 
       Neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade.<br>
@@ -335,7 +336,7 @@ class ProposalService {
       Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições negociadas e poderá
       compartilhar a proposta com eventuais participantes na tomada de decisão.<br>
 
-      Para acessar a proposta, click aqui (#link)<br>
+      Para acessar a proposta, click aqui <a href=${apiServer.prod}/proposal-view/${proposal._id}> Número da propsota: ${proposal.seq} </a><br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp <br>
       Imóvel: <bold>${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}</bold><br><br>
 

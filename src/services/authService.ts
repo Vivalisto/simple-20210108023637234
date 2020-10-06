@@ -44,6 +44,13 @@ class AuthService {
       throw new AppError('usuário não cadastrado');
     }
 
+    if (userAuth.situation === UserSituation.Inativo) {
+      throw new AppError(
+        'Usuário inátivo, favor entre em contato com seu superior',
+        401
+      );
+    }
+
     const validPassword = await bcrypt.compare(password, userAuth.password);
 
     if (!validPassword) {
