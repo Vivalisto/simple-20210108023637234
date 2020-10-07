@@ -12,10 +12,20 @@ import AppError from '../errors/AppError';
 
 import { apiServer } from '../config/api';
 import { sendMailUtil } from '../utils/sendMail';
+import { ProfileType } from '../enums/access-control.enum';
 
 class UserService {
-  async get(owner: string) {
-    return await UserRepository.find({ owner }).select('-avatar');
+  async get(userId: string) {
+    let query: any;
+    const userData: any = await this.getById(userId);
+
+    if (userData?.rules?.profile === ProfileType.Master) {
+      query = { organization: userData.organization };
+    } else {
+      query = { userId };
+    }
+
+    return await UserRepository.find(query).select('-avatar');
   }
 
   async getById(_id: string | mongoose.Schema.Types.ObjectId) {
