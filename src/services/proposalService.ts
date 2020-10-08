@@ -95,6 +95,10 @@ class ProposalService {
       proposalUpdate = { ...proposalStatus, stage: ProposalStage.Documental };
     }
 
+    if (proposalStatus.status === ProposalStatus.EmNegociacao) {
+      proposalUpdate = { ...proposalStatus, stage: ProposalStage.Criacao };
+    }
+
     return await this.update(_id, proposalUpdate);
   }
 
