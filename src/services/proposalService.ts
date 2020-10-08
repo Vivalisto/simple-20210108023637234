@@ -132,6 +132,8 @@ class ProposalService {
 
   async getSignings(userId: mongoose.Schema.Types.ObjectId, type: String) {
     let query = [];
+    let search = {};
+    const userProposal: any = await userService.getById(userId);
 
     if (type === ProposalType.Aluguel || type === ProposalType.CompraVenda) {
       query.push(type);
@@ -139,10 +141,22 @@ class ProposalService {
       query = [ProposalType.Aluguel, ProposalType.CompraVenda];
     }
 
-    return await ProposalRepository.find({
-      user: { _id: userId },
-      stage: { $gt: 0 },
-    })
+    if (
+      userProposal?.rules?.profile === ProfileType.Master &&
+      userProposal.isOrganization
+    ) {
+      search = {
+        organization: { _id: userProposal?.organization },
+        stage: { $gt: 0 },
+      };
+    } else {
+      search = {
+        user: { _id: userId },
+        stage: { $gt: 0 },
+      };
+    }
+
+    return await ProposalRepository.find(search)
       .where('type')
       .equals(query)
       .populate('user', proposalUserFields)
