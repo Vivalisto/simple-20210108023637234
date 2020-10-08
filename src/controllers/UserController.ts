@@ -25,6 +25,18 @@ class UserController {
     }
   }
 
+  async getByProfile(req: Request | any, res: Response) {
+    const userId = req.userId;
+    const { profile } = req.body;
+
+    try {
+      const user = await UserService.getByProfile({ userId, profile });
+      Helper.sendResponse(res, httpStatus.OK, user);
+    } catch (error) {
+      console.error.bind(console, `Error ${error}`);
+    }
+  }
+
   async create(req: Request, res: Response) {
     const userRequest = req.body;
     const { email } = req.body;

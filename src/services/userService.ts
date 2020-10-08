@@ -21,6 +21,8 @@ class UserService {
 
     if (userData?.rules?.profile === ProfileType.Master) {
       query = { organization: userData.organization };
+    } else if (userData?.rules?.profile === ProfileType.Gerente) {
+      query = { owner: userData._id };
     } else {
       query = { userId };
     }
@@ -65,12 +67,33 @@ class UserService {
     });
   }
 
+  async createInvite(user: any) {
+    const userExist = await this.userExist(user.email);
+
+    if (userExist) {
+      throw new AppError('Usuário já cadastrado no sistema');
+    }
+
+    return await UserRepository.create(user).catch((error) => {
+      console.log(error);
+      throw new AppError('Erro no cadastro, verifique seus dados');
+    });
+  }
+
   async update(_id: string, user: any) {
     return await UserRepository.findByIdAndUpdate(_id, user, { new: true });
   }
 
   async delete(_id: string) {
     return await UserRepository.findByIdAndRemove(_id);
+  }
+
+  async getByProfile({ userId, profile }: any) {
+    let query: any;
+    const userData: any = await this.getById(userId);
+    query = { organization: userData.organization };
+
+    return await UserRepository.find(query).select('name rules');
   }
 
   async userExist(email: string, withPassworld?: boolean) {
