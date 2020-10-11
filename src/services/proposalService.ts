@@ -10,9 +10,11 @@ import { ProposalType } from '../enums/proposal-type.enum';
 import { CustomerType } from '../enums/customer-type.enum';
 import { query } from 'express';
 import AppError from '../errors/AppError';
+
 import userService from './userService';
 import customerService from './customerService';
 import { sendMailUtil } from '../utils/sendMail';
+
 import { ProfileType } from '../enums/access-control.enum';
 import { apiServer } from '../config/api';
 
@@ -180,6 +182,12 @@ class ProposalService {
         });
 
         if (customerFind?.length && !!customerFind[0]) {
+          const { name, phone, personType } = proponent;
+          await customerService.update(customerFind[0]._id, {
+            name,
+            phone,
+            personType,
+          });
           if (!customerFind[0].type.includes(CustomerType.Proponent)) {
             customerFind[0].type.push(CustomerType.Proponent);
             await customerFind[0].save();
@@ -201,6 +209,11 @@ class ProposalService {
         });
 
         if (customerFind?.length && !!customerFind[0]) {
+          const { name, phone } = locator;
+          await customerService.update(customerFind[0]._id, {
+            name,
+            phone,
+          });
           if (!customerFind[0].type.includes(CustomerType.Proponent)) {
             customerFind[0].type.push(CustomerType.Locator);
             await customerFind[0].save();
@@ -241,6 +254,7 @@ class ProposalService {
       });
 
       if (customerFind?.length && !!customerFind[0]) {
+        await customerService.update(customerFind._id, proponent);
         if (!customerFind[0].type.includes(CustomerType.Proponent)) {
           customerFind[0].type.push(CustomerType.Proponent);
           await customerFind[0].save();
@@ -262,16 +276,20 @@ class ProposalService {
     }
 
     if (locator) {
+      await this.update(_id, locator);
       proposalDb = await this.getById(_id);
       let customerFind: any = await CustomerRepository.find({
         email: locator.email,
       });
 
       if (customerFind?.length && !!customerFind[0]) {
-        if (
-          !customerFind[0].type.includes(CustomerType.Locator) ||
-          !customerFind[0].type.includes(CustomerType.Salesman)
-        ) {
+        const { name, phone } = locator;
+        await customerService.update(customerFind[0]._id, {
+          name,
+          phone,
+        });
+
+        if (!customerFind[0].type.includes(CustomerType.Locator)) {
           customerFind[0].type.push(
             proposalDb.type === ProposalType.CompraVenda
               ? CustomerType.Salesman
@@ -279,6 +297,18 @@ class ProposalService {
           );
           await customerFind[0].save();
         }
+
+        if (proposalDb.type === ProposalType.CompraVenda) {
+          if (!customerFind[0].type.includes(CustomerType.Salesman)) {
+            customerFind[0].type.push(
+              proposalDb.type === ProposalType.CompraVenda
+                ? CustomerType.Salesman
+                : CustomerType.Locator
+            );
+            await customerFind[0].save();
+          }
+        }
+
         locatorData = customerFind[0];
       } else {
         let custType =
