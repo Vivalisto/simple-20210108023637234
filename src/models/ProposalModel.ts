@@ -6,7 +6,11 @@ import { Escrow, EscrowType } from '../enums/escrow.enum';
 import { ImmobileType } from '../enums/immobile-type.enum';
 import { ProposalStatus } from '../enums/proposal-status.enum';
 import { ProposalPackegeType } from '../enums/proposal-packege-type.enum';
-import { boolean } from 'yup';
+import * as momentTimezone from 'moment-timezone';
+import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz';
+
+const brazilTimeZone = 'America/Sao_Paulo';
+const utc = zonedTimeToUtc(Date.now(), momentTimezone.locale());
 
 const ImmobileSchema: mongoose.Schema = new mongoose.Schema({
   code: {
@@ -170,7 +174,7 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   },
   created: {
     type: Date,
-    default: Date.now(),
+    default: zonedTimeToUtc(Date.now(), momentTimezone.locale()),
   },
 });
 
