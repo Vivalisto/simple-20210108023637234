@@ -75,7 +75,14 @@ class ProposalService {
     return await ProposalRepository.findById(_id)
       .populate('locator')
       .populate('proponent')
-      .populate('user');
+      .populate('user')
+      .populate('organization');
+  }
+
+  async getByIdView(_id: string) {
+    return await ProposalRepository.findById(_id)
+      .populate('user')
+      .populate('organization');
   }
 
   async update(_id: string, proposal: any) {

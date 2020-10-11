@@ -113,7 +113,7 @@ class ProposalController {
     const { id, idCust } = req.params;
 
     try {
-      const proposal = await proposalService.getById(id);
+      const proposal = await proposalService.getByIdView(id);
       Helper.sendResponse(res, httpStatus.OK, { proposal });
     } catch (error) {
       Helper.sendResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, error);
