@@ -347,8 +347,7 @@ class ProposalService {
       } else {
         this.sendMailCreateProposalBuySell(proposalUpdate, userProposal);
       }
-    }
-    {
+    } else {
       const userProposal = await userService.getById(user);
       this.sendMailUser(proposalUpdate, userProposal);
     }
@@ -761,10 +760,10 @@ class ProposalService {
       <br>
       <br>
 
-      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
-      Proponente: ${proponent.name}
+      Imóvel: ${proposal?.immobile?.publicPlace}, ${proposal?.immobile?.number} - ${proposal?.immobile?.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
+      Proponente: ${proponent?.name}
       <br>
-      Locador: ${locator.name}
+      Locador: ${locator?.name}
       <br><br>
       Bons negócios e sucesso em sua negociação!
       <br>
