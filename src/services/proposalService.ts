@@ -179,7 +179,7 @@ class ProposalService {
           email: proponent.email,
         });
 
-        if (customerFind?.length && customerFind[0]) {
+        if (customerFind?.length && !!customerFind[0]) {
           if (!customerFind[0].type.includes(CustomerType.Proponent)) {
             customerFind[0].type.push(CustomerType.Proponent);
             await customerFind[0].save();
@@ -190,6 +190,7 @@ class ProposalService {
             ...proponent,
             type: [CustomerType.Proponent],
             user,
+            organization,
           });
         }
       }
@@ -199,7 +200,7 @@ class ProposalService {
           email: proponent.email,
         });
 
-        if (customerFind?.length && customerFind[0]) {
+        if (customerFind?.length && !!customerFind[0]) {
           if (!customerFind[0].type.includes(CustomerType.Proponent)) {
             customerFind[0].type.push(CustomerType.Locator);
             await customerFind[0].save();
@@ -209,6 +210,8 @@ class ProposalService {
           locatorData = await CustomerRepository.create({
             ...locator,
             type: [CustomerType.Locator],
+            user,
+            organization,
           });
         }
       }
@@ -228,6 +231,7 @@ class ProposalService {
   async updateProposalParts(_id: string, proposal: any, user: string) {
     let proponentData: any = {};
     let locatorData: any = {};
+    let proposalDb: any;
 
     const { proponent, locator, sendMail } = proposal;
 
@@ -236,7 +240,7 @@ class ProposalService {
         email: proponent.email,
       });
 
-      if (customerFind?.length && customerFind[0]) {
+      if (customerFind?.length && !!customerFind[0]) {
         if (!customerFind[0].type.includes(CustomerType.Proponent)) {
           customerFind[0].type.push(CustomerType.Proponent);
           await customerFind[0].save();
@@ -258,20 +262,32 @@ class ProposalService {
     }
 
     if (locator) {
+      proposalDb = await this.getById(_id);
       let customerFind: any = await CustomerRepository.find({
         email: locator.email,
       });
 
-      if (customerFind?.length && customerFind[0]) {
-        if (!customerFind[0].type.includes(CustomerType.Locator)) {
-          customerFind[0].type.push(CustomerType.Locator);
+      if (customerFind?.length && !!customerFind[0]) {
+        if (
+          !customerFind[0].type.includes(CustomerType.Locator) ||
+          !customerFind[0].type.includes(CustomerType.Salesman)
+        ) {
+          customerFind[0].type.push(
+            proposalDb.type === ProposalType.CompraVenda
+              ? CustomerType.Salesman
+              : CustomerType.Locator
+          );
           await customerFind[0].save();
         }
         locatorData = customerFind[0];
       } else {
+        let custType =
+          proposalDb.type === ProposalType.CompraVenda
+            ? CustomerType.Salesman
+            : CustomerType.Locator;
         locatorData = await CustomerRepository.create({
           ...locator,
-          type: [CustomerType.Locator],
+          type: [custType],
           user,
         });
       }
@@ -305,7 +321,8 @@ class ProposalService {
       return await ProposalRepository.find()
         .or([{ locator: customerId }, { proponent: customerId }])
         .populate('locator')
-        .populate('proponent');
+        .populate('proponent')
+        .populate('user', ['name']);
     } catch (error) {
       throw new AppError(`Problema ao carregar as propostas`);
     }

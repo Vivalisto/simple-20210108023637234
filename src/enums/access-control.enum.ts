@@ -33,6 +33,8 @@ export enum actionControl {
   List = 'LIST', //LISTAR
   Create = 'CREATE', //CRIAR
   Cancel = 'CANCEL', //CANCELAR
+  ReturnNegotiation = 'RETURN_NEGOTIATION', //RETORNAR PARA NEGOCIACAO
+  cancelHiring = 'CANCEL_HIRING', //CANCELAR CONTRATACAO
   Delete = 'DELETE', //DELETAR
   Export = 'EXPORT', //EXPORTAR
   Approve = 'APPROVE', //APROVAR
