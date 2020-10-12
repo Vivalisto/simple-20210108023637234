@@ -438,7 +438,7 @@ class ProposalService {
       <br>
       Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
         proposal._id
-      }> click aqui, Número da propsota: ${proposal.seq} </a>
+      }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -486,7 +486,7 @@ class ProposalService {
       <br><br>
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
       <br><br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da propsota: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -615,7 +615,7 @@ class ProposalService {
       <br>
       Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
         proposal._id
-      }> click aqui, Número da propsota: ${proposal.seq} </a>
+      }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -662,7 +662,7 @@ class ProposalService {
       <br>
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
       <br><br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da propsota: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -754,7 +754,7 @@ class ProposalService {
       <br><br>
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
       <br><br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da propsota: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
