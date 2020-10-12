@@ -113,7 +113,7 @@ class ProposalService {
     }
 
     if (proposalStatus.status === ProposalStatus.Fechada) {
-      this.sendMailAproveRent(proposal, userProposal);
+      this.sendMailApproveRentBuySell(proposal, userProposal);
     }
 
     return await this.update(_id, proposalUpdate);
@@ -786,7 +786,7 @@ class ProposalService {
     });
   }
 
-  async sendMailAproveRent(proposal: any, userProposal: any) {
+  async sendMailApproveRentBuySell(proposal: any, userProposal: any) {
     const { locator, proponent, followers } = proposal;
     const organizationDB: any = await organizationService.getById(
       proposal.organization
@@ -804,11 +804,13 @@ class ProposalService {
       <br><br>
       Você poderá acessar as condições negociadas sempre que preciso, para isto basta clicar no link abaixo:
       <br><br>
-      Para acessar a proposta de locação, <a href=${
-        apiServer.prod
-      }/proposal-view/${proposal._id}> click aqui, proposta: ${
-        proposal.seq
-      } </a>
+      Para acessar a proposta ${
+        proposal.type === ProposalType.Aluguel
+          ? 'de locação'
+          : 'venda do imóvel'
+      }, <a href=${apiServer.prod}/proposal-view/${
+        proposal._id
+      }> click aqui, proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -857,7 +859,11 @@ class ProposalService {
       Você poderá acessar as condições negociadas sempre que preciso, para isto basta clicar no link abaixo:
       <br>
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a ${
+        proposal.type === ProposalType.Aluguel
+          ? 'de locação'
+          : 'venda do imóvel'
+      }, <a href=${apiServer.prod}/proposal-view/${
         proposal._id
       }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
@@ -890,7 +896,13 @@ class ProposalService {
 
     sendMailUtil({
       to: userProposal.email,
-      subject: `Parabéns pela locação do imóvel ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Parabéns pela ${
+        proposal.type === ProposalType.Aluguel ? 'locação' : 'venda'
+      } do imóvel ${proposal.immobile.publicPlace}, ${
+        proposal.immobile.number
+      } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
+        proposal.immobile.cep
+      }`,
       message: `
       
       ${userProposal.name}, bom trabalho!
@@ -904,13 +916,19 @@ class ProposalService {
       <br>
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+        proposal._id
+      }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       <br>
-      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
+      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${
+        proposal.immobile.city
+      } - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
       Proponente: ${proponent.name}
       <br>
-      Vendedor: ${locator.name}
+      ${proposal.type === ProposalType.Aluguel ? 'Locador' : 'Vendedor'}: ${
+        locator.name
+      }
       <br><br>
       Bons negócios e sucesso em sua negociação!
       Atenciosamente.
@@ -952,7 +970,9 @@ class ProposalService {
             proposal.immobile.cep
           }</bold>
           <br><br>
-          Agradecemos a confiança e desejamos sucesso em sua nova locação.
+          Agradecemos a confiança e desejamos sucesso em sua nova ${
+            proposal.type === ProposalType.Aluguel ? 'locação' : 'venda'
+          }.
           <br><br>
           Em caso de dúvidas, é só entrar em contato.
           <br>
