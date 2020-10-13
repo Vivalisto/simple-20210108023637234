@@ -304,24 +304,20 @@ class ProposalService {
           phone,
         });
 
-        if (!customerFind[0].type.includes(CustomerType.Locator)) {
-          customerFind[0].type.push(
-            proposalDb.type === ProposalType.CompraVenda
-              ? CustomerType.Salesman
-              : CustomerType.Locator
-          );
+        if (
+          proposalDb.type === ProposalType.Aluguel &&
+          !customerFind[0].type.includes(CustomerType.Locator)
+        ) {
+          customerFind[0].type.push(CustomerType.Locator);
           await customerFind[0].save();
         }
 
-        if (proposalDb.type === ProposalType.CompraVenda) {
-          if (!customerFind[0].type.includes(CustomerType.Salesman)) {
-            customerFind[0].type.push(
-              proposalDb.type === ProposalType.CompraVenda
-                ? CustomerType.Salesman
-                : CustomerType.Locator
-            );
-            await customerFind[0].save();
-          }
+        if (
+          proposalDb.type === ProposalType.CompraVenda &&
+          !customerFind[0].type.includes(CustomerType.Salesman)
+        ) {
+          customerFind[0].type.push(CustomerType.Salesman);
+          await customerFind[0].save();
         }
 
         locatorData = customerFind[0];
@@ -787,6 +783,218 @@ class ProposalService {
   }
 
   async sendMailApproveRentBuySell(proposal: any, userProposal: any) {
+    const { locator, proponent, followers } = proposal;
+    const organizationDB: any = await organizationService.getById(
+      proposal.organization
+    );
+
+    sendMailUtil({
+      to: locator.email,
+      subject: `Parabéns pelo sucesso na negociação!`,
+      message: `
+      ${locator.name}, parabéns!
+      <br><br>
+      Estamos felizes pelo sucesso da negociação!
+      <br><br>
+      Daqui em diante, nossa equipe de contratos cuidará de tudo e em breve entrarão em contato para o procedimentos de contratação.
+      <br><br>
+      Você poderá acessar as condições negociadas sempre que preciso, para isto basta clicar no link abaixo:
+      <br><br>
+      Para acessar a proposta ${
+        proposal.type === ProposalType.Aluguel
+          ? 'de locação'
+          : 'venda do imóvel'
+      }, <a href=${apiServer.prod}/proposal-view/${
+        proposal._id
+      }> click aqui, proposta: ${proposal.seq} </a>
+      <br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      Imóvel: <bold>${proposal.immobile.publicPlace}, ${
+        proposal.immobile.number
+      } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
+        proposal.immobile.cep
+      }</bold>
+      <br><br>
+      Agradecemos a confiança e desejamos sucesso em sua nova locação.
+      <br><br>
+      Em caso de dúvidas, é só entrar em contato.
+      <br>
+      Atenciosamente.
+      <br>
+      <br>
+      Atenciosamente.
+      <br><br>
+
+      ${userProposal.name}<br>
+      CRECI Corretor: ${userProposal.creci}<br><br>
+      Telefone: ${userProposal.cellphone}<br>
+      E-mail: ${userProposal.email}<br><br>
+      ${organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''}<br>
+      ${
+        organizationDB?.name ? `CRECI Imobiliária: ${organizationDB.creci}` : ''
+      }
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+
+    sendMailUtil({
+      to: proponent.email,
+      subject: 'Parabéns pelo sucesso na negociação!',
+      message: `
+      
+      ${proponent.name}, parabéns!
+      <br><br>
+      Estamos felizes pelo sucesso da negociação!
+      <br>
+      <br>
+      Daqui em diante, nossa equipe de contratos cuidará de tudo e em breve entrarão em contato para os procedimentos de contratação.      
+      <br>
+      Você poderá acessar as condições negociadas sempre que preciso, para isto basta clicar no link abaixo:
+      <br>
+      <br>
+      Para acessar a ${
+        proposal.type === ProposalType.Aluguel
+          ? 'de locação'
+          : 'venda do imóvel'
+      }, <a href=${apiServer.prod}/proposal-view/${
+        proposal._id
+      }> click aqui, Número da proposta: ${proposal.seq} </a>
+      <br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      Imóvel: <bold>${proposal.immobile.publicPlace}, ${
+        proposal.immobile.number
+      } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
+        proposal.immobile.cep
+      }</bold>
+      <br><br>
+      Agradecemos a confiança e desejamos sucesso em sua nova locação.
+      <br><br>
+      Em caso de dúvidas, é só entrar em contato.
+      <br>
+      Atenciosamente.
+      <br><br>
+      ${userProposal.name}<br>
+      CRECI Corretor: ${userProposal.creci}<br><br>
+      Telefone: ${userProposal.cellphone}<br>
+      E-mail: ${userProposal.email}<br><br>
+      ${organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''}<br>
+      ${
+        organizationDB?.name ? `CRECI Imobiliária: ${organizationDB.creci}` : ''
+      }<br>
+
+      powered by Vivalisto Proptech
+      `,
+    });
+
+    sendMailUtil({
+      to: userProposal.email,
+      subject: `Parabéns pela ${
+        proposal.type === ProposalType.Aluguel ? 'locação' : 'venda'
+      } do imóvel ${proposal.immobile.publicPlace}, ${
+        proposal.immobile.number
+      } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
+        proposal.immobile.cep
+      }`,
+      message: `
+      
+      ${userProposal.name}, bom trabalho!
+      <br><br>
+      Que bom que tenha conseguido chegar em bons termos entre inquilinos e locadores! Agora, para concluir o processo de locação, você precisa entrar no sistema e, em MINHAS NEGOCIAÇÕES, selecionar a proposta fechada e clicar em ENVIAR PARA CONTRATAÇÃO, para que a sua EQUIPE DE CONTRATOS VIVALISTO de andamento no processo de formalização de forma otimizada e 100% digital, dessa forma, você ficará livre para dar sequência no atendimento de novos clientes e fazer mais negócios.
+      <br>
+      <br>
+      Não deixe seus clientes esperando, se ainda não ENVIOU PARA CONTRATAÇÃO, acesse o sistema e a proposta fechada clicando aqui:
+      <br>
+      <a href=${apiServer.prod}> Acesso ao sistema </a>
+      <br>
+      O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
+      <br>
+      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+        proposal._id
+      }> click aqui, Número da proposta: ${proposal.seq} </a>
+      <br>
+      <br>
+      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${
+        proposal.immobile.city
+      } - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
+      Proponente: ${proponent.name}
+      <br>
+      ${proposal.type === ProposalType.Aluguel ? 'Locador' : 'Vendedor'}: ${
+        locator.name
+      }
+      <br><br>
+      Bons negócios e sucesso em sua negociação!
+      Atenciosamente.
+      <br>
+      <br>
+      Equipe de Suporte<br><br>
+
+      powered by Vivalisto Proptech    
+      
+      `,
+    });
+
+    if (followers?.length) {
+      followers.forEach(function (follower: any) {
+        sendMailUtil({
+          to: follower,
+          subject: 'Acampanhar proposta',
+          message: `
+      
+          ${proponent.name}, parabéns!
+          <br><br>
+          Estamos felizes pelo sucesso da negociação!
+          <br>
+          <br>
+          Daqui em diante, nossa equipe de contratos cuidará de tudo e em breve entrarão em contato para os procedimentos de contratação.      
+          <br>
+          Você poderá acessar as condições negociadas sempre que preciso, para isto basta clicar no link abaixo:
+          <br>
+          <br>
+          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+            proposal._id
+          }> click aqui, Número da proposta: ${proposal.seq} </a>
+          <br>
+          Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+          <br>
+          Imóvel: <bold>${proposal.immobile.publicPlace}, ${
+            proposal.immobile.number
+          } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
+            proposal.immobile.cep
+          }</bold>
+          <br><br>
+          Agradecemos a confiança e desejamos sucesso em sua nova ${
+            proposal.type === ProposalType.Aluguel ? 'locação' : 'venda'
+          }.
+          <br><br>
+          Em caso de dúvidas, é só entrar em contato.
+          <br>
+          Atenciosamente.
+          <br><br>
+          ${userProposal.name}<br>
+          CRECI Corretor: ${userProposal.creci}<br><br>
+          Telefone: ${userProposal.cellphone}<br>
+          E-mail: ${userProposal.email}<br><br>
+          ${
+            organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''
+          }<br>
+          ${
+            organizationDB?.name
+              ? `CRECI Imobiliária: ${organizationDB.creci}`
+              : ''
+          }<br>
+    
+          powered by Vivalisto Proptech
+          `,
+        });
+      });
+    }
+  }
+
+  async sendMailSendHire(proposal: any, userProposal: any) {
     const { locator, proponent, followers } = proposal;
     const organizationDB: any = await organizationService.getById(
       proposal.organization
