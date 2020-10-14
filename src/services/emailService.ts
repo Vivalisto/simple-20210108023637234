@@ -10,6 +10,7 @@ class Mail {
   constructor(
     public from: string = 'noreply@vivalisto.com.br',
     public to?: string,
+    public cc?: Array<string>,
     public subject?: string,
     public message?: string
   ) {}
@@ -18,6 +19,7 @@ class Mail {
     let mailOptions: MailOptions = {
       from: 'noreply@vivalisto.com.br',
       to: this.to,
+      cc: this.cc,
       subject: this.subject,
       html: this.message,
     };

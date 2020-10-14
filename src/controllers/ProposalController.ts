@@ -81,7 +81,7 @@ class ProposalController {
     const { action } = req.body;
 
     try {
-      const proposal = await proposalService.updateStage(id, action);
+      const proposal = await proposalService.updateStage(id, action, userId);
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
       Helper.sendResponse(res, HttpStatus.BAD_REQUEST, error);

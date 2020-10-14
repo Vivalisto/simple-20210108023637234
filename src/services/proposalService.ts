@@ -119,10 +119,11 @@ class ProposalService {
     return await this.update(_id, proposalUpdate);
   }
 
-  async updateStage(proposalId: string, action: String) {
+  async updateStage(proposalId: string, action: String, userId: string) {
     let stageUpdate: Number;
 
     let proposal: any = await this.getById(proposalId);
+    let userDB: any = await userService.getById(userId);
 
     if (action === 'next') {
       stageUpdate = proposal.stage + 1;
@@ -143,6 +144,8 @@ class ProposalService {
     if (proposal.stage === ProposalStage.Finalizada) {
       throw new AppError('Proposta já concluída. Não existe mais passos!');
     }
+
+    this.SendMailByStage(stageUpdate, proposal, userDB);
 
     return await this.update(proposalId, { stage: stageUpdate });
   }
@@ -376,6 +379,32 @@ class ProposalService {
     }
   }
 
+  SendMailByStage(stageUpdate: number, proposal: any, userDB: any) {
+    switch (stageUpdate) {
+      case ProposalStage.Contrato:
+        proposal.type === ProposalType.Aluguel
+          ? this.sendMailDocToContract(proposal, userDB)
+          : this.sendMailDocToDueDiligence(proposal, userDB);
+      case ProposalStage.Vistoria:
+        proposal.type === ProposalType.Aluguel
+          ? this.sendMailContractToInspection(proposal, userDB)
+          : this.sendMailDueDiligenceToContract(proposal, userDB);
+      case ProposalStage.EntregaChaves:
+        proposal.type === ProposalType.Aluguel
+          ? this.sendMailInspectionToKeyDelivery(proposal, userDB)
+          : this.sendMailContractToKeysProperties(proposal, userDB);
+        break;
+      case ProposalStage.Conclusao:
+        proposal.type === ProposalType.Aluguel
+          ? this.sendMailKeyDeliveryConclusion(proposal, userDB)
+          : this.sendMailKeysPropertiesConclusion(proposal, userDB);
+        break;
+
+      default:
+        break;
+    }
+  }
+
   async sendMailCreateProposalRent(proposal: any, userProposal: any) {
     const { locator, proponent, followers } = proposal;
     const organizationDB: any = await organizationService.getById(
@@ -469,7 +498,7 @@ class ProposalService {
       ${organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''}<br>
       ${
         organizationDB?.name ? `CRECI Imobiliária: ${organizationDB.creci}` : ''
-      }<br>
+      }<br><br>
 
       powered by Vivalisto Proptech
       `,
@@ -1204,6 +1233,627 @@ class ProposalService {
         });
       });
     }
+  }
+  //ALUGUEL
+  async sendMailDocToContract(proposal: any, userProposal: any) {
+    const { locator, proponent, followers } = proposal;
+    followers.push(userProposal.email);
+    const organizationDB: any = await organizationService.getById(
+      proposal.organization
+    );
+
+    sendMailUtil({
+      to: locator.email,
+      subject: `Nova Etapa: Contrato - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      cc: followers,
+      message: `
+      Olá, ${locator.name}!
+      <br><br>
+      Inquilino(s) aprovado(s), vamos em frente! Em breve você receberá um e-mail para a assinatura de seu contrato de locação. Uma vez assinado, realizaremos a vistoria e na sequência a entrega das chaves.
+      <br><br>
+      Para verificar o status da contratação ${
+        proposal.type === ProposalType.Aluguel
+          ? 'de locação'
+          : 'de venda do imóvel'
+      }, <a href=${apiServer.prod}/proposal-view/${
+        proposal._id
+      }> click aqui </a>
+      <br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+      Agradecemos a confiança e desejamos sucesso em sua nova locação.
+      <br>
+      Atenciosamente.
+      <br><br>
+      Equipe de Contratos
+      <br>
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+
+    sendMailUtil({
+      to: proponent.email,
+      cc: followers,
+      subject: `Nova Etapa: Contrato - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      message: `
+      Olá, ${proponent.name}!
+      <br><br>
+      Concluímos o levantamento da documentação e realizamos as análises. Tudo correu bem, a locação foi aprovada pelo(s) locador(es) e em breve você receberá um e-mail para a assinatura de seu contrato de locação. Uma vez assinado, realizaremos a vistoria e na sequência a entrega das chaves.
+      <br><br>
+      Para verificar o status da contratação ${
+        proposal.type === ProposalType.Aluguel
+          ? 'de locação'
+          : 'de venda do imóvel'
+      }, <a href=${apiServer.prod}/proposal-view/${
+        proposal._id
+      }> click aqui </a>
+      <br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+      Agradecemos a confiança e desejamos sucesso em sua nova locação.
+      <br>
+      Atenciosamente.
+      <br><br>
+      Equipe de Contratos
+      <br>
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+  }
+  async sendMailContractToInspection(proposal: any, userProposal: any) {
+    const { locator, proponent, followers } = proposal;
+    followers.push(userProposal.email);
+    const organizationDB: any = await organizationService.getById(
+      proposal.organization
+    );
+
+    sendMailUtil({
+      to: locator.email,
+      subject: `Nova Etapa: Contrato - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      cc: followers,
+      message: `
+      Olá, ${locator.name}!
+      <br><br>
+      Parabéns pela contratação de sua nova locação!
+      <br><br>
+      Seremos ágeis agora na conclusão da vistoria, para isso, precisamos de sua ajuda. Para o agendamento da data da vistoria e instruções para acesso ao imóvel, pedimos favor acessar o link abaixo e responder as perguntas para que possamos dar andamento.
+      <br><br>
+      Para agendamento da vistoria, <a href='https://share.hsforms.com/1Q7grdolmThioZ-20k-4bzQ49vzc'> click aqui </a>
+      <br><br>
+      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      <br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+      Assim que o laudo for concluído, enviaremos em seu e-mail para a conferência. Havendo qualquer divergência, você poderá fazer o apontamento, o qual, uma vez validado, será incluído no laudo realizado.
+      <br>
+      <br>
+      Agradecemos a confiança e desejamos sucesso em sua nova locação.
+      <br>
+      Atenciosamente.
+      <br><br>
+      Equipe de Contratos
+      <br>
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+
+    sendMailUtil({
+      to: proponent.email,
+      cc: followers,
+      subject: `Nova Etapa: Contrato - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      message: `
+      Olá, ${proponent.name}!
+      <br><br>
+      Parabéns pela contratação de sua nova locação!
+      <br><br>
+      Seremos ágeis agora na conclusão da vistoria e assim que o laudo for concluído o laudo, enviaremos em seu e-mail para a conferência. Havendo qualquer divergência, você poderá fazer o apontamento, o qual, uma vez validado, será incluído no laudo realizado.      
+      <br><br>
+      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      <br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+      Estamos quase lá, após esta etapa será feita a entrega das chaves.
+      <br>
+      Em caso de dúvidas, é só entrar em contato.
+      <br>
+      Atenciosamente.
+      <br><br>
+      Equipe de Contratos
+      <br>
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+  }
+
+  async sendMailInspectionToKeyDelivery(proposal: any, userProposal: any) {
+    const { locator, proponent, followers } = proposal;
+    followers.push(userProposal.email);
+    const organizationDB: any = await organizationService.getById(
+      proposal.organization
+    );
+
+    sendMailUtil({
+      to: locator.email,
+      subject: `Nova Etapa: Entrega de Chaves - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      cc: followers,
+      message: `
+      Olá, ${locator.name}!
+      <br><br>
+      Vistoria concluída, agora é só formalizar a entrega de chaves!
+      <br><br>
+      Para que esta Etapa rapidamente, pedimos que acesse o link abaixo para o alinhamento da entrega.
+      <br><br>
+      Para alinhamento da entrega de chaves, <a href='https://share.hsforms.com/1aUYfbox-TDmQiRPlLG_Hqg49vzc'> click aqui </a>
+      <br><br>
+      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      <br>
+      Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+      Estamos à disposição para qualquer esclarecimento, bem como, caso ainda não tenha recebido o seu laudo de vistoria, favor nos avisar, respondendo a este e-mail.
+      <br>
+      Atenciosamente.
+      <br><br>
+      Equipe de Contratos
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+
+    sendMailUtil({
+      to: proponent.email,
+      cc: followers,
+      subject: `Nova Etapa: Entrega de Chaves - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      message: `
+      Olá, ${proponent.name}!
+      <br><br>
+      Vistoria concluída, agora é pegar as chaves!
+      <br>
+      Além deste e-mail, logo mais, você receberá um contato de nossa equipe ou do administrador da locação para que combinem o recebimento das chaves.
+      <br><br>
+      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      <br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+      Estamos à disposição para qualquer esclarecimento, bem como, caso ainda não tenha recebido o seu laudo de vistoria, favor nos avisar, respondendo a este e-mail.
+      <br>
+      Atenciosamente.
+      <br><br>
+      Equipe de Contratos
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+  }
+  async sendMailKeyDeliveryConclusion(proposal: any, userProposal: any) {
+    const { locator, proponent, followers } = proposal;
+    followers.push(userProposal.email);
+    const organizationDB: any = await organizationService.getById(
+      proposal.organization
+    );
+
+    sendMailUtil({
+      to: locator.email,
+      subject: `Nova Etapa: Conclusão - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      cc: followers,
+      message: `
+      Olá, ${locator.name}!
+      <br><br>
+      Chegamos ao fim de nossa jornada! Esperamos que sua experiência tenha sido realizadora e desejamos sucesso com a nova locação.
+      <br><br>
+      É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
+      <br><br>
+      Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação e que serão importantes na administração da locação, bem como, ao término dela, entre outras situações que possam demandar estes documentos, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.
+      <br><br>
+      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
+        proposal._id
+      }> click aqui </a>
+      <br>
+      Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+      Agradecemos a confiança e nos colocamos à disposição para auxiliar você em negócios futuros.
+      <br>
+      Atenciosamente.
+      <br><br>
+      ${userProposal.name}<br>
+      CRECI Corretor: ${userProposal.creci}<br><br>
+      Telefone: ${userProposal.cellphone}<br>
+      E-mail: ${userProposal.email}<br><br>
+      ${organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''}<br>
+      ${
+        organizationDB?.name ? `CRECI Imobiliária: ${organizationDB.creci}` : ''
+      }
+      <br><br>
+      Equipe de Contratos
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+
+    sendMailUtil({
+      to: proponent.email,
+      cc: followers,
+      subject: `Nova Etapa: Conclusão - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      message: `
+      Olá, ${proponent.name}!
+      <br><br>
+      Chegamos ao fim de nossa jornada! Esperamos que sua experiência tenha sido realizadora na locação de seu novo imóvel, que tenha muito sucesso e felicidades durante todo o período da locação.
+      <br>
+      É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
+      <br><br>
+      Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação e que serão importantes durante a locação, bem como, ao término dela, entre outras situações que possam demandar estes documentos, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.      
+      <br><br>
+      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
+        proposal._id
+      }> click aqui </a>
+      <br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+      Agradecemos a confiança e nos colocamos à disposição para auxiliar você em negócios futuros.
+      <br>
+      Atenciosamente.
+      <br><br>
+      ${userProposal.name}<br>
+      CRECI Corretor: ${userProposal.creci}<br><br>
+      Telefone: ${userProposal.cellphone}<br>
+      E-mail: ${userProposal.email}<br><br>
+      ${organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''}<br>
+      ${
+        organizationDB?.name ? `CRECI Imobiliária: ${organizationDB.creci}` : ''
+      }
+      <br><br>
+      Equipe de Contratos
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+  }
+
+  //COMPRA E VENDA
+  async sendMailDocToDueDiligence(proposal: any, userProposal: any) {
+    const { locator, proponent, followers } = proposal;
+    followers.push(userProposal.email);
+    const organizationDB: any = await organizationService.getById(
+      proposal.organization
+    );
+
+    sendMailUtil({
+      to: locator.email,
+      subject: `Nova Etapa: Due Diligence - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      cc: followers,
+      message: `
+      Olá, ${locator.name}!
+      <br><br>
+      Concluímos o levantamento da documentação, certidões e pesquisas para aportar segurança ao processo de venda de seu imóvel. Neste momento, nosso corpo jurídico está analisando toda a documentação, fazendo a “Due Diligence”, a diligência, como gostamos de chamar.
+      <br><br>
+      Vencida essa etapa, em média no prazo de até 48h úteis, entraremos em contato com o resultado da Due Diligence para a sua apreciação. Na sequência, será realizado o Contrato de Compra e Venda, para então seguirmos para a Etapa de Cartórios, onde cuidaremos da Escritura e do Registro do Imóvel.      
+      <br><br>
+      Para sua comodidade e segurança, cuidaremos de tudo!
+      <br><br>
+      Somos especialistas em direito imobiliário e nas etapas que compõem toda a transação, do início ao fim de sua contratação, atuando de forma isenta entre as partes, pois essa é uma grande preocupação de seu corretor, ${userProposal?.name}, pensando em sua experiência como cliente e em sua satisfação.      
+      <br><br>
+      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      <br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+      Agradecemos a confiança e desejamos sucesso em sua nova locação.
+      <br>
+      Atenciosamente.
+      <br><br>
+      Equipe de Contratos
+      <br>
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+
+    sendMailUtil({
+      to: proponent.email,
+      cc: followers,
+      subject: `Nova Etapa: Due Diligence - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      message: `
+      Olá, ${proponent.name}!
+      <br><br>
+      Concluímos o levantamento da documentação, certidões e pesquisas para aportar segurança ao processo de compra de seu imóvel. Neste momento, nosso corpo jurídico está analisando toda a documentação, fazendo a “Due Diligence”, a diligência, como gostamos de chamar, na qual será verificada a procedência do imóvel, se ele está livre e desembaraçado para a venda, bem como, se o(s) vendedor(es) tem algum restritivo financeiro, fiscal ou judicial que possa colocar em risco a transação.
+      <br><br>
+      Vencida essa etapa, em média no prazo de até 48h úteis, entraremos em contato com o resultado da Due Diligence para a sua apreciação. Na sequência, será realizado o Contrato de Compra e Venda, para então seguirmos para a Etapa de Cartórios, onde cuidaremos da Escritura e do Registro do Imóvel.
+      <br><br>
+      Para sua comodidade e segurança, cuidaremos de tudo!      
+      <br><br>
+      Somos especialistas em direito imobiliário e nas etapas que compõem toda a transação, do início ao fim de sua contratação, atuando de forma isenta entre as partes, pois essa é uma grande preocupação de seu corretor, ${userProposal?.name}, pensando em sua experiência como cliente e em sua satisfação.
+      <br><br>
+
+      Para verificar o status da contratação, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      <br>
+      Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+      Agradecemos a confiança e desejamos sucesso em sua nova locação.
+      <br>
+      Atenciosamente.
+      <br><br>
+      Equipe de Contratos
+      <br>
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+  }
+
+  async sendMailDueDiligenceToContract(proposal: any, userProposal: any) {
+    const { locator, proponent, followers } = proposal;
+    followers.push(userProposal.email);
+    const organizationDB: any = await organizationService.getById(
+      proposal.organization
+    );
+
+    sendMailUtil({
+      to: locator.email,
+      subject: `Nova Etapa: Contrato - ${proposal.seq}, Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      cc: followers,
+      message: `
+      Olá, ${locator.name}!
+      <br><br>
+      Tudo certo, vamos em frente com o Contrato de Compra e Venda! Em breve, nossa equipe enviará a minuta e coordenará todo o processo de assinatura.
+      <br><br>
+      Conforme explicado anteriormente, temos um corpo jurídico próprio, especialista e focado em direito imobiliário, isento entre as partes, o que aporta segurança, agilidade e economia em todo o processo, tornando-se desnecessário o envolvimento de advogados e terceiros nesta etapa, pois seu agente imobiliário confiou à VIVALISTO essa responsabilidade preocupado em aportar especialização e segurança jurídica e operacional na transação de venda de seu imóvel. Caso ainda queira e tenha contratado um advogado para representá-lo nesta etapa, sempre problemas, estamos abertos para tirar todas as dúvidas e prestar os esclarecimentos necessários para o bom andamento da fase contratual.
+      <br><br>
+      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      <br>
+      <br>
+      Ainda para sua comodidade e segurança, prezamos pela assinatura online, eliminando a necessidade de cartórios e papel, o também que economiza tempo e dinheiro para todos os envolvidos. Fique tranquilo que você receberá todas as instruções para o procedimento, que é simples, rápido e seguro.
+      <br>
+      <br>
+      Agradecemos a confiança e desejamos sucesso em sua nova locação.
+      <br>
+      Atenciosamente.
+      <br><br>
+      Equipe de Contratos
+      <br>
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+
+    sendMailUtil({
+      to: proponent.email,
+      cc: followers,
+      subject: `Nova Etapa: Due Diligence - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      message: `
+      Olá, ${proponent.name}!
+      <br><br>
+      Concluímos o levantamento da documentação, certidões e pesquisas para aportar segurança ao processo de compra de seu imóvel. Neste momento, nosso corpo jurídico está analisando toda a documentação, fazendo a “Due Diligence”, a diligência, como gostamos de chamar, na qual será verificada a procedência do imóvel, se ele está livre e desembaraçado para a venda, bem como, se o(s) vendedor(es) tem algum restritivo financeiro, fiscal ou judicial que possa colocar em risco a transação.
+      <br><br>
+      Vencida essa etapa, em média no prazo de até 48h úteis, entraremos em contato com o resultado da Due Diligence para a sua apreciação. Na sequência, será realizado o Contrato de Compra e Venda, para então seguirmos para a Etapa de Cartórios, onde cuidaremos da Escritura e do Registro do Imóvel.
+      <br><br>
+      Para sua comodidade e segurança, cuidaremos de tudo!      
+      <br><br>
+      Somos especialistas em direito imobiliário e nas etapas que compõem toda a transação, do início ao fim de sua contratação, atuando de forma isenta entre as partes, pois essa é uma grande preocupação de seu corretor, ${userProposal?.name}, pensando em sua experiência como cliente e em sua satisfação.
+      <br><br>
+
+      Para verificar o status da contratação, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      <br>
+      Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+      Agradecemos a confiança e desejamos sucesso em sua nova locação.
+      <br>
+      Atenciosamente.
+      <br><br>
+      Equipe de Contratos
+      <br>
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+  }
+  async sendMailContractToKeysProperties(proposal: any, userProposal: any) {
+    const { locator, proponent, followers } = proposal;
+    followers.push(userProposal.email);
+    const organizationDB: any = await organizationService.getById(
+      proposal.organization
+    );
+
+    sendMailUtil({
+      to: locator.email,
+      subject: `Nova Etapa: Chaves e Propriedade - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      cc: followers,
+      message: `
+      Olá, ${locator.name}!
+      <br><br>
+      Tudo certo, vamos em frente com o Contrato de Compra e Venda! Em breve, nossa equipe enviará a minuta e coordenará todo o processo de assinatura.
+      <br><br>
+      Conforme explicado anteriormente, temos um corpo jurídico próprio, especialista e focado em direito imobiliário, isento entre as partes, o que aporta segurança, agilidade e economia em todo o processo, tornando-se desnecessário o envolvimento de advogados e terceiros nesta etapa, pois seu agente imobiliário confiou à VIVALISTO essa responsabilidade preocupado em aportar especialização e segurança jurídica e operacional na transação de venda de seu imóvel. Caso ainda queira e tenha contratado um advogado para representá-lo nesta etapa, sempre problemas, estamos abertos para tirar todas as dúvidas e prestar os esclarecimentos necessários para o bom andamento da fase contratual.
+      <br><br>
+      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      <br>
+      <br>
+      Ainda para sua comodidade e segurança, prezamos pela assinatura online, eliminando a necessidade de cartórios e papel, o também que economiza tempo e dinheiro para todos os envolvidos. Fique tranquilo que você receberá todas as instruções para o procedimento, que é simples, rápido e seguro.
+      <br>
+      <br>
+      Agradecemos a confiança e desejamos sucesso em sua nova locação.
+      <br>
+      Atenciosamente.
+      <br><br>
+      Equipe de Contratos
+      <br>
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+
+    sendMailUtil({
+      to: proponent.email,
+      cc: followers,
+      subject: `Nova Etapa: Chaves e Propriedade - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      message: `
+      ${proponent.name}, parabéns pela compra de seu novo imóvel!
+      <br><br>
+      Contrato assinado, agora é hora de cuidarmos da fase de Cartórios, aqui também temos um grande diferencial para você, pois coordenaremos todo o processo, o qual tem detalhes específicos dependendo do tipo de negociação, se for com crédito imobiliário, parcelamento direto, à vista, se há crédito imobiliário a ser liquidado, enfim, não se preocupe que estaremos aqui para conduzir os trâmites e orientá-lo nessa jornada.
+      <br><br>
+      Somos pioneiros também em Escrituração Online, o que elimina a necessidade da sessão em cartório, bem como, cuidamos de tudo para que o processo ocorra através dos meios digitais e com toda a segurança a eles aportada.
+      <br><br>
+      Como citado, esta etapa possuí diferentes detalhes para cada tipo de transação, dessa forma, você receberá os direcionamentos de seu Gestor de Contratos Vivalisto em breve, para a sequência da transferência da propriedade.
+      <br><br>
+      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      <br>
+      Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+      Estamos quase lá! Em caso de dúvidas, é só entrar em contato.
+      <br>
+      Atenciosamente.
+      <br><br>
+      Equipe de Contratos
+      <br>
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+  }
+
+  async sendMailKeysPropertiesConclusion(proposal: any, userProposal: any) {
+    const { locator, proponent, followers } = proposal;
+    followers.push(userProposal.email);
+    const organizationDB: any = await organizationService.getById(
+      proposal.organization
+    );
+
+    sendMailUtil({
+      to: locator.email,
+      subject: `Nova Etapa: Chaves e Propriedade - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      cc: followers,
+      message: `
+      Olá, ${locator.name}!
+      <br><br>
+      Chegamos ao fim de nossa jornada! Esperamos que sua experiência tenha sido realizadora e desejamos sucesso em seus novos negócios.
+      <br><br>
+      É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
+      <br><br>
+      Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.      
+      <br><br>
+      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
+        proposal._id
+      }> click aqui </a>
+      <br>
+      <br>
+      Agradecemos a confiança e nos colocamos à disposição para auxiliar você em negócios futuros.
+      <br>
+      Atenciosamente.
+      <br><br>
+      ${userProposal.name}<br>
+      CRECI Corretor: ${userProposal.creci}<br><br>
+      Telefone: ${userProposal.cellphone}<br>
+      E-mail: ${userProposal.email}<br><br>
+      ${organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''}<br>
+      ${
+        organizationDB?.name ? `CRECI Imobiliária: ${organizationDB.creci}` : ''
+      }
+      <br><br>
+      Equipe de Contratos
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
+
+    sendMailUtil({
+      to: proponent.email,
+      cc: followers,
+      subject: `Nova Etapa: Conclusão - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      message: `
+      Olá, ${proponent.name}.
+      <br><br>
+      Chegamos ao fim de nossa jornada! Esperamos que sua experiência tenha sido realizadora na compra de seu novo imóvel, que com ele venha muito sucesso e felicidades.
+      <br><br>
+      É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
+      <br><br>
+      Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.
+      <br><br>
+      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
+        proposal._id
+      }> click aqui </a>
+      <br>
+      Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+      Agradecemos a confiança e nos colocamos à disposição para auxiliar você em negócios futuros.
+      <br>
+      Atenciosamente.
+      <br><br>
+      ${userProposal.name}<br>
+      CRECI Corretor: ${userProposal.creci}<br><br>
+      Telefone: ${userProposal.cellphone}<br>
+      E-mail: ${userProposal.email}<br><br>
+      ${organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''}<br>
+      ${
+        organizationDB?.name ? `CRECI Imobiliária: ${organizationDB.creci}` : ''
+      }
+      <br><br>
+      Equipe de Contratos
+      <br>
+      E-mail: contratos@vivalisto.com.br
+      <br>
+      <br>
+      powered by Vivalisto Proptech
+      `,
+    });
   }
 }
 
