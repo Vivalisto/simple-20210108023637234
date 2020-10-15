@@ -379,7 +379,7 @@ class ProposalService {
     }
   }
 
-  SendMailByStage(stageUpdate: number, proposal: any, userDB: any) {
+  SendMailByStage(stageUpdate: Number, proposal: any, userDB: any) {
     switch (stageUpdate) {
       case ProposalStage.Contrato:
         proposal.type === ProposalType.Aluguel
