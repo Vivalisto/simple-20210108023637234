@@ -412,6 +412,7 @@ class ProposalService {
     );
 
     sendMailUtil({
+      from: userProposal.email,
       to: locator.email,
       subject: `Olá, temos uma proposta de ${
         proposal.type === ProposalType.Aluguel ? 'locação' : 'compra e venda'
@@ -457,6 +458,7 @@ class ProposalService {
     });
 
     sendMailUtil({
+      from: userProposal.email,
       to: proponent.email,
       subject: 'Proposta enviada com sucesso!',
       message: `
@@ -505,6 +507,7 @@ class ProposalService {
     });
 
     sendMailUtil({
+      from: 'atendimento@vivalisto.com.br',
       to: userProposal.email,
       subject: 'Proposta enviada com sucesso!',
       message: `
@@ -544,6 +547,7 @@ class ProposalService {
     if (followers?.length) {
       followers.forEach(function (follower: any) {
         sendMailUtil({
+          from: userProposal.email,
           to: follower,
           subject: 'Acampanhar proposta',
           message: `
