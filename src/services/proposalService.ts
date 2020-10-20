@@ -1391,8 +1391,8 @@ class ProposalService {
       to: userProposal.email,
       subject: `${proposal.seq}, ${
         proposal.type === ProposalType.Aluguel
-          ? 'Venda'
-          : 'Locação'
+          ? 'Locação'
+          : 'Venda'
       }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
       message: `
       Olá, ${userProposal.name}!
@@ -1413,9 +1413,26 @@ class ProposalService {
       <br>
       Responsabilidade de envio de documentos e informações complementares:
       <br>
-      -
+      - ${
+        proposal.type === ProposalType.Aluguel
+          ? 'Inquilinos'
+          : 'Compradores'
+      }
       <br> 
-      -
+      - ${
+        proposal.type === ProposalType.Aluguel
+          ? 'Locadores'
+          : 'Vendedores'
+      }
+      <br>
+      ${
+        proposal.type === ProposalType.Aluguel
+          ? 'Administração da Locação: "imobiliari/ locador/ terceiro" <br>'
+          : '<br>'
+      }
+      
+      <br>
+      Outras Informações Importantes para a Contratação: "comentario modal"
       <br><br>
       Assim como você, os clientes já foram acionados para o andamento da contratação, caso sejam eles os responsáveis pelo envio das informações complementares e da documentação.
       <br>
@@ -1430,167 +1447,167 @@ class ProposalService {
       `,
     });
 
-    sendMailUtil({
-      from: 'contratos@vivalisto.com.br',
-      to: userProposal.email,
-      subject: `${proposal.seq}, ${
-        proposal.type === ProposalType.Aluguel
-          ? 'Venda'
-          : 'Locação'
-      }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
-      message: `
+    // sendMailUtil({
+    //   from: 'contratos@vivalisto.com.br',
+    //   to: userProposal.email,
+    //   subject: `${proposal.seq}, ${
+    //     proposal.type === ProposalType.Aluguel
+    //       ? 'Venda'
+    //       : 'Locação'
+    //   }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+    //   message: `
       
-      Olá, ${userProposal.name}!
-      <br><br>
-      Mais um negócio fechado!
-      <br><br>
-      A Equipe de Contratos Vivalisto cuidará de todo o processo de contratação e contará com o seu apoio para responder pela imobiliária quanto às questões de sua responsabilidade, como recebimentos de comissões entre outras, as quais serão solicitadas no decorrer das etapas.
-      <br><br>
-      Abaixo, seguem as informações consolidadas da negociação, cujo processo de contratação poderá ser acessado a qualquer momento na Plataforma Vivalisto, em MINHAS CONTRATAÇÕES.
-      <br><br>
-      Para acessar a proposta ${
-        proposal.type === ProposalType.Aluguel
-          ? 'de locação'
-          : 'venda do imóvel'
-      }, <a href=${apiServer.prod}/proposal-view/${
-        proposal._id
-      }> click aqui, proposta: ${proposal.seq} </a>
-      <br>
-      Responsabilidade de envio de documentos e informações complementares:
-      <br>
-      -
-      <br> 
-      -
-      <br><br>
-      Assim como você, os clientes já foram acionados para o andamento da contratação, caso sejam eles os responsáveis pelo envio das informações complementares e da documentação.
-      <br>
-      Enviaremos em breve os próximos passos, mas caso precise de algo é só falar com o seu Gestor de Contratos Vivalisto.
-      <br>
-      <br>
-      Atenciosamente.
-      <br><br>
-      Equipe de contratos
-      <br>
-      powered by Vivalisto Proptech
-      `,
-    });
+    //   Olá, ${userProposal.name}!
+    //   <br><br>
+    //   Mais um negócio fechado!
+    //   <br><br>
+    //   A Equipe de Contratos Vivalisto cuidará de todo o processo de contratação e contará com o seu apoio para responder pela imobiliária quanto às questões de sua responsabilidade, como recebimentos de comissões entre outras, as quais serão solicitadas no decorrer das etapas.
+    //   <br><br>
+    //   Abaixo, seguem as informações consolidadas da negociação, cujo processo de contratação poderá ser acessado a qualquer momento na Plataforma Vivalisto, em MINHAS CONTRATAÇÕES.
+    //   <br><br>
+    //   Para acessar a proposta ${
+    //     proposal.type === ProposalType.Aluguel
+    //       ? 'de locação'
+    //       : 'venda do imóvel'
+    //   }, <a href=${apiServer.prod}/proposal-view/${
+    //     proposal._id
+    //   }> click aqui, proposta: ${proposal.seq} </a>
+    //   <br>
+    //   Responsabilidade de envio de documentos e informações complementares:
+    //   <br>
+    //   -
+    //   <br> 
+    //   -
+    //   <br><br>
+    //   Assim como você, os clientes já foram acionados para o andamento da contratação, caso sejam eles os responsáveis pelo envio das informações complementares e da documentação.
+    //   <br>
+    //   Enviaremos em breve os próximos passos, mas caso precise de algo é só falar com o seu Gestor de Contratos Vivalisto.
+    //   <br>
+    //   <br>
+    //   Atenciosamente.
+    //   <br><br>
+    //   Equipe de contratos
+    //   <br>
+    //   powered by Vivalisto Proptech
+    //   `,
+    // });
 
-    sendMailUtil({
-      from: 'contratos@vivalisto.com.br',
-      to: 'contratos@vivalisto.com.br',
-      subject: `${proposal.seq}, ${
-        proposal.type === ProposalType.Aluguel
-          ? 'Venda'
-          : 'Locação'
-      }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
-      message: `
+    // sendMailUtil({
+    //   from: 'contratos@vivalisto.com.br',
+    //   to: 'contratos@vivalisto.com.br',
+    //   subject: `${proposal.seq}, ${
+    //     proposal.type === ProposalType.Aluguel
+    //       ? 'Venda'
+    //       : 'Locação'
+    //   }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+    //   message: `
       
-      Mais um negócio fechado!
-      <br><br>
-      Responsabilidade de envio de documentos e informações complementares:
-      <br><br>
-      Bons negócios e sucesso em sua negociação!
-      Atenciosamente.
-      <br>
-      <br>
-      Equipe de Suporte<br><br>
+    //   Mais um negócio fechado!
+    //   <br><br>
+    //   Responsabilidade de envio de documentos e informações complementares:
+    //   <br><br>
+    //   Bons negócios e sucesso em sua negociação!
+    //   Atenciosamente.
+    //   <br>
+    //   <br>
+    //   Equipe de Suporte<br><br>
 
-      powered by Vivalisto Proptech    
+    //   powered by Vivalisto Proptech    
       
-      `,
-    });
+    //   `,
+    // });
 
-    sendMailUtil({
-      from: 'contratos@vivalisto.com.br',
-      to: locator.email,
-      subject: `${proposal.seq}, ${
-        proposal.type === ProposalType.Aluguel
-          ? 'Venda'
-          : 'Locação'
-      }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
-      message: `
+    // sendMailUtil({
+    //   from: 'contratos@vivalisto.com.br',
+    //   to: locator.email,
+    //   subject: `${proposal.seq}, ${
+    //     proposal.type === ProposalType.Aluguel
+    //       ? 'Venda'
+    //       : 'Locação'
+    //   }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+    //   message: `
       
-      Olá, ${locator?.name}
-      <br><br>
-      Vamos dar início ao processo de contratação do imóvel ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}, Ordem de Serviço ${proposal.seq}.
-      <br><br>
-      A Vivalisto é especialista em contratos e processos. Com corpo jurídico próprio e isento em relação às partes da transação, aportamos segurança jurídica, agilidade e especialização em todas as etapas pós- negociação. Essa é uma grande preocupação de seu corretor, ${userProposal.name}, pensando      em sua experiência como cliente e em sua satisfação.
-      <br>
-      <br>
-      Agora, precisamos de informações complementares à sua negociação para que o processo caminhe de forma leve e com a devida segurança jurídica e operacional. É bem simples e prático! Quanto mais rápido responder, mais rápido receberá o e-mail com instruções para o envio de sua documentação de forma 100% digital. Após a análise da documentação e do(s) proponente(s), seguiremos para a assinatura on- line do contrato, vistoria do imóvel e entrega das chaves.
-      <br>
-      <br>
-      Para envio das informações, <a href='https://share.hsforms.com/1Xfp-eeMASHaXdbX0PlKLLA49vzc'> click aqui </a>
-      <br>
-      <br>
-      Em caso de dúvida, é só entrar em contato pelo e-mail contratos@vivalisto.com.br.
-      <br>
-      <br>
-      Atenciosamente.
-      <br>
-      Equipe de Suporte
-      <br><br>
+    //   Olá, ${locator?.name}
+    //   <br><br>
+    //   Vamos dar início ao processo de contratação do imóvel ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}, Ordem de Serviço ${proposal.seq}.
+    //   <br><br>
+    //   A Vivalisto é especialista em contratos e processos. Com corpo jurídico próprio e isento em relação às partes da transação, aportamos segurança jurídica, agilidade e especialização em todas as etapas pós- negociação. Essa é uma grande preocupação de seu corretor, ${userProposal.name}, pensando      em sua experiência como cliente e em sua satisfação.
+    //   <br>
+    //   <br>
+    //   Agora, precisamos de informações complementares à sua negociação para que o processo caminhe de forma leve e com a devida segurança jurídica e operacional. É bem simples e prático! Quanto mais rápido responder, mais rápido receberá o e-mail com instruções para o envio de sua documentação de forma 100% digital. Após a análise da documentação e do(s) proponente(s), seguiremos para a assinatura on- line do contrato, vistoria do imóvel e entrega das chaves.
+    //   <br>
+    //   <br>
+    //   Para envio das informações, <a href='https://share.hsforms.com/1Xfp-eeMASHaXdbX0PlKLLA49vzc'> click aqui </a>
+    //   <br>
+    //   <br>
+    //   Em caso de dúvida, é só entrar em contato pelo e-mail contratos@vivalisto.com.br.
+    //   <br>
+    //   <br>
+    //   Atenciosamente.
+    //   <br>
+    //   Equipe de Suporte
+    //   <br><br>
 
-      powered by Vivalisto Proptech    
+    //   powered by Vivalisto Proptech    
       
-      `,
-    });
+    //   `,
+    // });
 
-    if (followers?.length) {
-      followers.forEach(function (follower: any) {
-        sendMailUtil({
-          to: follower,
-          subject: 'Acompanhar proposta',
-          message: `
+    // if (followers?.length) {
+    //   followers.forEach(function (follower: any) {
+    //     sendMailUtil({
+    //       to: follower,
+    //       subject: 'Acompanhar proposta',
+    //       message: `
       
-          ${proponent.name}, parabéns!
-          <br><br>
-          Estamos felizes pelo sucesso da negociação!
-          <br>
-          <br>
-          Daqui em diante, nossa equipe de contratos cuidará de tudo e em breve entrarão em contato para os procedimentos de contratação.      
-          <br>
-          Você poderá acessar as condições negociadas sempre que preciso, para isto basta clicar no link abaixo:
-          <br>
-          <br>
-          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
-            proposal._id
-          }> click aqui, Número da proposta: ${proposal.seq} </a>
-          <br>
-          Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
-          <br>
-          Imóvel: <bold>${proposal.immobile.publicPlace}, ${
-            proposal.immobile.number
-          } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
-            proposal.immobile.cep
-          }</bold>
-          <br><br>
-          Agradecemos a confiança e desejamos sucesso em sua nova ${
-            proposal.type === ProposalType.Aluguel ? 'locação' : 'venda'
-          }.
-          <br><br>
-          Em caso de dúvidas, é só entrar em contato.
-          <br>
-          Atenciosamente.
-          <br><br>
-          ${userProposal.name}<br>
-          CRECI Corretor: ${userProposal.creci}<br><br>
-          Telefone: ${userProposal.cellphone}<br>
-          E-mail: ${userProposal.email}<br><br>
-          ${
-            organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''
-          }<br>
-          ${
-            organizationDB?.name
-              ? `CRECI Imobiliária: ${organizationDB.creci}`
-              : ''
-          }<br>
+    //       ${proponent.name}, parabéns!
+    //       <br><br>
+    //       Estamos felizes pelo sucesso da negociação!
+    //       <br>
+    //       <br>
+    //       Daqui em diante, nossa equipe de contratos cuidará de tudo e em breve entrarão em contato para os procedimentos de contratação.      
+    //       <br>
+    //       Você poderá acessar as condições negociadas sempre que preciso, para isto basta clicar no link abaixo:
+    //       <br>
+    //       <br>
+    //       Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+    //         proposal._id
+    //       }> click aqui, Número da proposta: ${proposal.seq} </a>
+    //       <br>
+    //       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+    //       <br>
+    //       Imóvel: <bold>${proposal.immobile.publicPlace}, ${
+    //         proposal.immobile.number
+    //       } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
+    //         proposal.immobile.cep
+    //       }</bold>
+    //       <br><br>
+    //       Agradecemos a confiança e desejamos sucesso em sua nova ${
+    //         proposal.type === ProposalType.Aluguel ? 'locação' : 'venda'
+    //       }.
+    //       <br><br>
+    //       Em caso de dúvidas, é só entrar em contato.
+    //       <br>
+    //       Atenciosamente.
+    //       <br><br>
+    //       ${userProposal.name}<br>
+    //       CRECI Corretor: ${userProposal.creci}<br><br>
+    //       Telefone: ${userProposal.cellphone}<br>
+    //       E-mail: ${userProposal.email}<br><br>
+    //       ${
+    //         organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''
+    //       }<br>
+    //       ${
+    //         organizationDB?.name
+    //           ? `CRECI Imobiliária: ${organizationDB.creci}`
+    //           : ''
+    //       }<br>
     
-          powered by Vivalisto Proptech
-          `,
-        });
-      });
-    }
+    //       powered by Vivalisto Proptech
+    //       `,
+    //     });
+    //   });
+    // }
   }
   //ALUGUEL
   async sendMailDocToContract(proposal: any, userProposal: any) {
