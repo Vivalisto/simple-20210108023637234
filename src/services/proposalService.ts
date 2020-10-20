@@ -1164,6 +1164,7 @@ class ProposalService {
     );
 
     sendMailUtil({
+      from: userProposal.email,
       to: locator.email,
       subject: `Parabéns pelo sucesso na negociação!`,
       message: `
@@ -1216,6 +1217,7 @@ class ProposalService {
     });
 
     sendMailUtil({
+      from: userProposal.email,
       to: proponent.email,
       subject: 'Parabéns pelo sucesso na negociação!',
       message: `
@@ -1266,6 +1268,7 @@ class ProposalService {
     });
 
     sendMailUtil({
+      from: 'atendimento@vivalisto.com.br',
       to: userProposal.email,
       subject: `Parabéns pela ${
         proposal.type === ProposalType.Aluguel ? 'locação' : 'venda'
@@ -1278,7 +1281,11 @@ class ProposalService {
       
       ${userProposal.name}, bom trabalho!
       <br><br>
-      Que bom que tenha conseguido chegar em bons termos entre inquilinos e locadores! Agora, para concluir o processo de locação, você precisa entrar no sistema e, em MINHAS NEGOCIAÇÕES, selecionar a proposta fechada e clicar em ENVIAR PARA CONTRATAÇÃO, para que a sua EQUIPE DE CONTRATOS VIVALISTO de andamento no processo de formalização de forma otimizada e 100% digital, dessa forma, você ficará livre para dar sequência no atendimento de novos clientes e fazer mais negócios.
+      Que bom que tenha conseguido chegar em bons termos entre ${
+        proposal.type === ProposalType.Aluguel
+          ? 'inquilinos e locadores!'
+          : 'compradores e vendedores!'
+      } Agora, para concluir o processo de locação, você precisa entrar no sistema e, em MINHAS NEGOCIAÇÕES, selecionar a proposta fechada e clicar em ENVIAR PARA CONTRATAÇÃO, para que a sua EQUIPE DE CONTRATOS VIVALISTO de andamento no processo de formalização de forma otimizada e 100% digital, dessa forma, você ficará livre para dar sequência no atendimento de novos clientes e fazer mais negócios.
       <br>
       <br>
       Não deixe seus clientes esperando, se ainda não ENVIOU PARA CONTRATAÇÃO, acesse o sistema e a proposta fechada clicando aqui:
