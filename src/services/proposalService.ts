@@ -346,17 +346,27 @@ class ProposalService {
       ...proposal,
     });
 
-    if (sendMail && proposal) {
+    if(proposal.editProposal) {
       const userProposal = await userService.getById(user);
-      if (proposalUpdate.type === ProposalType.Aluguel) {
-        this.sendMailCreateProposalRent(proposalUpdate, userProposal);
+      if(sendMail && proposal) {
+        this.sendMailEditProposal(proposalUpdate, userProposal);
       } else {
-        this.sendMailCreateProposalBuySell(proposalUpdate, userProposal);
+        this.noSendMailEditProposal(proposalUpdate, userProposal);
       }
     } else {
-      const userProposal = await userService.getById(user);
-      this.sendMailUser(proposalUpdate, userProposal);
+      if (sendMail && proposal) {
+        const userProposal = await userService.getById(user);
+        if (proposalUpdate.type === ProposalType.Aluguel) {
+          this.sendMailCreateProposalRent(proposalUpdate, userProposal);
+        } else {
+          this.sendMailCreateProposalBuySell(proposalUpdate, userProposal);
+        }
+      } else if (sendMail === false) {
+        const userProposal = await userService.getById(user);
+        this.noSendMailUser(proposalUpdate, userProposal);
+      }
     }
+
 
     return proposalUpdate;
   }
@@ -549,7 +559,7 @@ class ProposalService {
         sendMailUtil({
           from: userProposal.email,
           to: follower,
-          subject: 'Acampanhar proposta',
+          subject: 'Acompanhar proposta',
           message: `
           Olá,
           <br><br>
@@ -601,12 +611,13 @@ class ProposalService {
     );
 
     sendMailUtil({
+      from: userProposal.email,
       to: locator.email,
-      subject: `Proposta atualizada para a venda de seu imóvel!`,
+      subject: `Olá, temos uma proposta de compra para o seu imóvel!`,
       message: `
-      ${locator.name}, temos novidades!
+      ${locator.name}, boas notícias!
       <br><br>
-      Estamos evoluindo na negociação para fecharmos o negócio. No link abaixo você terá acesso às últimas condições propostas.
+      Acabamos de conseguir uma proposta para o seu imóvel, para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
       <br><br>
       Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
         proposal._id
@@ -620,10 +631,14 @@ class ProposalService {
         proposal.immobile.cep
       }</bold>
       <br><br>
-      Lembrando que, neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises, contratos e tudo o mais necessário para a segurança da sua venda. Essa etapa também é um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, cuidamos de tudo para você, até da Escritura e do Registro de Imóveis. Temos um corpo jurídico isento e especializado em direito imobiliário e processos integrados com uso da tecnologia, para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, uma vez que cuidamos de tudo para a sua segurança e comodidade.
+      Neste momento, precisamos que analise as condições para darmos andamento na negociação. Não se preocupe que nesta etapa tratamos apenas das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises, contratos e tudo o mais necessário para a segurança da sua venda.
       <br><br>
-      Caso esteja de acordo, tenha alguma dúvida ou consideração a fazer, é só entrar em contato ou responder esta mensagem
+      Aliás, esse é um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, cuidamos de tudo para você, até da Escritura e do Registro de Imóveis. Temos um corpo jurídico isento e especializado em direito imobiliário e processos integrados com uso da tecnologia, para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, uma vez que cuidamos de tudo para a sua segurança e comodidade.
       <br><br>
+      Em caso de dúvida, é só entrar em contato.
+      <br><br>
+      Bons negócios!
+      <br>
       Atenciosamente.
       <br><br>
 
@@ -641,13 +656,17 @@ class ProposalService {
     });
 
     sendMailUtil({
+      from: userProposal.email,
       to: proponent.email,
-      subject: 'Proposta atualizada para a compra de seu imóvel!',
+      subject: 'Proposta enviada com sucesso!',
       message: `
       
-      ${proponent.name}, temos novidades!
+      ${proponent.name}, parabéns!
       <br><br>
-      Estamos evoluindo na negociação para fecharmos o negócio. No link abaixo você terá acesso às últimas condições propostas.
+      Sua proposta foi enviada, o vendedor está analisando e em breve retornaremos.
+      <br>
+      <br>
+      Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições negociadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
       <br>
       <br>
       Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
@@ -662,10 +681,14 @@ class ProposalService {
         proposal.immobile.cep
       }</bold>
       <br><br>
-      Lembrando que, neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises, contratos e tudo o mais necessário para a segurança da sua compra. E que, aliás, esse é um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, cuidamos de tudo para você, até da Escritura e do Registro de Imóveis. Temos um corpo jurídico isento e especializado em direito imobiliário e processos integrados com uso da tecnologia, para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, uma vez que cuidamos de tudo para a sua segurança e comodidade, até mesmo do crédito imobiliário, sem nenhum custo adicional.
+      Neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises, contratos e tudo o mais necessário para a segurança da sua compra. Aliás, esse é um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, cuidamos de tudo para você, até da Escritura e do Registro de Imóveis. Temos um corpo jurídico isento e especializado em direito imobiliário e processos integrados com uso da tecnologia, para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, uma vez que cuidamos de tudo para a sua segurança e comodidade, até mesmo do crédito imobiliário, sem nenhum custo adicional.
       <br><br>
-      Caso esteja de acordo, tenha alguma dúvida ou consideração a fazer, é só entrar em contato ou responder esta mensagem
+      Em breve retorno com uma posição sobre a sua proposta.
       <br>
+      Em caso de dúvida, é só entrar em contato.
+      <br>
+      <br>
+      Sucesso em sua negociação!
       <br>
       Atenciosamente.
       <br><br>
@@ -683,22 +706,22 @@ class ProposalService {
     });
 
     sendMailUtil({
+      from: 'atendimento@vivalisto.com.br',
       to: userProposal.email,
-      subject: 'Proposta alterada com sucesso!',
+      subject: 'Proposta enviada com sucesso!',
       message: `
       
-      ${userProposal.name}, muito bem!
+      ${userProposal.name}, parabéns!
       <br><br>
-      Estamos evoluindo, a proposta foi alterada e encaminhada para seus clientes, compradores e vendedores.
+      Excelente, a proposta foi gerada e encaminhada para seus clientes, compradores e vendedores.
       <br>
       <br>
-      É importante “não deixar o negócio esfriar”, faça o acompanhamento junto aos seus clientes e esteja próximo para responder às suas dúvidas e anseios, atuando de forma consultiva para chegar à um bom termo com ambas as partes.
+      Você poderá a qualquer momento acessar a proposta no sistema em MINHAS PROPOSTAS, alterá-la e, uma vez fechada a negociação, ENVIAR PARA CONTRATAÇÃO, para que a sua EQUIPE DE CONTRATOS VIVALISTO de andamento no processo de formalização de forma otimizada e 100% digital, permitindo que você continue focado em atender os seus clientes e em fazer mais negócios.
       <br>
-      <br>
-      Lembrando que você poderá a qualquer momento acessar a proposta no sistema, em MINHAS PROPOSTAS, alterá-la e, uma vez fechada a negociação, ENVIAR PARA CONTRATAÇÃO, para que a sua EQUIPE DE CONTRATOS VIVALISTO de andamento no processo de formalização de forma otimizada e 100% digital, permitindo que você continue focado em atender os seus clientes e em fazer mais negócios.      
       <br>
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
-      <br><br>
+      <br>
+      <br>
       Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
@@ -725,8 +748,214 @@ class ProposalService {
     if (followers?.length) {
       followers.forEach(function (follower: any) {
         sendMailUtil({
+          from: userProposal.email,
           to: follower,
-          subject: 'Acampanhar proposta',
+          subject: 'Acompanhar proposta',
+          message: `
+          Olá,
+          <br><br>
+          Você foi adicionado para acompanhar a proposta. Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
+          <br><br>
+          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+            proposal._id
+          }> click aqui, proposta: ${proposal.seq} </a>
+          <br>
+          Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+          <br>
+          Imóvel: <bold>${proposal.immobile.publicPlace}, ${
+            proposal.immobile.number
+          } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
+            proposal.immobile.cep
+          }</bold>
+          <br><br>
+          Neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade. 
+          <br><br>
+          Em caso de dúvida, é só entrar em contato.
+          <br><br>
+          Atenciosamente.
+          <br><br>
+    
+          ${userProposal.name}<br>
+          CRECI Corretor: ${userProposal.creci}<br><br>
+          Telefone: ${userProposal.cellphone}<br>
+          E-mail: ${userProposal.email}<br><br>
+          ${
+            organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''
+          }<br>
+          ${
+            organizationDB?.name
+              ? `CRECI Imobiliária: ${organizationDB.creci}`
+              : ''
+          }<br>
+    
+          powered by Vivalisto Proptech
+          `,
+        });
+      });
+    }
+  }
+  async sendMailEditProposal(proposal: any, userProposal: any) {
+    const { locator, proponent, followers } = proposal;
+    const organizationDB: any = await organizationService.getById(
+      proposal.organization
+    );
+
+    sendMailUtil({
+      from: userProposal.email,
+      to: locator.email,
+      subject: `Proposta atualizada para ${
+        proposal.type === ProposalType.Aluguel
+          ? 'locação'
+          : 'venda'
+      } de seu imóvel!`,
+      message: `
+      ${locator.name}, temos novidades!
+      <br><br>
+      Estamos evoluindo na negociação para fecharmos o negócio. No link abaixo você terá acesso às últimas condições propostas.
+      <br><br>
+      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+        proposal._id
+      }> click aqui, proposta: ${proposal.seq} </a>
+      <br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      Imóvel: <bold>${proposal.immobile.publicPlace}, ${
+        proposal.immobile.number
+      } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
+        proposal.immobile.cep
+      }</bold>
+      <br><br>
+      Lembrando que neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo edinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade.
+      <br><br>
+      Caso esteja de acordo, tenha alguma dúvida ou consideração a fazer, é só entrar em contato ou responder esta mensagem.
+      <br><br>
+      Bons negócios!
+      <br>
+      Atenciosamente.
+      <br><br>
+
+      ${userProposal.name}<br>
+      CRECI Corretor: ${userProposal.creci}<br><br>
+      Telefone: ${userProposal.cellphone}<br>
+      E-mail: ${userProposal.email}<br><br>
+      ${organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''}<br>
+      ${
+        organizationDB?.name ? `CRECI Imobiliária: ${organizationDB.creci}` : ''
+      }<br>
+
+      powered by Vivalisto Proptech
+      `,
+    });
+
+    sendMailUtil({
+      from: userProposal.email,
+      to: proponent.email,
+      subject: `Proposta atualizada para ${
+        proposal.type === ProposalType.Aluguel
+          ? 'sua locação!'
+          : 'compra de seu imóvel!'
+      } `,
+      message: `
+      
+      ${proponent.name}, temos novidades!
+      <br><br>
+      Estamos evoluindo na negociação para fecharmos o negócio. No link abaixo você terá acesso às últimas condições propostas.
+      <br>
+      <br>
+      Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições negociadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
+      <br>
+      <br>
+      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+        proposal._id
+      }> click aqui, Número da proposta: ${proposal.seq} </a>
+      <br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      Imóvel: <bold>${proposal.immobile.publicPlace}, ${
+        proposal.immobile.number
+      } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
+        proposal.immobile.cep
+      }</bold>
+      <br><br>
+      Lembrando que neste momento trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade.
+      <br><br>
+      Caso esteja de acordo, tenha alguma dúvida ou consideração a fazer, é só entrar em contato ou responder esta mensagem.
+      <br>
+      Em caso de dúvida, é só entrar em contato.
+      <br>
+      <br>
+      Atenciosamente.
+      <br><br>
+      ${userProposal.name}<br>
+      CRECI Corretor: ${userProposal.creci}<br><br>
+      Telefone: ${userProposal.cellphone}<br>
+      E-mail: ${userProposal.email}<br><br>
+      ${organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''}<br>
+      ${
+        organizationDB?.name ? `CRECI Imobiliária: ${organizationDB.creci}` : ''
+      }<br>
+
+      powered by Vivalisto Proptech
+      `,
+    });
+
+    sendMailUtil({
+      from: 'atendimento@vivalisto.com.br',
+      to: userProposal.email,
+      subject: 'Proposta alterada com sucesso!',
+      message: `
+      
+      ${userProposal.name}, muito bem!
+      <br><br>
+      Estamos evoluindo, a proposta foi alterada e encaminhada para seus clientes, ${
+        proposal.type === ProposalType.Aluguel
+          ? ' inquilinos e locadores.'
+          : 'compradores e vendedores.'
+      }
+      <br>
+      <br>
+      É importante “não deixar o negócio esfriar”, faça o acompanhamento junto aos seus clientes e esteja próximo para responder às suas dúvidas e anseios, atuando de forma consultiva para chegar à um bom termo com ambas as partes.
+      <br>
+      <br>
+      Você poderá a qualquer momento acessar a proposta no sistema em MINHAS PROPOSTAS, alterá-la e, uma vez fechada a negociação, ENVIAR PARA CONTRATAÇÃO, para que a sua EQUIPE DE CONTRATOS VIVALISTO de andamento no processo de formalização de forma otimizada e 100% digital, permitindo que você continue focado em atender os seus clientes e em fazer mais negócios.
+      <br>
+      <br>
+      O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.      
+      <br>
+      <br>
+      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
+      <br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+
+      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
+      Proponente: ${proponent.name}
+      <br>
+      ${
+        proposal.type === ProposalType.Aluguel
+          ? 'Locador'
+          : 'Vendedor'
+      }: ${locator.name}
+      <br><br>
+      Bons negócios e sucesso em sua negociação!
+      <br>
+      Atenciosamente.
+      <br>
+      <br>
+      Equipe de Suporte<br><br>
+
+      powered by Vivalisto Proptech    
+      
+      `,
+    });
+
+    if (followers?.length) {
+      followers.forEach(function (follower: any) {
+        sendMailUtil({
+          from: userProposal.email,
+          to: follower,
+          subject: 'Acompanhar proposta',
           message: `
           Olá,
           <br><br>
@@ -771,20 +1000,129 @@ class ProposalService {
     }
   }
 
-  async sendMailUser(proposal: any, userProposal: any) {
+  async noSendMailEditProposal(proposal: any, userProposal: any) {
     const { locator, proponent, followers } = proposal;
     const organizationDB: any = await organizationService.getById(
       proposal.organization
     );
 
     sendMailUtil({
+      from: 'atendimento@vivalisto.com.br',
+      to: userProposal.email,
+      subject: 'Proposta alterada com sucesso!',
+      message: `
+      
+      ${userProposal.name}, muito bem!
+      <br><br>
+      A proposta foi alterada, mas lembre-se, como solicitado por você, não foi encaminhada para seus clientes, ${
+        proposal.type === ProposalType.Aluguel
+          ? ' inquilinos e locadores.'
+          : 'compradores e vendedores.'
+      }
+      <br>
+      <br>
+      Você poderá a qualquer momento acessar a proposta no sistema em MINHAS PROPOSTAS, alterá-la e, uma vez fechada a negociação, ENVIAR PARA CONTRATAÇÃO, para que a sua EQUIPE DE CONTRATOS VIVALISTO de andamento no processo de formalização de forma otimizada e 100% digital, permitindo que você continue focado em atender os seus clientes e em fazer mais negócios.
+      <br>
+      <br>
+      O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.      
+      <br>
+      <br>
+      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
+      <br>
+      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      <br>
+      <br>
+
+      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
+      Proponente: ${proponent.name}
+      <br>
+      ${
+        proposal.type === ProposalType.Aluguel
+          ? 'Locador'
+          : 'Vendedor'
+      }: ${locator.name}
+      <br><br>
+      Bons negócios e sucesso em sua negociação!
+      <br>
+      Atenciosamente.
+      <br>
+      <br>
+      Equipe de Suporte<br><br>
+
+      powered by Vivalisto Proptech    
+      
+      `,
+    });
+
+    if (followers?.length) {
+      followers.forEach(function (follower: any) {
+        sendMailUtil({
+          from: userProposal.email,
+          to: follower,
+          subject: 'Proposta atualizada',
+          message: `
+          Olá,
+          <br><br>
+          Você foi adicionado para acompanhar a proposta. Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
+          <br><br>
+          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+            proposal._id
+          }> click aqui, proposta: ${proposal.seq} </a>
+          <br>
+          Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+          <br>
+          Imóvel: <bold>${proposal.immobile.publicPlace}, ${
+            proposal.immobile.number
+          } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
+            proposal.immobile.cep
+          }</bold>
+          <br><br>
+          Neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade. 
+          <br><br>
+          Em caso de dúvida, é só entrar em contato.
+          <br><br>
+          Atenciosamente.
+          <br><br>
+    
+          ${userProposal.name}<br>
+          CRECI Corretor: ${userProposal.creci}<br><br>
+          Telefone: ${userProposal.cellphone}<br>
+          E-mail: ${userProposal.email}<br><br>
+          ${
+            organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''
+          }<br>
+          ${
+            organizationDB?.name
+              ? `CRECI Imobiliária: ${organizationDB.creci}`
+              : ''
+          }<br>
+    
+          powered by Vivalisto Proptech
+          `,
+        });
+      });
+    }
+  }
+
+  async noSendMailUser(proposal: any, userProposal: any) {
+    const { locator, proponent, followers } = proposal;
+    const organizationDB: any = await organizationService.getById(
+      proposal.organization
+    );
+
+    sendMailUtil({
+      from: 'atendimento@vivalisto.com.br',
       to: userProposal.email,
       subject: 'Proposta gerada com sucesso!',
       message: `
       
       ${userProposal.name}, parabéns!
       <br><br>
-      Excelente, a proposta foi gerada, mas como solicitado por você, não foi encaminhada para seus clientes, inquilinos e locadores.
+      Excelente, a proposta foi gerada, mas como solicitado por você, não foi encaminhada para seus clientes, ${
+        proposal.type === ProposalType.Aluguel
+          ? 'inquilinos e locadores'
+          : 'compradores e vendedores.'
+      }.
       <br>
       <br>
       Você poderá a qualquer momento acessar a proposta no sistema em MINHAS PROPOSTAS, alterá-la e, uma vez fechada a negociação, ENVIAR PARA CONTRATAÇÃO, para que a sua EQUIPE DE CONTRATOS VIVALISTO de andamento no processo de formalização de forma otimizada e 100% digital, permitindo que você continue focado em atender os seus clientes e em fazer mais negócios.
@@ -800,7 +1138,11 @@ class ProposalService {
       Imóvel: ${proposal?.immobile?.publicPlace}, ${proposal?.immobile?.number} - ${proposal?.immobile?.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
       Proponente: ${proponent?.name}
       <br>
-      Locador: ${locator?.name}
+      ${
+        proposal.type === ProposalType.Aluguel
+          ? 'Locador'
+          : 'Comprador'
+      }: ${locator?.name}
       <br><br>
       Bons negócios e sucesso em sua negociação!
       <br>
@@ -974,7 +1316,7 @@ class ProposalService {
       followers.forEach(function (follower: any) {
         sendMailUtil({
           to: follower,
-          subject: 'Acampanhar proposta',
+          subject: 'Acompanhar proposta',
           message: `
       
           ${proponent.name}, parabéns!
@@ -1186,7 +1528,7 @@ class ProposalService {
       followers.forEach(function (follower: any) {
         sendMailUtil({
           to: follower,
-          subject: 'Acampanhar proposta',
+          subject: 'Acompanhar proposta',
           message: `
       
           ${proponent.name}, parabéns!
