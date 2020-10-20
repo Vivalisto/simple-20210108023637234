@@ -8,7 +8,7 @@ import keys from '../config/keys-dev';
 
 class Mail {
   constructor(
-    public from: string ,
+    public from?: string ,
     public to?: string,
     public cc?: Array<string>,
     public subject?: string,
