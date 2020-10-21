@@ -190,6 +190,17 @@ class ProposalService {
       };
     }
 
+    if(userProposal?.rules?.group === GroupType.Vivalisto && userProposal?.rules?.profile === ProfileType.Master) {
+      return await ProposalRepository.find({stage: { $gt: 0 },})
+      .where('type')
+      .equals(query)
+      .populate('user', proposalUserFields)
+      .populate('locator')
+      .populate('proponent')
+      .populate('organization');
+    }
+
+
     return await ProposalRepository.find(search)
       .where('type')
       .equals(query)
