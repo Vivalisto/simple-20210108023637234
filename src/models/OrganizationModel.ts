@@ -21,6 +21,10 @@ const OrganizationSchema: mongoose.Schema = new mongoose.Schema({
     type: String,
     lowercase: true,
   },
+  site: {
+    type: String,
+    lowercase: true,
+  },
   organizationName: {
     type: String,
   },
