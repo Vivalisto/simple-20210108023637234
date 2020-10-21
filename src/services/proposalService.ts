@@ -399,10 +399,12 @@ class ProposalService {
         proposal.type === ProposalType.Aluguel
           ? this.sendMailDocToContract(proposal, userDB)
           : this.sendMailDocToDueDiligence(proposal, userDB);
+        break;
       case ProposalStage.Vistoria:
         proposal.type === ProposalType.Aluguel
           ? this.sendMailContractToInspection(proposal, userDB)
           : this.sendMailDueDiligenceToContract(proposal, userDB);
+        break;
       case ProposalStage.EntregaChaves:
         proposal.type === ProposalType.Aluguel
           ? this.sendMailInspectionToKeyDelivery(proposal, userDB)
@@ -1712,13 +1714,14 @@ class ProposalService {
     );
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: locator.email,
       subject: `Nova Etapa: Contrato - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
       cc: followers,
       message: `
       Olá, ${locator.name}!
       <br><br>
-      Inquilino(s) aprovado(s), vamos em frente! Em breve você receberá um e-mail para a assinatura de seu contrato de locação. Uma vez assinado, realizaremos a vistoria e na sequência a entrega das chaves.
+      Concluímos o levantamento da documentação e realizamos as análises. Tudo correu bem, a locação foi aprovada pelo(s) locador(es) e em breve você receberá um e-mail para a assinatura de seu contrato de locação. Uma vez assinado, realizaremos a vistoria e na sequência a entrega das chaves.
       <br><br>
       Para verificar o status da contratação ${
         proposal.type === ProposalType.Aluguel
@@ -1746,6 +1749,7 @@ class ProposalService {
     });
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
       subject: `Nova Etapa: Contrato - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
@@ -1779,6 +1783,7 @@ class ProposalService {
       `,
     });
   }
+  
   async sendMailContractToInspection(proposal: any, userProposal: any) {
     const { locator, proponent, followers } = proposal;
     followers.push(userProposal.email);
@@ -1787,8 +1792,9 @@ class ProposalService {
     );
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: locator.email,
-      subject: `Nova Etapa: Contrato - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Vistoria - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
       cc: followers,
       message: `
       Olá, ${locator.name}!
@@ -1822,9 +1828,10 @@ class ProposalService {
     });
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
-      subject: `Nova Etapa: Contrato - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Vistoria - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
       message: `
       Olá, ${proponent.name}!
       <br><br>
@@ -1862,6 +1869,7 @@ class ProposalService {
     );
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: locator.email,
       subject: `Nova Etapa: Entrega de Chaves - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
       cc: followers,
@@ -1885,14 +1893,13 @@ class ProposalService {
       <br><br>
       Equipe de Contratos
       <br>
-      E-mail: contratos@vivalisto.com.br
-      <br>
       <br>
       powered by Vivalisto Proptech
       `,
     });
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
       subject: `Nova Etapa: Entrega de Chaves - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
@@ -1929,6 +1936,7 @@ class ProposalService {
     );
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: locator.email,
       subject: `Nova Etapa: Conclusão - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
       cc: followers,
@@ -1963,14 +1971,13 @@ class ProposalService {
       <br><br>
       Equipe de Contratos
       <br>
-      E-mail: contratos@vivalisto.com.br
-      <br>
       <br>
       powered by Vivalisto Proptech
       `,
     });
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
       subject: `Nova Etapa: Conclusão - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
@@ -2005,8 +2012,6 @@ class ProposalService {
       <br><br>
       Equipe de Contratos
       <br>
-      E-mail: contratos@vivalisto.com.br
-      <br>
       <br>
       powered by Vivalisto Proptech
       `,
@@ -2022,8 +2027,9 @@ class ProposalService {
     );
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: locator.email,
-      subject: `Nova Etapa: Due Diligence - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Due Diligence - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
       cc: followers,
       message: `
       Olá, ${locator.name}!
@@ -2048,14 +2054,12 @@ class ProposalService {
       Equipe de Contratos
       <br>
       <br>
-      E-mail: contratos@vivalisto.com.br
-      <br>
-      <br>
       powered by Vivalisto Proptech
       `,
     });
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
       subject: `Nova Etapa: Due Diligence - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
@@ -2083,9 +2087,6 @@ class ProposalService {
       Equipe de Contratos
       <br>
       <br>
-      E-mail: contratos@vivalisto.com.br
-      <br>
-      <br>
       powered by Vivalisto Proptech
       `,
     });
@@ -2099,6 +2100,7 @@ class ProposalService {
     );
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: locator.email,
       subject: `Nova Etapa: Contrato - ${proposal.seq}, Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
       cc: followers,
@@ -2122,17 +2124,15 @@ class ProposalService {
       Equipe de Contratos
       <br>
       <br>
-      E-mail: contratos@vivalisto.com.br
-      <br>
-      <br>
       powered by Vivalisto Proptech
       `,
     });
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
-      subject: `Nova Etapa: Due Diligence - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Contrato - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
       message: `
       Olá, ${proponent.name}!
       <br><br>
@@ -2157,9 +2157,6 @@ class ProposalService {
       Equipe de Contratos
       <br>
       <br>
-      E-mail: contratos@vivalisto.com.br
-      <br>
-      <br>
       powered by Vivalisto Proptech
       `,
     });
@@ -2172,15 +2169,18 @@ class ProposalService {
     );
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: locator.email,
-      subject: `Nova Etapa: Chaves e Propriedade - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Chaves e Propriedade - ${proposal.seq}, Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
       cc: followers,
       message: `
       Olá, ${locator.name}!
       <br><br>
-      Tudo certo, vamos em frente com o Contrato de Compra e Venda! Em breve, nossa equipe enviará a minuta e coordenará todo o processo de assinatura.
+      Contrato assinado, agora é hora de cuidarmos da fase de Cartórios, aqui também temos um grande diferencial para você, pois coordenaremos todo o processo, o qual tem detalhes específicos dependendo do tipo de negociação, se for com crédito imobiliário, parcelamento direto, à vista, se há crédito imobiliário a ser liquidado, enfim, não se preocupe que estaremos aqui para conduzir os trâmites e orientá-lo nessa jornada.
       <br><br>
-      Conforme explicado anteriormente, temos um corpo jurídico próprio, especialista e focado em direito imobiliário, isento entre as partes, o que aporta segurança, agilidade e economia em todo o processo, tornando-se desnecessário o envolvimento de advogados e terceiros nesta etapa, pois seu agente imobiliário confiou à VIVALISTO essa responsabilidade preocupado em aportar especialização e segurança jurídica e operacional na transação de venda de seu imóvel. Caso ainda queira e tenha contratado um advogado para representá-lo nesta etapa, sempre problemas, estamos abertos para tirar todas as dúvidas e prestar os esclarecimentos necessários para o bom andamento da fase contratual.
+      Somos pioneiros também em Escrituração Online, o que elimina a necessidade da sessão em cartório, bem como, cuidamos de tudo para que o processo ocorra através dos meios digitais e com toda a segurança a eles aportada.
+      <br><br>
+      Como citado, esta etapa possuí diferentes detalhes para cada tipo de transação, dessa forma, você receberá os direcionamentos de seu Gestor de Contratos Vivalisto em breve, para a sequência da transferência da propriedade.      
       <br><br>
       Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
       <br>
@@ -2195,14 +2195,12 @@ class ProposalService {
       Equipe de Contratos
       <br>
       <br>
-      E-mail: contratos@vivalisto.com.br
-      <br>
-      <br>
       powered by Vivalisto Proptech
       `,
     });
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
       subject: `Nova Etapa: Chaves e Propriedade - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
@@ -2227,9 +2225,6 @@ class ProposalService {
       Equipe de Contratos
       <br>
       <br>
-      E-mail: contratos@vivalisto.com.br
-      <br>
-      <br>
       powered by Vivalisto Proptech
       `,
     });
@@ -2243,8 +2238,9 @@ class ProposalService {
     );
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: locator.email,
-      subject: `Nova Etapa: Chaves e Propriedade - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Conclusão - ${proposal.seq}, Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
       cc: followers,
       message: `
       Olá, ${locator.name}!
@@ -2275,14 +2271,12 @@ class ProposalService {
       <br><br>
       Equipe de Contratos
       <br>
-      E-mail: contratos@vivalisto.com.br
-      <br>
-      <br>
       powered by Vivalisto Proptech
       `,
     });
 
     sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
       subject: `Nova Etapa: Conclusão - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
@@ -2316,8 +2310,6 @@ class ProposalService {
       }
       <br><br>
       Equipe de Contratos
-      <br>
-      E-mail: contratos@vivalisto.com.br
       <br>
       <br>
       powered by Vivalisto Proptech
