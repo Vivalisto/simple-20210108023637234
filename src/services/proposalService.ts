@@ -15,7 +15,7 @@ import userService from './userService';
 import customerService from './customerService';
 import { sendMailUtil } from '../utils/sendMail';
 
-import { ProfileType } from '../enums/access-control.enum';
+import { GroupType, ProfileType } from '../enums/access-control.enum';
 import { apiServer } from '../config/api';
 import organizationService from './organizationService';
 
@@ -63,6 +63,16 @@ class ProposalService {
         user: { _id: userId },
       };
     }
+
+    if(userProposal?.rules?.group === GroupType.Vivalisto && userProposal?.rules?.profile === ProfileType.Master) {
+        return await ProposalRepository.find()
+        .where('type')
+        .populate('locator')
+        .populate('proponent')
+        .populate('user')
+        .populate('organization');
+    }
+
 
     return await ProposalRepository.find(search)
       .where('type')

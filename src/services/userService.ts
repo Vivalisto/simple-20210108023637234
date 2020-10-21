@@ -13,6 +13,7 @@ import AppError from '../errors/AppError';
 import { apiServer } from '../config/api';
 import { sendMailUtil } from '../utils/sendMail';
 import { ProfileType } from '../enums/access-control.enum';
+import { UserSituation } from '../enums/user-situation.enum';
 
 class UserService {
   async get(userId: string) {
@@ -168,6 +169,10 @@ class UserService {
 
     if (now > user.passwordResetExpires) {
       throw new AppError('Token expirado, gere um novo token', 401);
+    }
+
+    if (user.situation === UserSituation.Pendente) {
+      user.situation = UserSituation.Ativo
     }
 
     user.password = password;
