@@ -7,6 +7,7 @@ const userRouter = express.Router();
 userRouter.get('/test', (req, res) => res.json({ msg: 'server ativo' }));
 
 userRouter.use(authMiddleware);
+userRouter.get('/profile', UserController.getByProfile);
 userRouter.get('/', UserController.get);
 userRouter.get('/:id', UserController.getById);
 userRouter.post('/', UserController.create);

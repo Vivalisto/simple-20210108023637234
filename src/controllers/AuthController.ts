@@ -88,7 +88,7 @@ class AuthController {
 
     try {
       await inviteValidation(req.body);
-      const user = await AuthService.registerInvite(userRequest, req.userId);
+      await AuthService.registerInvite(userRequest, req.userId);
       Helper.sendResponse(res, HttpStatus.OK, {
         message: 'Usuário cadastrado com sucesso',
       });

@@ -5,4 +5,5 @@
 export enum CustomerType {
   Proponent = 'PROPONENT',
   Locator = 'LOCATOR',
+  Salesman = 'SALESMAN',
 }

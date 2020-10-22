@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
+import * as mongoose from 'mongoose';
 
 import UserRepository from '../repositories/userRepository';
 import OrganizationService from '../services/organizationService';
@@ -10,14 +11,27 @@ import Mail from '../services/emailService';
 import AppError from '../errors/AppError';
 
 import { apiServer } from '../config/api';
-import { sendMail } from '../utils/sendMail';
+import { sendMailUtil } from '../utils/sendMail';
+import { ProfileType } from '../enums/access-control.enum';
+import { UserSituation } from '../enums/user-situation.enum';
 
 class UserService {
-  async get(owner: string) {
-    return await UserRepository.find({ owner }).select('-avatar');
+  async get(userId: string) {
+    let query: any;
+    const userData: any = await this.getById(userId);
+
+    if (userData?.rules?.profile === ProfileType.Master) {
+      query = { organization: userData.organization };
+    } else if (userData?.rules?.profile === ProfileType.Gerente) {
+      query = { owner: userData._id };
+    } else {
+      query = { userId };
+    }
+
+    return await UserRepository.find(query).select('-avatar');
   }
 
-  async getById(_id: string) {
+  async getById(_id: string | mongoose.Schema.Types.ObjectId) {
     return await UserRepository.findById(_id);
   }
 
@@ -54,12 +68,33 @@ class UserService {
     });
   }
 
+  async createInvite(user: any) {
+    const userExist = await this.userExist(user.email);
+
+    if (userExist) {
+      throw new AppError('Usuário já cadastrado no sistema');
+    }
+
+    return await UserRepository.create(user).catch((error) => {
+      console.log(error);
+      throw new AppError('Erro no cadastro, verifique seus dados');
+    });
+  }
+
   async update(_id: string, user: any) {
     return await UserRepository.findByIdAndUpdate(_id, user, { new: true });
   }
 
   async delete(_id: string) {
     return await UserRepository.findByIdAndRemove(_id);
+  }
+
+  async getByProfile({ userId, profile }: any) {
+    let query: any;
+    const userData: any = await this.getById(userId);
+    query = { organization: userData.organization };
+
+    return await UserRepository.find(query).select('name rules');
   }
 
   async userExist(email: string, withPassworld?: boolean) {
@@ -136,6 +171,10 @@ class UserService {
       throw new AppError('Token expirado, gere um novo token', 401);
     }
 
+    if (user.situation === UserSituation.Pendente) {
+      user.situation = UserSituation.Ativo
+    }
+
     user.password = password;
     user.save();
   }
@@ -159,11 +198,11 @@ class UserService {
       },
     });
 
-    await sendMail(
-      user.email,
-      'VIVALISTO - Liberação de acesso',
-      `Olá, ${user.name}, Bem-vindo à Vivalisto, a sua nova plataforma de negócios. Para prosseguir com seu cadastro. <a href=${apiServer.prod}/reset-password/${user.email}/${token}> Clique aqui para Definir uma senha.</a>`
-    );
+    await sendMailUtil({
+      to: user.email,
+      subject: 'VIVALISTO - Liberação de acesso',
+      message: `Olá, ${user.name}, Bem-vindo à Vivalisto, a sua nova plataforma de negócios. Para prosseguir com seu cadastro. <a href=${apiServer.prod}/reset-password/${user.email}/${token}> Clique aqui para Definir uma senha.</a>`,
+    });
     return;
   }
 

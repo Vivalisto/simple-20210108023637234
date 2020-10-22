@@ -64,7 +64,11 @@ class ProposalController {
     const proposalStatus = req.body;
 
     try {
-      const proposal = await proposalService.updateStatus(id, proposalStatus);
+      const proposal = await proposalService.updateStatus(
+        id,
+        proposalStatus,
+        userId
+      );
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
       Helper.sendResponse(res, HttpStatus.BAD_REQUEST, error);
@@ -77,7 +81,7 @@ class ProposalController {
     const { action } = req.body;
 
     try {
-      const proposal = await proposalService.updateStage(id, action);
+      const proposal = await proposalService.updateStage(id, action, userId);
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
       Helper.sendResponse(res, HttpStatus.BAD_REQUEST, error);
@@ -104,6 +108,17 @@ class ProposalController {
     try {
       const proposals = await proposalService.getByCustomer(id);
       Helper.sendResponse(res, httpStatus.OK, { proposals });
+    } catch (error) {
+      Helper.sendResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, error);
+    }
+  }
+
+  async getByProposalAndsCustomer(req: Request, res: Response) {
+    const { id, idCust } = req.params;
+
+    try {
+      const proposal = await proposalService.getByIdView(id);
+      Helper.sendResponse(res, httpStatus.OK, { proposal });
     } catch (error) {
       Helper.sendResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, error);
     }

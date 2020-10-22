@@ -8,15 +8,18 @@ import keys from '../config/keys-dev';
 
 class Mail {
   constructor(
+    public from?: string ,
     public to?: string,
+    public cc?: Array<string>,
     public subject?: string,
     public message?: string
   ) {}
 
   sendMail() {
     let mailOptions: MailOptions = {
-      from: 'noreply@vivalisto.com.br',
+      from: this.from || 'noreply@vivalisto.com.br',
       to: this.to,
+      cc: this.cc,
       subject: this.subject,
       html: this.message,
     };

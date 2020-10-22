@@ -9,6 +9,7 @@ import proposalRoutes from './routes/ProposalRoutes';
 import stageRouter from './routes/StageRoutes';
 import ruleRouter from './routes/RuleRoutes';
 import customerRouter from './routes/CustomerRoutes';
+import organizationRouter from './routes/OrganizationRoutes';
 import authMiddleware from './middlewares/auth';
 
 class StartUp {
@@ -26,12 +27,12 @@ class StartUp {
   enableCors() {
     const options: cors.CorsOptions = {
       methods: 'GET, OPTIONS, PUT, POST, DELETE',
-      origin: '*',
+      origin: 'https://app.programadorfavorito.com.br/',
     };
   }
 
   middler() {
-    // this.enableCors();
+    this.enableCors();
     this.app.use(cors());
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
@@ -44,6 +45,7 @@ class StartUp {
     this.app.use('/api/v1/stage', stageRouter);
     this.app.use('/api/v1/rule', ruleRouter);
     this.app.use('/api/v1/customer', customerRouter);
+    this.app.use('/api/v1/organization', organizationRouter);
 
     this.app.route('/').get((req: Request, res: Response) => {
       return res.send({ versao: '0.0.1' });

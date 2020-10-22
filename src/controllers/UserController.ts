@@ -5,9 +5,9 @@ import UserService from '../services/userService';
 import Helper from '../utils/helper';
 class UserController {
   async get(req: Request | any, res: Response) {
-    const owner = req.userId;
+    const userId = req.userId;
     try {
-      const users = await UserService.get(owner);
+      const users = await UserService.get(userId);
       Helper.sendResponse(res, HttpStatus.OK, users);
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
@@ -19,6 +19,18 @@ class UserController {
 
     try {
       const user = await UserService.getById(id);
+      Helper.sendResponse(res, httpStatus.OK, user);
+    } catch (error) {
+      console.error.bind(console, `Error ${error}`);
+    }
+  }
+
+  async getByProfile(req: Request | any, res: Response) {
+    const userId = req.userId;
+    const { profile } = req.body;
+
+    try {
+      const user = await UserService.getByProfile({ userId, profile });
       Helper.sendResponse(res, httpStatus.OK, user);
     } catch (error) {
       console.error.bind(console, `Error ${error}`);

@@ -28,8 +28,12 @@ class AuthService {
   }
 
   async registerInvite(userRequest: any, owner: string) {
-    let userIvite = { ...userRequest, owner, password: '12345' };
-    const newUser = await UserService.create(userIvite);
+    let userIvite = {
+      ...userRequest,
+      owner: !!userRequest.owner ? userRequest.owner : owner,
+      password: '12345',
+    };
+    const newUser = await UserService.createInvite(userIvite);
 
     if (newUser) {
       await UserService.sendInvite(userIvite.email);
@@ -42,6 +46,13 @@ class AuthService {
 
     if (!userAuth) {
       throw new AppError('usuário não cadastrado');
+    }
+
+    if (userAuth.situation === UserSituation.Inativo) {
+      throw new AppError(
+        'Usuário inátivo, favor entre em contato com seu superior',
+        401
+      );
     }
 
     const validPassword = await bcrypt.compare(password, userAuth.password);
