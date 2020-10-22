@@ -61,7 +61,7 @@ const ValueExchangeSchema: mongoose.Schema = new mongoose.Schema({
     type: Boolean,
   },
   commissionValue: {
-    type: Number,
+    type: String,
   },
   adreess: {
     type: ImmobileSchema,
