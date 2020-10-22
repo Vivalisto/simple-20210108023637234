@@ -7,7 +7,6 @@
     "dev": "ts-node-dev --inspect --transpileOnly --ignore-watch node_modules src/server.ts",
     "build": "tsc && npm run copy:certificado",
     "start": "node ./dist/server.js",
-    "postinstall": "grunt",
     "copy:certificado": "cp src/config/certificado/* ./dist/config/certificado/"
   },
   "repository": {
@@ -39,8 +38,7 @@
     "nodemailer-express-handlebars": "^4.0.0",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "request": "^2.88.2",
-    "yup": "^0.29.1",
-    "grunt": "grunt"
+    "yup": "^0.29.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
@@ -55,10 +53,6 @@
     "@types/yup": "^0.29.3",
     "ts-node": "^8.10.2",
     "ts-node-dev": "^1.0.0-pre.44",
-    "typescript": "^3.9.5",
-    "grunt": "^1.0.1",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-ts": "^6.0.0-beta.3"
+    "typescript": "^3.9.5"
   }
 }
