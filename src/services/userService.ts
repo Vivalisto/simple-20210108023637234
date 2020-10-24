@@ -14,6 +14,7 @@ import { apiServer } from '../config/api';
 import { sendMailUtil } from '../utils/sendMail';
 import { ProfileType } from '../enums/access-control.enum';
 import { UserSituation } from '../enums/user-situation.enum';
+import { TermKey } from '../enums/term-key.enum';
 
 class UserService {
   async get(userId: string) {
@@ -114,6 +115,23 @@ class UserService {
       throw new AppError('Situação inválida');
     }
     return await this.update(_id, { situation });
+  }
+
+  async updateTerm(_id: string, term: any) {
+    const user: any = await this.getById(_id);
+    const terms: any = user.terms.filter((termUser: any) => termUser?.key === term?.key)
+    
+    if (!Object.values(TermKey).includes(term.key)) {
+      throw new AppError('Termo não cadastrado');
+    }
+
+    if(!!terms.length) {
+      throw new AppError('Termo já aceito');
+    }
+
+    user.terms.push({...term, accept: true})
+    user.save();
+    return user;
   }
 
   async userExistWithFields(email: string, withFields?: string) {

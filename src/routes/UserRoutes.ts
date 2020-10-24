@@ -13,6 +13,7 @@ userRouter.get('/:id', UserController.getById);
 userRouter.post('/', UserController.create);
 userRouter.put('/', UserController.update);
 userRouter.put('/:id/situation', UserController.updateSituation);
+userRouter.put('/:id/accept-term', UserController.updateTerm);
 
 userRouter.delete('/:id', UserController.delete);
 

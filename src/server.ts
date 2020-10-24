@@ -1,6 +1,6 @@
 import StartUp from './startUp';
 
-let port = process.env.PORT || '3000';
+let port = process.env.PORT || '3333';
 
 StartUp.app.listen(port, () => {
   console.log(`😀 servidor executando na porta ${port}`);

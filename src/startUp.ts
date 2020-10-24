@@ -10,6 +10,7 @@ import stageRouter from './routes/StageRoutes';
 import ruleRouter from './routes/RuleRoutes';
 import customerRouter from './routes/CustomerRoutes';
 import organizationRouter from './routes/OrganizationRoutes';
+import termRouter from './routes/TermRoutes';
 import authMiddleware from './middlewares/auth';
 
 class StartUp {
@@ -46,6 +47,7 @@ class StartUp {
     this.app.use('/api/v1/rule', ruleRouter);
     this.app.use('/api/v1/customer', customerRouter);
     this.app.use('/api/v1/organization', organizationRouter);
+    this.app.use('/api/v1/term', termRouter);
 
     this.app.route('/').get((req: Request, res: Response) => {
       return res.send({ versao: '0.0.1' });

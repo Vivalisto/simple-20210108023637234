@@ -79,6 +79,18 @@ class UserController {
     }
   }
 
+  async updateTerm(req: Request | any, res: Response) {
+    const { id } = req.params;
+    const userAddTerm = req.body.term;
+
+    try {
+      const user = await UserService.updateTerm(id, userAddTerm);
+      Helper.sendResponse(res, HttpStatus.OK, { user });
+    } catch (error) {
+      Helper.sendResponse(res, error.statusCode, error.message);
+    }
+  }
+
   async delete(req: Request, res: Response) {
     const { id } = req.params;
 
