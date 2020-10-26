@@ -28,7 +28,7 @@ class StartUp {
   enableCors() {
     const options: cors.CorsOptions = {
       methods: 'GET, OPTIONS, PUT, POST, DELETE',
-      origin: '*',
+      origin: 'https://app.programadorfavorito.com.br/',
     };
   }
 
