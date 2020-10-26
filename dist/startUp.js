@@ -26,7 +26,7 @@ var StartUp = /** @class */ (function () {
     StartUp.prototype.enableCors = function () {
         var options = {
             methods: 'GET, OPTIONS, PUT, POST, DELETE',
-            origin: 'https://app.programadorfavorito.com.br/',
+            origin: '*',
         };
     };
     StartUp.prototype.middler = function () {
