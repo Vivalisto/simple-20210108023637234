@@ -15,5 +15,6 @@ userRouter.get('/:id', UserController_1.default.getById);
 userRouter.post('/', UserController_1.default.create);
 userRouter.put('/', UserController_1.default.update);
 userRouter.put('/:id/situation', UserController_1.default.updateSituation);
+userRouter.put('/accept-term', UserController_1.default.updateTerm);
 userRouter.delete('/:id', UserController_1.default.delete);
 exports.default = userRouter;

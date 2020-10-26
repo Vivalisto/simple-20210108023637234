@@ -218,9 +218,34 @@ var UserController = /** @class */ (function () {
             });
         });
     };
+    UserController.prototype.updateTerm = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var id, userAddTerm, user, error_7;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        id = req.userId;
+                        userAddTerm = req.body.term;
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, userService_1.default.updateTerm(id, userAddTerm)];
+                    case 2:
+                        user = _a.sent();
+                        helper_1.default.sendResponse(res, HttpStatus.OK, { user: user });
+                        return [3 /*break*/, 4];
+                    case 3:
+                        error_7 = _a.sent();
+                        helper_1.default.sendResponse(res, error_7.statusCode, error_7.message);
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
     UserController.prototype.delete = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, error_7;
+            var id, error_8;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -234,8 +259,8 @@ var UserController = /** @class */ (function () {
                         helper_1.default.sendResponse(res, http_status_1.default.OK, 'Usuário deletado com sucesso');
                         return [3 /*break*/, 4];
                     case 3:
-                        error_7 = _a.sent();
-                        helper_1.default.sendResponse(res, error_7.statusCode, error_7.message);
+                        error_8 = _a.sent();
+                        helper_1.default.sendResponse(res, error_8.statusCode, error_8.message);
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }

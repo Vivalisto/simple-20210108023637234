@@ -62,6 +62,7 @@ var mongoose = __importStar(require("mongoose"));
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var user_situation_enum_1 = require("../enums/user-situation.enum");
 var access_control_enum_1 = require("../enums/access-control.enum");
+var TermModel_1 = __importDefault(require("./TermModel"));
 var UserAccessSchema = new mongoose.Schema({
     group: {
         type: String,
@@ -145,6 +146,9 @@ var UserSchema = new mongoose.Schema({
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'organization',
+    },
+    terms: {
+        type: [TermModel_1.default],
     },
     created: {
         type: Date,

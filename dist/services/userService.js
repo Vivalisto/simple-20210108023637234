@@ -61,6 +61,7 @@ var api_1 = require("../config/api");
 var sendMail_1 = require("../utils/sendMail");
 var access_control_enum_1 = require("../enums/access-control.enum");
 var user_situation_enum_1 = require("../enums/user-situation.enum");
+var term_key_enum_1 = require("../enums/term-key.enum");
 var UserService = /** @class */ (function () {
     function UserService() {
     }
@@ -220,6 +221,28 @@ var UserService = /** @class */ (function () {
                         }
                         return [4 /*yield*/, this.update(_id, { situation: situation })];
                     case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    UserService.prototype.updateTerm = function (_id, term) {
+        return __awaiter(this, void 0, void 0, function () {
+            var user, terms;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getById(_id)];
+                    case 1:
+                        user = _a.sent();
+                        terms = user.terms.filter(function (termUser) { return (termUser === null || termUser === void 0 ? void 0 : termUser.key) === (term === null || term === void 0 ? void 0 : term.key); });
+                        if (!Object.values(term_key_enum_1.TermKey).includes(term.key)) {
+                            throw new AppError_1.default('Termo não cadastrado');
+                        }
+                        if (!!terms.length) {
+                            throw new AppError_1.default('Termo já aceito');
+                        }
+                        user.terms.push(__assign(__assign({}, term), { accept: true }));
+                        user.save();
+                        return [2 /*return*/, user];
                 }
             });
         });

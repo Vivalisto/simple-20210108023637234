@@ -14,6 +14,7 @@ var StageRoutes_1 = __importDefault(require("./routes/StageRoutes"));
 var RuleRoutes_1 = __importDefault(require("./routes/RuleRoutes"));
 var CustomerRoutes_1 = __importDefault(require("./routes/CustomerRoutes"));
 var OrganizationRoutes_1 = __importDefault(require("./routes/OrganizationRoutes"));
+var TermRoutes_1 = __importDefault(require("./routes/TermRoutes"));
 var StartUp = /** @class */ (function () {
     function StartUp() {
         this.app = express_1.default();
@@ -42,6 +43,7 @@ var StartUp = /** @class */ (function () {
         this.app.use('/api/v1/rule', RuleRoutes_1.default);
         this.app.use('/api/v1/customer', CustomerRoutes_1.default);
         this.app.use('/api/v1/organization', OrganizationRoutes_1.default);
+        this.app.use('/api/v1/term', TermRoutes_1.default);
         this.app.route('/').get(function (req, res) {
             return res.send({ versao: '0.0.1' });
         });

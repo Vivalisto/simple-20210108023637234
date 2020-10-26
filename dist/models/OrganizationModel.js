@@ -41,7 +41,7 @@ var OrganizationSchema = new mongoose.Schema({
         type: String,
         lowercase: true,
     },
-    site: {
+    link: {
         type: String,
         lowercase: true,
     },
