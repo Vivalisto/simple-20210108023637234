@@ -80,7 +80,7 @@ class UserController {
   }
 
   async updateTerm(req: Request | any, res: Response) {
-    const { id } = req.params;
+    const id = req.userId;
     const userAddTerm = req.body.term;
 
     try {

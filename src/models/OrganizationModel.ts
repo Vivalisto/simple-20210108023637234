@@ -21,7 +21,7 @@ const OrganizationSchema: mongoose.Schema = new mongoose.Schema({
     type: String,
     lowercase: true,
   },
-  site: {
+  link: {
     type: String,
     lowercase: true,
   },
