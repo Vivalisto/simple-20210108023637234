@@ -41,6 +41,7 @@ export enum actionControl {
   Invite = 'INVITE', //CONVIDAR
   Enable = 'ENABLE', //HABILITAR
   Disable = 'DISABLE', //DESABILITAR
+  completeHiring = 'COMPLETE_HIRING', //COMCLUIR CONTRATACAO
   DashboardPage = 'DASHBOARD-PAGE', //DASHBOARD-PAGE
   RentPage = 'RENT-PAGE', //ALUGUEL-PAGE
   BuySellPage = 'BUY_SELL-PAGE', //COMPRA_VENDA-PAGE

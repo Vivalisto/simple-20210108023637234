@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import * as mongoose from 'mongoose';
 
@@ -12,7 +11,7 @@ import AppError from '../errors/AppError';
 
 import { apiServer } from '../config/api';
 import { sendMailUtil } from '../utils/sendMail';
-import { ProfileType } from '../enums/access-control.enum';
+import { GroupType, ProfileType } from '../enums/access-control.enum';
 import { UserSituation } from '../enums/user-situation.enum';
 import { TermKey } from '../enums/term-key.enum';
 
@@ -21,7 +20,9 @@ class UserService {
     let query: any;
     const userData: any = await this.getById(userId);
 
-    if (userData?.rules?.profile === ProfileType.Master) {
+    if ( userData?.rules?.group === GroupType.Vivalisto && userData?.rules?.profile === ProfileType.Master ) {
+      query = {};
+    } else if (userData?.rules?.profile === ProfileType.Master) {
       query = { organization: userData.organization };
     } else if (userData?.rules?.profile === ProfileType.Gerente) {
       query = { owner: userData._id };
@@ -176,7 +177,7 @@ class UserService {
   ) {
     const user: any = await this.userExistWithFields(
       email,
-      '+passwordResetToken passwordResetExpires'
+      '+passwordResetToken passwordResetExpires situation'
     );
 
     if (token !== user.passwordResetToken) {
@@ -187,6 +188,10 @@ class UserService {
 
     if (now > user.passwordResetExpires) {
       throw new AppError('Token expirado, gere um novo token', 401);
+    }
+
+    if (user.situation === UserSituation.Inativo) {
+      throw new AppError('Usuário inativo, entre em contato com seu superior', 401);
     }
 
     if (user.situation === UserSituation.Pendente) {

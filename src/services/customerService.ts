@@ -1,15 +1,27 @@
+import { GroupType, ProfileType } from '../enums/access-control.enum';
 import CustomerRepository from '../repositories/customerRepository';
 
 import Mail from '../services/emailService';
 import { sendMailUtil } from '../utils/sendMail';
+import userService from './userService';
 
 class CustomerService {
   async create(customer: any) {
     return await CustomerRepository.create(customer);
   }
 
-  async get(user: string) {
-    return await CustomerRepository.find({ user });
+  async get(userId: string) {
+    let query: any;
+    const userData: any = await userService.getById(userId)
+    
+    if ( userData?.rules?.group === GroupType.Vivalisto && userData?.rules?.profile === ProfileType.Master ) {
+      query = {};
+    } else {
+      query = { userId }
+    }
+
+
+    return await CustomerRepository.find(query);
   }
 
   async getById(_id: string) {
