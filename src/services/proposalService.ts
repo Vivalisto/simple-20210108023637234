@@ -190,7 +190,7 @@ class ProposalService {
       };
     }
 
-    if(userProposal?.rules?.group === GroupType.Vivalisto && userProposal?.rules?.profile === ProfileType.Master) {
+    if(userProposal?.rules?.group === GroupType.Vivalisto && (userProposal?.rules?.profile === ProfileType.Master || userProposal?.rules?.profile === ProfileType.Gerente)) {
       return await ProposalRepository.find({stage: { $gt: 0 },})
       .where('type')
       .equals(query)
