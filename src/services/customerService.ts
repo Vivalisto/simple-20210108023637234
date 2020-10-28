@@ -16,8 +16,12 @@ class CustomerService {
     
     if ( userData?.rules?.group === GroupType.Vivalisto && userData?.rules?.profile === ProfileType.Master ) {
       query = {};
+    } else if(userData?.rules.group === GroupType.Imobiliaria && userData?.rules?.profile === ProfileType.Master) {
+      query = { organization: userData.organization }
+    } else if(userData?.rules.group === GroupType.Imobiliaria && userData?.rules?.profile === ProfileType.Gerente) {
+      query = { organization: userData.organization }
     } else {
-      query = { userId }
+      query = { user: userId }
     }
 
 

@@ -20,7 +20,7 @@ class UserService {
     let query: any;
     const userData: any = await this.getById(userId);
 
-    if ( userData?.rules?.group === GroupType.Vivalisto && userData?.rules?.profile === ProfileType.Master ) {
+    if ( userData?.rules?.group === GroupType.Vivalisto ) {
       query = {};
     } else if (userData?.rules?.profile === ProfileType.Master) {
       query = { organization: userData.organization };

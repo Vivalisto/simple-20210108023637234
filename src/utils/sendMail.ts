@@ -1,7 +1,6 @@
 import Mail from '../services/emailService';
 
 export async function sendMailUtil({ to, cc, subject, message, from }: any) {
-  console.log("from", from)
   Mail.from = from;
   Mail.to = to;
   Mail.cc = cc;
