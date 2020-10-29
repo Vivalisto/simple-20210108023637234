@@ -87,6 +87,17 @@ class UserService {
     return await UserRepository.findByIdAndUpdate(_id, user, { new: true });
   }
 
+  async edit(userId: string, data: any, userEditId: string) {
+    //carrega os dados do usuário que solicitou a alteração
+    const userDb: any = await this.getById(userId);
+
+    if (userDb?.rules?.profile !== ProfileType.Master) {
+      throw new AppError('Usuário não tem permissão para realizar essa ação');
+    }
+
+    return await UserRepository.findByIdAndUpdate(userEditId, data, { new: true });
+  }
+
   async delete(_id: string) {
     return await UserRepository.findByIdAndRemove(_id);
   }

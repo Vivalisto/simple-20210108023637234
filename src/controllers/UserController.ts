@@ -67,6 +67,19 @@ class UserController {
     }
   }
 
+  async edit(req: Request | any, res: Response) {
+    const userId = req.userId;
+    const { userEditId } = req.params;
+    const dataUpdate = req.body;
+
+    try {
+      const user = await UserService.edit(userId, dataUpdate, userEditId);
+      Helper.sendResponse(res, HttpStatus.OK, {user});
+    } catch (error) {
+      Helper.sendResponse(res, error.statusCode, error.message);
+    }
+  }
+
   async updateSituation(req: Request | any, res: Response) {
     const { id } = req.params;
     const userNewStatus = req.body.situation;
