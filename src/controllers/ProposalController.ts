@@ -88,6 +88,19 @@ class ProposalController {
     }
   }
 
+  async sendHiring(req: Request | any, res: Response) {
+    const { userId } = req;
+    const { id } = req.params;
+    const { hiringData } = req.body;
+
+    try {
+      const proposal = await proposalService.sendHiring(id, userId,  hiringData );
+      Helper.sendResponse(res, HttpStatus.OK, { proposal });
+    } catch (error) {
+      Helper.sendResponse(res, HttpStatus.BAD_REQUEST, error);
+    }
+  }
+
   async getSignings(req: Request | any, res: Response) {
     const { type } = req.query;
     try {

@@ -9,6 +9,8 @@ import { ProposalPackegeType } from '../enums/proposal-packege-type.enum';
 import * as momentTimezone from 'moment-timezone';
 import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz';
 
+import { ResponsibleHiring } from '../enums/responsible-hiring.enum';
+
 const brazilTimeZone = 'America/Sao_Paulo';
 const utc = zonedTimeToUtc(Date.now(), momentTimezone.locale());
 
@@ -115,6 +117,25 @@ const ContractSchema: mongoose.Schema = new mongoose.Schema({
   },
 });
 
+const hiringData: mongoose.Schema = new mongoose.Schema({
+  proponentParts: {
+    type: Boolean,
+    default: false,
+  },
+  ownerParts: {
+    type: Boolean,
+    default: false,
+  },
+  responsibleHiring: {
+    type: String,
+    default: ResponsibleHiring.Organization,
+    enum: Object.values(ResponsibleHiring),
+  },
+  comments: {
+    type: String,
+  },
+});
+
 const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   stage: {
     type: Number,
@@ -171,6 +192,9 @@ const ProposalSchema: mongoose.Schema = new mongoose.Schema({
   locator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'customer',
+  },
+  hiringData: {
+    type: hiringData,
   },
   created: {
     type: Date,

@@ -164,6 +164,40 @@ class ProposalService {
     return await this.update(proposalId, { stage: stageUpdate });
   }
 
+  async sendHiring(proposalId: string, userId: string, hiringDataReq: any) {
+    let userDB: any = await userService.getById(userId);
+
+    const {
+      status,
+      followers,
+      userResponsible,
+      proponentParts,
+      ownerParts,
+      responsibleHiring,
+      comments,
+   } = hiringDataReq
+
+   const proposalData: any = {
+      status,
+      stage: ProposalStage.Documental,
+      followers,
+      user: userResponsible,
+      hiringData: {
+        proponentParts,
+        ownerParts,
+        responsibleHiring,
+        comments,
+      }
+    }
+
+    await this.update(proposalId, proposalData);
+    let proposal: any = await this.getById(proposalId);
+
+    this.sendMailHire(proposal, userDB);
+
+    return proposal
+  }
+
   async getSignings(userId: mongoose.Schema.Types.ObjectId, type: String) {
     let query = [];
     let search = {};
@@ -1417,7 +1451,7 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: userProposal.email,
-      subject: `${proposal.seq}, ${
+      subject: `OS ${proposal.seq}, ${
         proposal.type === ProposalType.Aluguel
           ? 'Locação'
           : 'Venda'
@@ -1478,7 +1512,7 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: user.email,
-      subject: `${proposal.seq}, ${
+      subject: `OS ${proposal.seq}, ${
         proposal.type === ProposalType.Aluguel
           ? 'Locação'
           : 'Venda'
@@ -1539,7 +1573,7 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: 'contratos@vivalisto.com.br',
-      subject: `${proposal.seq}, ${
+      subject: `OS ${proposal.seq}, ${
         proposal.type === ProposalType.Aluguel
           ? 'Locação'
           : 'Venda'
@@ -1590,7 +1624,7 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: proponent.email,
-      subject: `${proposal.seq}, ${
+      subject: `OS ${proposal.seq}, ${
         proposal.type === ProposalType.Aluguel
           ? 'Locação'
           : 'Venda'
@@ -1627,7 +1661,7 @@ class ProposalService {
       from: 'contratos@vivalisto.com.br',
       to: locator.email,
       cc: followers?.length ? followers : [], 
-      subject: `${proposal.seq}, ${
+      subject: `OS ${proposal.seq}, ${
         proposal.type === ProposalType.Aluguel
           ? 'Locação'
           : 'Venda'
@@ -1644,7 +1678,7 @@ class ProposalService {
       Agora, precisamos de informações complementares à sua negociação para que o processo caminhe de forma leve e com a devida segurança jurídica e operacional. É bem simples e prático! Quanto mais rápido responder, mais rápido receberá o e-mail com instruções para o envio de sua documentação de forma 100% digital. Após a análise da documentação e do(s) proponente(s), seguiremos para a assinatura on- line do contrato, vistoria do imóvel e entrega das chaves.
       <br>
       <br>
-      Para envio das informações, <a href='https://share.hsforms.com/1Xfp-eeMASHaXdbX0PlKLLA49vzc'> click aqui </a>
+      Para envio das informações, <a href=${ proposal.type === ProposalType.Aluguel ? 'https://share.hsforms.com/1Xfp-eeMASHaXdbX0PlKLLA49vzc' : 'https://share.hsforms.com/1AIvfShu0QhmegRqm1dCE2g49vzc'}> click aqui </a>
       <br>
       <br>
       Em caso de dúvida, é só entrar em contato pelo e-mail <a> contratos@vivalisto.com.br </a>
@@ -1664,7 +1698,7 @@ class ProposalService {
       from: 'contratos@vivalisto.com.br',
       to: userProposal.email,
       cc: followers?.length ? followers : [], 
-      subject: `${proposal.seq}, ${proposal.seq}, ${
+      subject: `OS ${proposal.seq}, ${proposal.seq}, ${
         proposal.type === ProposalType.Aluguel
           ? 'Locação'
           : 'Venda'
@@ -2353,7 +2387,8 @@ class ProposalService {
       É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
       <br><br>
       Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.
-      <br><br>
+      <br><br>import { boolean } from 'yup';
+
       Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
         proposal._id
       }> click aqui </a>
