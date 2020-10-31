@@ -18,6 +18,7 @@ import { sendMailUtil } from '../utils/sendMail';
 import { GroupType, ProfileType } from '../enums/access-control.enum';
 import { apiServer } from '../config/api';
 import organizationService from './organizationService';
+import { ResponsibleHiring } from '../enums/responsible-hiring.enum';
 
 const proposalUserFields = [
   'name',
@@ -977,7 +978,7 @@ class ProposalService {
       <br><br>
       Estamos evoluindo, a proposta foi alterada e encaminhada para seus clientes, ${
         proposal.type === ProposalType.Aluguel
-          ? ' inquilinos e locadores.'
+          ? 'inquilinos e locadores.'
           : 'compradores e vendedores.'
       }
       <br>
@@ -1448,9 +1449,19 @@ class ProposalService {
     const { locator, proponent, followers } = proposal;
     const userProposal: any = await userService.getById(proposal.user.id);
 
+    let RESPONSIBLE: any = {
+      [ResponsibleHiring.Organization]: 'Imobiliária',
+      [ResponsibleHiring.Others]: 'Terceiro',
+      [ResponsibleHiring.Owner]: 'Locador'
+    }
+
+    const restProposal: string = proposal?.hiringData?.responsibleHiring
+    
+
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: userProposal.email,
+      cc: user.email,
       subject: `OS ${proposal.seq}, ${
         proposal.type === ProposalType.Aluguel
           ? 'Locação'
@@ -1475,26 +1486,38 @@ class ProposalService {
       <br>
       Responsabilidade de envio de documentos e informações complementares:
       <br>
-      - ${
-        proposal.type === ProposalType.Aluguel
-          ? 'Inquilinos'
-          : 'Compradores'
+      ${
+        proposal?.hiringData?.proponentParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? '- Inquilinos'
+            : '- Compradores'  
+          )
+          : ''
       }
-      <br> 
+      <br>
       - ${
-        proposal.type === ProposalType.Aluguel
-          ? 'Locadores'
-          : 'Vendedores'
+        proposal?.hiringData?.ownerParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? '- Locadores'
+            : '- Vendedores'
+  
+          )
+          : ''
       }
+      <br>
       <br>
       ${
         proposal.type === ProposalType.Aluguel
-          ? 'Administração da Locação: "imobiliari/ locador/ terceiro" <br>'
+          ? `Administração da Locação: ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}<br>`
           : '<br>'
       }
       
       <br>
-      Outras Informações Importantes para a Contratação: "comentario modal"
+      Outras Informações Importantes para a Contratação:
+      <br>
+      ${proposal?.hiringData?.comments}
       <br><br>
       Assim como você, os clientes já foram acionados para o andamento da contratação, caso sejam eles os responsáveis pelo envio das informações complementares e da documentação.
       <br>
@@ -1536,26 +1559,36 @@ class ProposalService {
       <br>
       Responsabilidade de envio de documentos e informações complementares:
       <br>
-      - ${
-        proposal.type === ProposalType.Aluguel
-          ? 'Inquilinos'
-          : 'Compradores'
-      }
-      <br> 
-      - ${
-        proposal.type === ProposalType.Aluguel
-          ? 'Locadores'
-          : 'Vendedores'
+      ${
+        proposal?.hiringData?.proponentParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? '- Inquilinos'
+            : '- Compradores'  
+          )
+          : ''
       }
       <br>
       ${
+        proposal?.hiringData?.ownerParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? '- Locadores'
+            : '- Vendedores'
+  
+          )
+          : ''
+      }
+      <br>
+      <br>
+      ${
         proposal.type === ProposalType.Aluguel
-          ? 'Administração da Locação: "imobiliari/ locador/ terceiro" <br>'
+          ? `Administração da Locação: ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}<br>`
           : '<br>'
       }
       
       <br>
-      Outras Informações Importantes para a Contratação: "comentario modal"
+      Outras Informações Importantes para a Contratação: ${proposal?.hiringData?.comments}
       <br><br>
       Assim como você, os clientes já foram acionados para o andamento da contratação, caso sejam eles os responsáveis pelo envio das informações complementares e da documentação.
       <br>
@@ -1596,27 +1629,29 @@ class ProposalService {
       <br>
       Responsabilidade de envio de documentos e informações complementares:
       <br>
-      - ${
+      ${
         proposal.type === ProposalType.Aluguel
-          ? 'Inquilinos'
-          : 'Compradores'
+          ? '- Inquilinos'
+          : '- Compradores'
       }
       <br> 
-      - ${
+      ${
         proposal.type === ProposalType.Aluguel
-          ? 'Locadores'
-          : 'Vendedores'
+          ? '- Locadores'
+          : '- Vendedores'
       }
       <br>
       ${
         proposal.type === ProposalType.Aluguel
           ? 'Administração da Locação: "imobiliari/ locador/ terceiro" <br>'
-          : '<br>'
+          : ''
       }
 
       <br>
-      Outras Informações Importantes para a Contratação: "comentario modal"
-      <br>      
+      Outras Informações Importantes para a Contratação:
+      <br>
+      ${proposal?.hiringData?.comments}
+      <br>
       <br>
       `,
     });
@@ -1726,10 +1761,10 @@ class ProposalService {
           `
           :
           `
-          Para envio das informações de COMPRADORES,, <a href='https://share.hsforms.com/1AIvfShu0QhmegRqm1dCE2g49vzc'> click aqui </a>
+          Para envio das informações de COMPRADORES, <a href='https://share.hsforms.com/1AIvfShu0QhmegRqm1dCE2g49vzc'> click aqui </a>
           <br>
           <br>
-          Para envio das informações de VENDEDORES,, <a href='https://share.hsforms.com/1lw5Uk3cvTfKgQxRQVGMrPw49vzc'> click aqui </a>
+          Para envio das informações de VENDEDORES, <a href='https://share.hsforms.com/1lw5Uk3cvTfKgQxRQVGMrPw49vzc'> click aqui </a>
           `
       }
       <br>
