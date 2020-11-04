@@ -33,6 +33,15 @@ class UserService {
     return await UserRepository.find(query).select('-avatar');
   }
 
+  async getAll(userId: string) {
+    let query: any;
+    const userData: any = await this.getById(userId);
+
+    query = { organization: userData.organization };
+
+    return await UserRepository.find(query).select('-avatar');
+  }
+
   async getById(_id: string | mongoose.Schema.Types.ObjectId) {
     return await UserRepository.findById(_id);
   }

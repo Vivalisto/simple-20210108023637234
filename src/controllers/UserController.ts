@@ -14,6 +14,16 @@ class UserController {
     }
   }
 
+  async getAll(req: Request | any, res: Response) {
+    const userId = req.userId;
+    try {
+      const users = await UserService.getAll(userId);
+      Helper.sendResponse(res, HttpStatus.OK, users);
+    } catch (error) {
+      console.error.bind(console, `Error ${error}`);
+    }
+  }
+
   async getById(req: Request, res: Response) {
     const { id } = req.params;
 
