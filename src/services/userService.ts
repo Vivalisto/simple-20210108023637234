@@ -90,6 +90,7 @@ class UserService {
   async edit(userId: string, data: any, userEditId: string) {
     //carrega os dados do usuário que solicitou a alteração
     const userDb: any = await this.getById(userId);
+    const userEdit: any = await this.getById(userEditId);
 
     if (userDb?.rules?.profile !== ProfileType.Master) {
       throw new AppError('Usuário não tem permissão para realizar essa ação');
