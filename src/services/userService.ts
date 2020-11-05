@@ -105,8 +105,14 @@ class UserService {
     const userDb: any = await this.getById(userId);
     const userEdit: any = await this.getById(userEditId);
 
+    const userDataByEmail: any = await this.userExist(data.email)
+
     const usersOwner: any = await this.getFiltered({owner: userEditId })
     const usersCoordinator: any = await this.getFiltered({coordinator: userEditId })
+
+    if(userDataByEmail.id != userEditId) {
+      throw new AppError('Email já cadastrado no sistema');
+    }
 
     if (userDb?.rules?.profile !== ProfileType.Master) {
       throw new AppError('Usuário não tem permissão para realizar essa ação');
