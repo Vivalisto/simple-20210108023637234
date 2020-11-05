@@ -42,6 +42,10 @@ class UserService {
     return await UserRepository.find(query).select('-avatar');
   }
 
+  async getFiltered(query: {}) {
+    return await UserRepository.find(query).select('-avatar');
+  }
+
   async getById(_id: string | mongoose.Schema.Types.ObjectId) {
     return await UserRepository.findById(_id);
   }
@@ -101,10 +105,20 @@ class UserService {
     const userDb: any = await this.getById(userId);
     const userEdit: any = await this.getById(userEditId);
 
+    const usersOwner: any = await this.getFiltered({owner: userEditId })
+    const usersCoordinator: any = await this.getFiltered({coordinator: userEditId })
+
     if (userDb?.rules?.profile !== ProfileType.Master) {
       throw new AppError('Usuário não tem permissão para realizar essa ação');
     }
 
+    if(usersOwner?.length || usersCoordinator?.length) {
+      if(userEdit.rules.profile === data.rules.profile ) {
+        return await UserRepository.findByIdAndUpdate(userEditId, data, { new: true });
+      } else {
+        throw new AppError('Alteração de PERFIL não permitida. Existe(m) usuário(s) subordinado(s) a essa conta. Mova o(s) para outra gerencia  antes de realizar essa ação.');
+      }
+    }      
     return await UserRepository.findByIdAndUpdate(userEditId, data, { new: true });
   }
 
