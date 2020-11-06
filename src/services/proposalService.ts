@@ -59,6 +59,10 @@ class ProposalService {
       search = {
         organization: { _id: userProposal?.organization },
       };
+    } else if (userProposal?.rules?.profile === ProfileType.Coordenador || userProposal?.rules?.profile === ProfileType.Gerente){
+      search = {
+        organization: { _id: userProposal?.organization },
+      }
     } else {
       search = {
         user: { _id: userId },
@@ -209,6 +213,7 @@ class ProposalService {
     } else {
       query = [ProposalType.Aluguel, ProposalType.CompraVenda];
     }
+    
 
     if (
       userProposal?.rules?.profile === ProfileType.Master &&
@@ -218,6 +223,11 @@ class ProposalService {
         organization: { _id: userProposal?.organization },
         stage: { $gt: 0 },
       };
+    } else if (userProposal?.rules?.profile === ProfileType.Coordenador || userProposal?.rules?.profile === ProfileType.Gerente){
+      search = {
+        organization: { _id: userProposal?.organization },
+        stage: { $gt: 0 },
+      }      
     } else {
       search = {
         user: { _id: userId },
@@ -1517,7 +1527,7 @@ class ProposalService {
       <br>
       Outras Informações Importantes para a Contratação:
       <br>
-      ${proposal?.hiringData?.comments}
+      ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
       <br><br>
       Assim como você, os clientes já foram acionados para o andamento da contratação, caso sejam eles os responsáveis pelo envio das informações complementares e da documentação.
       <br>
@@ -1588,7 +1598,7 @@ class ProposalService {
       }
       
       <br>
-      Outras Informações Importantes para a Contratação: ${proposal?.hiringData?.comments}
+      Outras Informações Importantes para a Contratação: ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
       <br><br>
       Assim como você, os clientes já foram acionados para o andamento da contratação, caso sejam eles os responsáveis pelo envio das informações complementares e da documentação.
       <br>
@@ -1650,7 +1660,7 @@ class ProposalService {
       <br>
       Outras Informações Importantes para a Contratação:
       <br>
-      ${proposal?.hiringData?.comments}
+      ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
       <br>
       <br>
       `,

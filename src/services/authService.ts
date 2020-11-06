@@ -28,10 +28,12 @@ class AuthService {
   }
 
   async registerInvite(userRequest: any, owner: string) {
+    const userOrganization: any = await UserService.getById(owner);
     let userIvite = {
       ...userRequest,
       owner: !!userRequest.owner ? userRequest.owner : owner,
-      password: '12345',
+      organization: userOrganization?.organization,
+      password: '12345'
     };
     const newUser = await UserService.createInvite(userIvite);
 
