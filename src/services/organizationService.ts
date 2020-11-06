@@ -17,6 +17,7 @@ class OrganizationService {
   }
 
   async update(_id: string, organization: any) {
+    
     return await OrganizationRepository.findByIdAndUpdate(_id, organization, {
       new: true,
     });

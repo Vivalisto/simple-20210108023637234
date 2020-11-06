@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import * as mongoose from 'mongoose';
 
@@ -12,15 +11,18 @@ import AppError from '../errors/AppError';
 
 import { apiServer } from '../config/api';
 import { sendMailUtil } from '../utils/sendMail';
-import { ProfileType } from '../enums/access-control.enum';
+import { GroupType, ProfileType } from '../enums/access-control.enum';
 import { UserSituation } from '../enums/user-situation.enum';
+import { TermKey } from '../enums/term-key.enum';
 
 class UserService {
   async get(userId: string) {
     let query: any;
     const userData: any = await this.getById(userId);
 
-    if (userData?.rules?.profile === ProfileType.Master) {
+    if ( userData?.rules?.group === GroupType.Vivalisto ) {
+      query = {};
+    } else if (userData?.rules?.profile === ProfileType.Master) {
       query = { organization: userData.organization };
     } else if (userData?.rules?.profile === ProfileType.Gerente) {
       query = { owner: userData._id };
@@ -28,6 +30,19 @@ class UserService {
       query = { userId };
     }
 
+    return await UserRepository.find(query).select('-avatar');
+  }
+
+  async getAll(userId: string) {
+    let query: any;
+    const userData: any = await this.getById(userId);
+
+    query = { organization: userData.organization };
+
+    return await UserRepository.find(query).select('-avatar');
+  }
+
+  async getFiltered(query: {}) {
     return await UserRepository.find(query).select('-avatar');
   }
 
@@ -85,6 +100,34 @@ class UserService {
     return await UserRepository.findByIdAndUpdate(_id, user, { new: true });
   }
 
+  async edit(userId: string, data: any, userEditId: string) {
+    //carrega os dados do usuário que solicitou a alteração
+    const userDb: any = await this.getById(userId);
+    const userEdit: any = await this.getById(userEditId);
+
+    const userDataByEmail: any = await this.userExist(data.email)
+
+    const usersOwner: any = await this.getFiltered({owner: userEditId })
+    const usersCoordinator: any = await this.getFiltered({coordinator: userEditId })
+
+    if(userDataByEmail.id != userEditId) {
+      throw new AppError('Email já cadastrado no sistema');
+    }
+
+    if (userDb?.rules?.profile !== ProfileType.Master) {
+      throw new AppError('Usuário não tem permissão para realizar essa ação');
+    }
+
+    if(usersOwner?.length || usersCoordinator?.length) {
+      if(userEdit.rules.profile === data.rules.profile ) {
+        return await UserRepository.findByIdAndUpdate(userEditId, data, { new: true });
+      } else {
+        throw new AppError('Alteração de PERFIL não permitida. Existe(m) usuário(s) subordinado(s) a essa conta. Mova o(s) para outra gerencia  antes de realizar essa ação.');
+      }
+    }      
+    return await UserRepository.findByIdAndUpdate(userEditId, data, { new: true });
+  }
+
   async delete(_id: string) {
     return await UserRepository.findByIdAndRemove(_id);
   }
@@ -114,6 +157,23 @@ class UserService {
       throw new AppError('Situação inválida');
     }
     return await this.update(_id, { situation });
+  }
+
+  async updateTerm(_id: string, term: any) {
+    const user: any = await this.getById(_id);
+    const terms: any = user.terms.filter((termUser: any) => termUser?.key === term?.key)
+    
+    if (!Object.values(TermKey).includes(term.key)) {
+      throw new AppError('Termo não cadastrado');
+    }
+
+    if(!!terms.length) {
+      throw new AppError('Termo já aceito');
+    }
+
+    user.terms.push({...term, accept: true})
+    user.save();
+    return user;
   }
 
   async userExistWithFields(email: string, withFields?: string) {
@@ -158,7 +218,7 @@ class UserService {
   ) {
     const user: any = await this.userExistWithFields(
       email,
-      '+passwordResetToken passwordResetExpires'
+      '+passwordResetToken passwordResetExpires situation'
     );
 
     if (token !== user.passwordResetToken) {
@@ -169,6 +229,10 @@ class UserService {
 
     if (now > user.passwordResetExpires) {
       throw new AppError('Token expirado, gere um novo token', 401);
+    }
+
+    if (user.situation === UserSituation.Inativo) {
+      throw new AppError('Usuário inativo, entre em contato com seu superior', 401);
     }
 
     if (user.situation === UserSituation.Pendente) {

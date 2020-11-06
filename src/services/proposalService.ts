@@ -18,6 +18,7 @@ import { sendMailUtil } from '../utils/sendMail';
 import { GroupType, ProfileType } from '../enums/access-control.enum';
 import { apiServer } from '../config/api';
 import organizationService from './organizationService';
+import { ResponsibleHiring } from '../enums/responsible-hiring.enum';
 
 const proposalUserFields = [
   'name',
@@ -164,6 +165,40 @@ class ProposalService {
     return await this.update(proposalId, { stage: stageUpdate });
   }
 
+  async sendHiring(proposalId: string, userId: string, hiringDataReq: any) {
+    let userDB: any = await userService.getById(userId);
+
+    const {
+      status,
+      followers,
+      userResponsible,
+      proponentParts,
+      ownerParts,
+      responsibleHiring,
+      comments,
+   } = hiringDataReq
+
+   const proposalData: any = {
+      status,
+      stage: ProposalStage.Documental,
+      followers,
+      user: userResponsible,
+      hiringData: {
+        proponentParts,
+        ownerParts,
+        responsibleHiring,
+        comments,
+      }
+    }
+
+    await this.update(proposalId, proposalData);
+    let proposal: any = await this.getById(proposalId);
+
+    this.sendMailHire(proposal, userDB);
+
+    return proposal
+  }
+
   async getSignings(userId: mongoose.Schema.Types.ObjectId, type: String) {
     let query = [];
     let search = {};
@@ -190,7 +225,7 @@ class ProposalService {
       };
     }
 
-    if(userProposal?.rules?.group === GroupType.Vivalisto && userProposal?.rules?.profile === ProfileType.Master) {
+    if(userProposal?.rules?.group === GroupType.Vivalisto && (userProposal?.rules?.profile === ProfileType.Master || userProposal?.rules?.profile === ProfileType.Gerente)) {
       return await ProposalRepository.find({stage: { $gt: 0 },})
       .where('type')
       .equals(query)
@@ -230,6 +265,7 @@ class ProposalService {
             name,
             phone,
             personType,
+            organization
           });
           if (!customerFind[0].type.includes(CustomerType.Proponent)) {
             customerFind[0].type.push(CustomerType.Proponent);
@@ -256,6 +292,7 @@ class ProposalService {
           await customerService.update(customerFind[0]._id, {
             name,
             phone,
+            organization
           });
           if (!customerFind[0].type.includes(CustomerType.Proponent)) {
             customerFind[0].type.push(CustomerType.Locator);
@@ -267,7 +304,7 @@ class ProposalService {
             ...locator,
             type: [CustomerType.Locator],
             user,
-            organization,
+            organization
           });
         }
       }
@@ -289,6 +326,8 @@ class ProposalService {
     let locatorData: any = {};
     let proposalDb: any;
 
+    const userRequest: any = await userService.getById(user);
+
     const { proponent, locator, sendMail } = proposal;
 
     if (proponent) {
@@ -297,7 +336,7 @@ class ProposalService {
       });
 
       if (customerFind?.length && !!customerFind[0]) {
-        await customerService.update(customerFind._id, proponent);
+        await customerService.update(customerFind._id, {...proponent, organization: userRequest?.organization});
         if (!customerFind[0].type.includes(CustomerType.Proponent)) {
           customerFind[0].type.push(CustomerType.Proponent);
           await customerFind[0].save();
@@ -307,6 +346,7 @@ class ProposalService {
         proponentData = await CustomerRepository.create({
           ...proponent,
           type: [CustomerType.Proponent],
+          organization: userRequest?.organization
         }).catch(() => {
           throw new AppError('Erro ao atualizar a proposta');
         });
@@ -330,6 +370,7 @@ class ProposalService {
         await customerService.update(customerFind[0]._id, {
           name,
           phone,
+          organization: userRequest?.organization
         });
 
         if (
@@ -358,6 +399,7 @@ class ProposalService {
           ...locator,
           type: [custType],
           user,
+          organization: userRequest?.organization
         });
       }
 
@@ -469,7 +511,7 @@ class ProposalService {
         proposal.immobile.number
       } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
         proposal.immobile.cep
-      }</bold>
+      } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}</bold>
       <br><br>
       Neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade. 
       <br><br>
@@ -517,7 +559,7 @@ class ProposalService {
         proposal.immobile.number
       } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
         proposal.immobile.cep
-      }</bold>
+      } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}</bold>
       <br><br>
       Neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade.
       <br><br>
@@ -564,7 +606,7 @@ class ProposalService {
       <br>
       <br>
 
-      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
+      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}<br>
       Proponente: ${proponent.name}
       <br>
       Locador: ${locator.name}
@@ -602,7 +644,7 @@ class ProposalService {
             proposal.immobile.number
           } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
             proposal.immobile.cep
-          }</bold>
+          } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}</bold>
           <br><br>
           Neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade. 
           <br><br>
@@ -656,7 +698,7 @@ class ProposalService {
         proposal.immobile.number
       } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
         proposal.immobile.cep
-      }</bold>
+      } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}</bold>
       <br><br>
       Neste momento, precisamos que analise as condições para darmos andamento na negociação. Não se preocupe que nesta etapa tratamos apenas das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises, contratos e tudo o mais necessário para a segurança da sua venda.
       <br><br>
@@ -706,7 +748,7 @@ class ProposalService {
         proposal.immobile.number
       } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
         proposal.immobile.cep
-      }</bold>
+      } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}</bold>
       <br><br>
       Neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises, contratos e tudo o mais necessário para a segurança da sua compra. Aliás, esse é um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, cuidamos de tudo para você, até da Escritura e do Registro de Imóveis. Temos um corpo jurídico isento e especializado em direito imobiliário e processos integrados com uso da tecnologia, para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, uma vez que cuidamos de tudo para a sua segurança e comodidade, até mesmo do crédito imobiliário, sem nenhum custo adicional.
       <br><br>
@@ -755,7 +797,7 @@ class ProposalService {
       <br>
       <br>
 
-      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
+      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}<br>
       Proponente: ${proponent.name}
       <br>
       Vendedor: ${locator.name}
@@ -793,7 +835,7 @@ class ProposalService {
             proposal.immobile.number
           } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
             proposal.immobile.cep
-          }</bold>
+          } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}</bold>
           <br><br>
           Neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade. 
           <br><br>
@@ -850,7 +892,7 @@ class ProposalService {
         proposal.immobile.number
       } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
         proposal.immobile.cep
-      }</bold>
+      } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}</bold>
       <br><br>
       Lembrando que neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo edinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade.
       <br><br>
@@ -902,7 +944,7 @@ class ProposalService {
         proposal.immobile.number
       } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
         proposal.immobile.cep
-      }</bold>
+      } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}</bold>
       <br><br>
       Lembrando que neste momento trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade.
       <br><br>
@@ -936,7 +978,7 @@ class ProposalService {
       <br><br>
       Estamos evoluindo, a proposta foi alterada e encaminhada para seus clientes, ${
         proposal.type === ProposalType.Aluguel
-          ? ' inquilinos e locadores.'
+          ? 'inquilinos e locadores.'
           : 'compradores e vendedores.'
       }
       <br>
@@ -956,7 +998,7 @@ class ProposalService {
       <br>
       <br>
 
-      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
+      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}<br>
       Proponente: ${proponent.name}
       <br>
       ${
@@ -998,7 +1040,7 @@ class ProposalService {
             proposal.immobile.number
           } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
             proposal.immobile.cep
-          }</bold>
+          } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}</bold>
           <br><br>
           Neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade. 
           <br><br>
@@ -1060,7 +1102,7 @@ class ProposalService {
       <br>
       <br>
 
-      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
+      Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}<br>
       Proponente: ${proponent.name}
       <br>
       ${
@@ -1102,7 +1144,7 @@ class ProposalService {
             proposal.immobile.number
           } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
             proposal.immobile.cep
-          }</bold>
+          } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}</bold>
           <br><br>
           Neste momento, trataremos das condições comerciais e posteriormente, uma vez fechada a negociação, serão realizadas todas as análises cadastrais, contratações de garantias, enfim, tudo para a segurança da sua locação. Aliás, esse um grande diferencial nosso, pois além de termos uma jornada de contratação 100% digital, um corpo jurídico isento e especializado em direito imobiliário, integramos todos os serviços relativos à locação para que você não precise enfrentar filas em cartórios, gastar tempo e dinheiro com a burocracia, advogados e documentação externa, seguros ou vistorias, uma vez que cuidamos de tudo para a sua segurança e comodidade. 
           <br><br>
@@ -1162,7 +1204,7 @@ class ProposalService {
       <br>
       <br>
 
-      Imóvel: ${proposal?.immobile?.publicPlace}, ${proposal?.immobile?.number} - ${proposal?.immobile?.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
+      Imóvel: ${proposal?.immobile?.publicPlace}, ${proposal?.immobile?.number} - ${proposal?.immobile?.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}<br>
       Proponente: ${proponent?.name}
       <br>
       ${
@@ -1217,7 +1259,7 @@ class ProposalService {
         proposal.immobile.number
       } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
         proposal.immobile.cep
-      }</bold>
+      } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}</bold>
       <br><br>
       Agradecemos a confiança e desejamos sucesso em sua nova locação.
       <br><br>
@@ -1273,7 +1315,7 @@ class ProposalService {
         proposal.immobile.number
       } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
         proposal.immobile.cep
-      }</bold>
+      } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}</bold>
       <br><br>
       Agradecemos a confiança e desejamos sucesso em sua nova locação.
       <br><br>
@@ -1303,7 +1345,7 @@ class ProposalService {
         proposal.immobile.number
       } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
         proposal.immobile.cep
-      }`,
+      } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       message: `
       
       ${userProposal.name}, bom trabalho!
@@ -1328,7 +1370,7 @@ class ProposalService {
       <br>
       Imóvel: ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${
         proposal.immobile.city
-      } - ${proposal.immobile.state}, ${proposal.immobile.cep}<br>
+      } - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}<br>
       Proponente: ${proponent.name}
       <br>
       ${proposal.type === ProposalType.Aluguel ? 'Locador' : 'Vendedor'}: ${
@@ -1373,7 +1415,7 @@ class ProposalService {
             proposal.immobile.number
           } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${
             proposal.immobile.cep
-          }</bold>
+           } ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}</bold>
           <br><br>
           Agradecemos a confiança e desejamos sucesso em sua nova ${
             proposal.type === ProposalType.Aluguel ? 'locação' : 'venda'
@@ -1407,14 +1449,24 @@ class ProposalService {
     const { locator, proponent, followers } = proposal;
     const userProposal: any = await userService.getById(proposal.user.id);
 
+    let RESPONSIBLE: any = {
+      [ResponsibleHiring.Organization]: 'Imobiliária',
+      [ResponsibleHiring.Others]: 'Terceiro',
+      [ResponsibleHiring.Owner]: 'Locador'
+    }
+
+    const restProposal: string = proposal?.hiringData?.responsibleHiring
+    
+
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: userProposal.email,
-      subject: `${proposal.seq}, ${
+      cc: user.email,
+      subject: `OS ${proposal.seq}, ${
         proposal.type === ProposalType.Aluguel
           ? 'Locação'
           : 'Venda'
-      }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       message: `
       Olá, ${userProposal.name}!
       <br><br>
@@ -1434,26 +1486,38 @@ class ProposalService {
       <br>
       Responsabilidade de envio de documentos e informações complementares:
       <br>
-      - ${
-        proposal.type === ProposalType.Aluguel
-          ? 'Inquilinos'
-          : 'Compradores'
-      }
-      <br> 
-      - ${
-        proposal.type === ProposalType.Aluguel
-          ? 'Locadores'
-          : 'Vendedores'
+      ${
+        proposal?.hiringData?.proponentParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? '- Inquilinos'
+            : '- Compradores'  
+          )
+          : ''
       }
       <br>
       ${
+        proposal?.hiringData?.ownerParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? '- Locadores'
+            : '- Vendedores'
+  
+          )
+          : ''
+      }
+      <br>
+      <br>
+      ${
         proposal.type === ProposalType.Aluguel
-          ? 'Administração da Locação: "imobiliari/ locador/ terceiro" <br>'
+          ? `Administração da Locação: ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}<br>`
           : '<br>'
       }
       
       <br>
-      Outras Informações Importantes para a Contratação: "comentario modal"
+      Outras Informações Importantes para a Contratação:
+      <br>
+      ${proposal?.hiringData?.comments}
       <br><br>
       Assim como você, os clientes já foram acionados para o andamento da contratação, caso sejam eles os responsáveis pelo envio das informações complementares e da documentação.
       <br>
@@ -1471,11 +1535,11 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: user.email,
-      subject: `${proposal.seq}, ${
+      subject: `OS ${proposal.seq}, ${
         proposal.type === ProposalType.Aluguel
           ? 'Locação'
           : 'Venda'
-      }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       message: `
       Olá, ${user.name}!
       <br><br>
@@ -1495,26 +1559,36 @@ class ProposalService {
       <br>
       Responsabilidade de envio de documentos e informações complementares:
       <br>
-      - ${
-        proposal.type === ProposalType.Aluguel
-          ? 'Inquilinos'
-          : 'Compradores'
-      }
-      <br> 
-      - ${
-        proposal.type === ProposalType.Aluguel
-          ? 'Locadores'
-          : 'Vendedores'
+      ${
+        proposal?.hiringData?.proponentParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? '- Inquilinos'
+            : '- Compradores'  
+          )
+          : ''
       }
       <br>
       ${
+        proposal?.hiringData?.ownerParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? '- Locadores'
+            : '- Vendedores'
+  
+          )
+          : ''
+      }
+      <br>
+      <br>
+      ${
         proposal.type === ProposalType.Aluguel
-          ? 'Administração da Locação: "imobiliari/ locador/ terceiro" <br>'
+          ? `Administração da Locação: ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}<br>`
           : '<br>'
       }
       
       <br>
-      Outras Informações Importantes para a Contratação: "comentario modal"
+      Outras Informações Importantes para a Contratação: ${proposal?.hiringData?.comments}
       <br><br>
       Assim como você, os clientes já foram acionados para o andamento da contratação, caso sejam eles os responsáveis pelo envio das informações complementares e da documentação.
       <br>
@@ -1532,11 +1606,11 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: 'contratos@vivalisto.com.br',
-      subject: `${proposal.seq}, ${
+      subject: `OS ${proposal.seq}, ${
         proposal.type === ProposalType.Aluguel
           ? 'Locação'
           : 'Venda'
-      }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       message: `
       
       Mais um negócio fechado!
@@ -1555,71 +1629,116 @@ class ProposalService {
       <br>
       Responsabilidade de envio de documentos e informações complementares:
       <br>
-      - ${
+      ${
         proposal.type === ProposalType.Aluguel
-          ? 'Inquilinos'
-          : 'Compradores'
+          ? '- Inquilinos'
+          : '- Compradores'
       }
       <br> 
-      - ${
+      ${
         proposal.type === ProposalType.Aluguel
-          ? 'Locadores'
-          : 'Vendedores'
+          ? '- Locadores'
+          : '- Vendedores'
       }
       <br>
       ${
         proposal.type === ProposalType.Aluguel
           ? 'Administração da Locação: "imobiliari/ locador/ terceiro" <br>'
-          : '<br>'
+          : ''
       }
 
       <br>
-      Outras Informações Importantes para a Contratação: "comentario modal"
-      <br>      
+      Outras Informações Importantes para a Contratação:
+      <br>
+      ${proposal?.hiringData?.comments}
+      <br>
       <br>
       `,
     });
 
-    sendMailUtil({
-      from: 'contratos@vivalisto.com.br',
-      to: locator.email,
-      subject: `${proposal.seq}, ${
-        proposal.type === ProposalType.Aluguel
-          ? 'Locação'
-          : 'Venda'
-      }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
-      message: `
-      
-      Olá, ${locator?.name}
-      <br><br>
-      Vamos dar início ao processo de contratação do imóvel ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}, Ordem de Serviço ${proposal.seq}.
-      <br><br>
-      A Vivalisto é especialista em contratos e processos. Com corpo jurídico próprio e isento em relação às partes da transação, aportamos segurança jurídica, agilidade e especialização em todas as etapas pós- negociação. Essa é uma grande preocupação de seu corretor, ${userProposal.name}, pensando      em sua experiência como cliente e em sua satisfação.
-      <br>
-      <br>
-      Agora, precisamos de informações complementares à sua negociação para que o processo caminhe de forma leve e com a devida segurança jurídica e operacional. É bem simples e prático! Quanto mais rápido responder, mais rápido receberá o e-mail com instruções para o envio de sua documentação de forma 100% digital. Após a análise da documentação e do(s) proponente(s), seguiremos para a assinatura on- line do contrato, vistoria do imóvel e entrega das chaves.
-      <br>
-      <br>
-      Para envio das informações, <a href='https://share.hsforms.com/1Xfp-eeMASHaXdbX0PlKLLA49vzc'> click aqui </a>
-      <br>
-      <br>
-      Em caso de dúvida, é só entrar em contato pelo e-mail <a> contratos@vivalisto.com.br </a>
-      <br>
-      <br>
-      Atenciosamente.
-      <br>
-      Equipe de Contratos
-      <br><br>
+    if(proposal?.hiringData?.proponentParts) {
+      sendMailUtil({
+        from: 'contratos@vivalisto.com.br',
+        to: proponent.email,
+        subject: `OS ${proposal.seq}, ${
+          proposal.type === ProposalType.Aluguel
+            ? 'Locação'
+            : 'Venda'
+        }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
+        message: `
+        
+        Olá, ${proponent?.name}
+        <br><br>
+        Vamos dar início ao processo de contratação do imóvel ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}, Ordem de Serviço ${proposal.seq}.
+        <br><br>
+        A Vivalisto é especialista em contratos e processos. Com corpo jurídico próprio e isento em relação às partes da transação, aportamos segurança jurídica, agilidade e especialização em todas as etapas pós- negociação. Essa é uma grande preocupação de seu corretor, ${userProposal.name}, pensando      em sua experiência como cliente e em sua satisfação.
+        <br>
+        <br>
+        Agora, precisamos de informações complementares à sua negociação para que o processo caminhe de forma leve e com a devida segurança jurídica e operacional. É bem simples e prático! Quanto mais rápido responder, mais rápido receberá o e-mail com instruções para o envio de sua documentação de forma 100% digital. Após a análise da documentação e do(s) proponente(s), seguiremos para a assinatura on- line do contrato, vistoria do imóvel e entrega das chaves.
+        <br>
+        <br>
+        Para envio das informações, <a href=${ proposal.type === ProposalType.Aluguel ? 'https://share.hsforms.com/1Xfp-eeMASHaXdbX0PlKLLA49vzc' : 'https://share.hsforms.com/1AIvfShu0QhmegRqm1dCE2g49vzc'}> click aqui </a>
+        <br>
+        <br>
+        Em caso de dúvida, é só entrar em contato pelo e-mail <a> contratos@vivalisto.com.br </a>
+        <br>
+        <br>
+        Atenciosamente.
+        <br>
+        Equipe de Contratos
+        <br><br>
+  
+        powered by Vivalisto Proptech    
+        
+        `,
+      });
+    }
 
-      powered by Vivalisto Proptech    
-      
-      `,
-    });
+    if(proposal?.hiringData?.ownerParts) {
+
+      sendMailUtil({
+        from: 'contratos@vivalisto.com.br',
+        to: locator.email,
+        cc: followers?.length ? followers : [], 
+        subject: `OS ${proposal.seq}, ${
+          proposal.type === ProposalType.Aluguel
+            ? 'Locação'
+            : 'Venda'
+        }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+        message: `
+        
+        Olá, ${locator?.name}
+        <br><br>
+        Vamos dar início ao processo de contratação do imóvel ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}, Ordem de Serviço ${proposal.seq}.
+        <br><br>
+        A Vivalisto é especialista em contratos e processos. Com corpo jurídico próprio e isento em relação às partes da transação, aportamos segurança jurídica, agilidade e especialização em todas as etapas pós- negociação. Essa é uma grande preocupação de seu corretor, ${userProposal.name}, pensando em sua experiência como cliente e em sua satisfação.
+        <br>
+        <br>
+        Agora, precisamos de informações complementares à sua negociação para que o processo caminhe de forma leve e com a devida segurança jurídica e operacional. É bem simples e prático! Quanto mais rápido responder, mais rápido receberá o e-mail com instruções para o envio de sua documentação de forma 100% digital. Após a análise da documentação e do(s) proponente(s), seguiremos para a assinatura on- line do contrato, vistoria do imóvel e entrega das chaves.
+        <br>
+        <br>
+        Para envio das informações, <a href=${ proposal.type === ProposalType.Aluguel ? 'https://share.hsforms.com/1tW7eVQ-3RmKDzsLvHVXlpw49vzc' : 'https://share.hsforms.com/1lw5Uk3cvTfKgQxRQVGMrPw49vzc'}> click aqui </a>
+        <br>
+        <br>
+        Em caso de dúvida, é só entrar em contato pelo e-mail <a> contratos@vivalisto.com.br </a>
+        <br>
+        <br>
+        Atenciosamente.
+        <br>
+        Equipe de Contratos
+        <br><br>
+  
+        powered by Vivalisto Proptech    
+        
+        `,
+      });
+    }
 
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: userProposal.email,
-      subject: `${proposal.seq}, ${proposal.seq}, ${
+      cc: followers?.length ? followers : [], 
+      subject: `OS ${proposal.seq}, ${
         proposal.type === ProposalType.Aluguel
           ? 'Locação'
           : 'Venda'
@@ -1628,11 +1747,11 @@ class ProposalService {
       
       Olá, ${userProposal?.name}
       <br><br>
-      Vamos dar início ao processo de ${proposal.seq}, ${
+      Vamos dar início ao processo. OS: ${proposal.seq}, ${
         proposal.type === ProposalType.Aluguel
           ? 'contratação da locação'
           : 'contratação da venda'
-      } do imóvel, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}, Ordem de Serviço ${proposal.seq}.
+      } do imóvel, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}, Ordem de Serviço ${proposal.seq}.
       <br><br>
       Conforme apontado no envio para a contratação, você ficou responsável pelo fornecimento dos documentos e informações complementares do(s) cliente(s), dessa forma, solicitamos que acesse os links abaixo para a sequência do processo.
       <br>
@@ -1647,10 +1766,10 @@ class ProposalService {
           `
           :
           `
-          Para envio das informações de COMPRADORES,, <a href='https://share.hsforms.com/1AIvfShu0QhmegRqm1dCE2g49vzc'> click aqui </a>
+          Para envio das informações de COMPRADORES, <a href='https://share.hsforms.com/1AIvfShu0QhmegRqm1dCE2g49vzc'> click aqui </a>
           <br>
           <br>
-          Para envio das informações de VENDEDORES,, <a href='https://share.hsforms.com/1lw5Uk3cvTfKgQxRQVGMrPw49vzc'> click aqui </a>
+          Para envio das informações de VENDEDORES, <a href='https://share.hsforms.com/1lw5Uk3cvTfKgQxRQVGMrPw49vzc'> click aqui </a>
           `
       }
       <br>
@@ -1667,7 +1786,6 @@ class ProposalService {
       
       `,
     });
-
 
 
     // if (followers?.length) {
@@ -1737,7 +1855,7 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: locator.email,
-      subject: `Nova Etapa: Contrato - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Contrato - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       cc: followers,
       message: `
       Olá, ${locator.name}!
@@ -1773,7 +1891,7 @@ class ProposalService {
       from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
-      subject: `Nova Etapa: Contrato - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Contrato - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       message: `
       Olá, ${proponent.name}!
       <br><br>
@@ -1815,7 +1933,7 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: locator.email,
-      subject: `Nova Etapa: Vistoria - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Vistoria - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       cc: followers,
       message: `
       Olá, ${locator.name}!
@@ -1852,7 +1970,7 @@ class ProposalService {
       from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
-      subject: `Nova Etapa: Vistoria - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Vistoria - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       message: `
       Olá, ${proponent.name}!
       <br><br>
@@ -1892,7 +2010,7 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: locator.email,
-      subject: `Nova Etapa: Entrega de Chaves - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Entrega de Chaves - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       cc: followers,
       message: `
       Olá, ${locator.name}!
@@ -1923,7 +2041,7 @@ class ProposalService {
       from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
-      subject: `Nova Etapa: Entrega de Chaves - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Entrega de Chaves - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       message: `
       Olá, ${proponent.name}!
       <br><br>
@@ -1959,7 +2077,7 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: locator.email,
-      subject: `Nova Etapa: Conclusão - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Conclusão - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       cc: followers,
       message: `
       Olá, ${locator.name}!
@@ -2001,7 +2119,7 @@ class ProposalService {
       from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
-      subject: `Nova Etapa: Conclusão - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Conclusão - ${proposal.seq}, Locação, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       message: `
       Olá, ${proponent.name}!
       <br><br>
@@ -2050,7 +2168,7 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: locator.email,
-      subject: `Nova Etapa: Due Diligence - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Due Diligence - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       cc: followers,
       message: `
       Olá, ${locator.name}!
@@ -2083,7 +2201,7 @@ class ProposalService {
       from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
-      subject: `Nova Etapa: Due Diligence - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Due Diligence - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       message: `
       Olá, ${proponent.name}!
       <br><br>
@@ -2123,7 +2241,7 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: locator.email,
-      subject: `Nova Etapa: Contrato - ${proposal.seq}, Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Contrato - ${proposal.seq}, Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       cc: followers,
       message: `
       Olá, ${locator.name}!
@@ -2153,7 +2271,7 @@ class ProposalService {
       from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
-      subject: `Nova Etapa: Contrato - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Contrato - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       message: `
       Olá, ${proponent.name}!
       <br><br>
@@ -2192,7 +2310,7 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: locator.email,
-      subject: `Nova Etapa: Chaves e Propriedade - ${proposal.seq}, Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Chaves e Propriedade - ${proposal.seq}, Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       cc: followers,
       message: `
       Olá, ${locator.name}!
@@ -2224,7 +2342,7 @@ class ProposalService {
       from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
-      subject: `Nova Etapa: Chaves e Propriedade - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Chaves e Propriedade - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       message: `
       ${proponent.name}, parabéns pela compra de seu novo imóvel!
       <br><br>
@@ -2261,7 +2379,7 @@ class ProposalService {
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
       to: locator.email,
-      subject: `Nova Etapa: Conclusão - ${proposal.seq}, Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Conclusão - ${proposal.seq}, Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       cc: followers,
       message: `
       Olá, ${locator.name}!
@@ -2300,7 +2418,7 @@ class ProposalService {
       from: 'contratos@vivalisto.com.br',
       to: proponent.email,
       cc: followers,
-      subject: `Nova Etapa: Conclusão - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      subject: `Nova Etapa: Conclusão - ${proposal.seq}, Compra e Venda, ${proposal.immobile.publicPlace}, ${proposal.immobile.number} - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
       message: `
       Olá, ${proponent.name}.
       <br><br>
@@ -2309,7 +2427,8 @@ class ProposalService {
       É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
       <br><br>
       Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.
-      <br><br>
+      <br><br>import { boolean } from 'yup';
+
       Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
         proposal._id
       }> click aqui </a>

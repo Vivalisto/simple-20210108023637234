@@ -14,6 +14,16 @@ class UserController {
     }
   }
 
+  async getAll(req: Request | any, res: Response) {
+    const userId = req.userId;
+    try {
+      const users = await UserService.getAll(userId);
+      Helper.sendResponse(res, HttpStatus.OK, users);
+    } catch (error) {
+      console.error.bind(console, `Error ${error}`);
+    }
+  }
+
   async getById(req: Request, res: Response) {
     const { id } = req.params;
 
@@ -67,12 +77,37 @@ class UserController {
     }
   }
 
+  async edit(req: Request | any, res: Response) {
+    const userId = req.userId;
+    const { userEditId } = req.params;
+    const dataUpdate = req.body;
+
+    try {
+      const user = await UserService.edit(userId, dataUpdate, userEditId);
+      Helper.sendResponse(res, HttpStatus.OK, {user});
+    } catch (error) {
+      Helper.sendResponse(res, error.statusCode, error.message);
+    }
+  }
+
   async updateSituation(req: Request | any, res: Response) {
     const { id } = req.params;
     const userNewStatus = req.body.situation;
 
     try {
       const user = await UserService.updateSituation(id, userNewStatus);
+      Helper.sendResponse(res, HttpStatus.OK, { user });
+    } catch (error) {
+      Helper.sendResponse(res, error.statusCode, error.message);
+    }
+  }
+
+  async updateTerm(req: Request | any, res: Response) {
+    const id = req.userId;
+    const userAddTerm = req.body.term;
+
+    try {
+      const user = await UserService.updateTerm(id, userAddTerm);
       Helper.sendResponse(res, HttpStatus.OK, { user });
     } catch (error) {
       Helper.sendResponse(res, error.statusCode, error.message);

@@ -7,6 +7,8 @@ import momentTimezone from 'moment-timezone';
 import { UserSituation } from '../enums/user-situation.enum';
 import { GroupType, ProfileType } from '../enums/access-control.enum';
 
+import TermSchema from './TermModel'
+
 // corretor autonomo
 interface IUser {
   name: string;
@@ -105,6 +107,10 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
   },
+  coordinator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
+  },
   rules: {
     type: UserAccessSchema,
     default: { group: GroupType.Autonomo, profile: ProfileType.Master },
@@ -112,6 +118,9 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
   organization: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'organization',
+  },
+  terms: {
+    type: [TermSchema],
   },
   created: {
     type: Date,
