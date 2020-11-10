@@ -71,7 +71,7 @@ class UserController {
 
     try {
       const user = await UserService.update(id, userUpdate);
-      Helper.sendResponse(res, HttpStatus.OK, user);
+      Helper.sendResponse(res, HttpStatus.OK, {user});
     } catch (error) {
       Helper.sendResponse(res, error.statusCode, error.message);
     }

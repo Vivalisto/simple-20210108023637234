@@ -1653,7 +1653,7 @@ class ProposalService {
       <br>
       ${
         proposal.type === ProposalType.Aluguel
-          ? 'Administração da Locação: "imobiliari/ locador/ terceiro" <br>'
+          ? `Administração da Locação: ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}<br>`
           : ''
       }
 
