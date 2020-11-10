@@ -1640,27 +1640,34 @@ class ProposalService {
       Responsabilidade de envio de documentos e informações complementares:
       <br>
       ${
-        proposal.type === ProposalType.Aluguel
-          ? '- Inquilinos'
-          : '- Compradores'
+        proposal?.hiringData?.proponentParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? '- Inquilinos'
+            : '- Compradores'  
+          )
+          : ''
       }
-      <br> 
+      <br>
       ${
-        proposal.type === ProposalType.Aluguel
-          ? '- Locadores'
-          : '- Vendedores'
+        proposal?.hiringData?.ownerParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? '- Locadores'
+            : '- Vendedores'
+  
+          )
+          : ''
       }
+      <br>
       <br>
       ${
         proposal.type === ProposalType.Aluguel
           ? `Administração da Locação: ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}<br>`
-          : ''
+          : '<br>'
       }
-
       <br>
-      Outras Informações Importantes para a Contratação:
-      <br>
-      ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
+      Outras Informações Importantes para a Contratação: ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
       <br>
       <br>
       `,
