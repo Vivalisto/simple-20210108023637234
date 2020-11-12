@@ -14,6 +14,7 @@ import { sendMailUtil } from '../utils/sendMail';
 import { GroupType, ProfileType } from '../enums/access-control.enum';
 import { UserSituation } from '../enums/user-situation.enum';
 import { TermKey } from '../enums/term-key.enum';
+import proposalService from './proposalService';
 
 class UserService {
   async get(userId: string) {
@@ -33,11 +34,16 @@ class UserService {
     return await UserRepository.find(query).select('-avatar');
   }
 
-  async getAll(userId: string) {
+  async getAll(proposalId: string) {
     let query: any;
-    const userData: any = await this.getById(userId);
+    const proposal: any = await proposalService.getById(proposalId)
+    const userData: any = await this.getById(proposal?.user);
 
-    query = { organization: userData.organization };
+    if(userData?.organization) {
+      query = { organization: userData.organization };
+    } else {
+      query = { _id: userData.id };
+    }
 
     return await UserRepository.find(query).select('-avatar');
   }

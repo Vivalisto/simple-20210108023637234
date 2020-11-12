@@ -14,10 +14,12 @@ class UserController {
     }
   }
 
-  async getAll(req: Request | any, res: Response) {
+  async getAllByProposal(req: Request | any, res: Response) {
     const userId = req.userId;
+    const { proposalId } = req.params;
+    
     try {
-      const users = await UserService.getAll(userId);
+      const users = await UserService.getAll(proposalId);
       Helper.sendResponse(res, HttpStatus.OK, users);
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
