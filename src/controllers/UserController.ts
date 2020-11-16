@@ -14,10 +14,12 @@ class UserController {
     }
   }
 
-  async getAll(req: Request | any, res: Response) {
+  async getAllByProposal(req: Request | any, res: Response) {
     const userId = req.userId;
+    const { proposalId } = req.params;
+    
     try {
-      const users = await UserService.getAll(userId);
+      const users = await UserService.getAll(proposalId);
       Helper.sendResponse(res, HttpStatus.OK, users);
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
@@ -71,7 +73,7 @@ class UserController {
 
     try {
       const user = await UserService.update(id, userUpdate);
-      Helper.sendResponse(res, HttpStatus.OK, user);
+      Helper.sendResponse(res, HttpStatus.OK, {user});
     } catch (error) {
       Helper.sendResponse(res, error.statusCode, error.message);
     }

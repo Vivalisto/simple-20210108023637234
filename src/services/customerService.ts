@@ -14,7 +14,7 @@ class CustomerService {
     let query: any;
     const userData: any = await userService.getById(userId)
     
-    if ( userData?.rules?.group === GroupType.Vivalisto && userData?.rules?.profile === ProfileType.Master ) {
+    if ( userData?.rules?.group === GroupType.Vivalisto) {
       query = {};
     } else if(userData?.rules.group === GroupType.Imobiliaria && userData?.rules?.profile === ProfileType.Master) {
       query = { organization: userData.organization }
