@@ -115,6 +115,20 @@ class ProposalController {
     }
   }
 
+  async getIntegrationHiring(req: Request | any, res: Response) {
+    const { type } = req.query;
+    try {
+      const proposals = await proposalService.getIntegrationHiring(req.userId, type);
+      Helper.sendResponse(res, HttpStatus.OK, { proposals });
+    } catch (error) {
+      Helper.sendResponse(
+        res,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Erro ao buscar as propostas'
+      );
+    }
+  }
+
   async getByCustomer(req: Request, res: Response) {
     const { id } = req.params;
 
