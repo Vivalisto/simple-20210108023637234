@@ -1,6 +1,6 @@
 const keys = {
   mongoURI:
-    'mongodb://admin:vivalisto2020@7c6a2ac2-2497-4be6-9444-1efbcacaa0a6-0.br37s45d0p54n73ffbr0.databases.appdomain.cloud:30902,7c6a2ac2-2497-4be6-9444-1efbcacaa0a6-1.br37s45d0p54n73ffbr0.databases.appdomain.cloud:30902/vivalisto-dev?authSource=admin&replicaSet=replset',
+    `mongodb://admin:vivalisto2020@7c6a2ac2-2497-4be6-9444-1efbcacaa0a6-0.br37s45d0p54n73ffbr0.databases.appdomain.cloud:30902,7c6a2ac2-2497-4be6-9444-1efbcacaa0a6-1.br37s45d0p54n73ffbr0.databases.appdomain.cloud:30902/${process.env.NODE_ENV === "production" ? 'vivalisto-dev' : 'vivalisto-staging'}?authSource=admin&replicaSet=replset`,
   secretOrKey: '9f920d6932f46a4a1fc98d25ffbbb166', //MD5
   apiKeySendgrid:
     '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',

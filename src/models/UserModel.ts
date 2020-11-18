@@ -74,6 +74,9 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
   cpf: {
     type: String,
   },
+  rg: {
+    type: String,
+  },
   cellphone: {
     type: String,
     required: true,
