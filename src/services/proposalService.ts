@@ -519,7 +519,7 @@ class ProposalService {
       <br><br>
       Acabamos de conseguir uma proposta para o seu imóvel, para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
       <br><br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, proposta: ${proposal.seq} </a>
       <br>
@@ -567,7 +567,7 @@ class ProposalService {
       Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições negociadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
       <br>
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
@@ -618,7 +618,7 @@ class ProposalService {
       <br><br>
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
       <br><br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -652,7 +652,7 @@ class ProposalService {
           <br><br>
           Você foi adicionado para acompanhar a proposta. Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
           <br><br>
-          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+          Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
             proposal._id
           }> click aqui, proposta: ${proposal.seq} </a>
           <br>
@@ -706,7 +706,7 @@ class ProposalService {
       <br><br>
       Acabamos de conseguir uma proposta para o seu imóvel, para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
       <br><br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, proposta: ${proposal.seq} </a>
       <br>
@@ -756,7 +756,7 @@ class ProposalService {
       Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições negociadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
       <br>
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
@@ -809,7 +809,7 @@ class ProposalService {
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
       <br>
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -843,7 +843,7 @@ class ProposalService {
           <br><br>
           Você foi adicionado para acompanhar a proposta. Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
           <br><br>
-          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+          Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
             proposal._id
           }> click aqui, proposta: ${proposal.seq} </a>
           <br>
@@ -900,7 +900,7 @@ class ProposalService {
       <br><br>
       Estamos evoluindo na negociação para fecharmos o negócio. No link abaixo você terá acesso às últimas condições propostas.
       <br><br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, proposta: ${proposal.seq} </a>
       <br>
@@ -952,7 +952,7 @@ class ProposalService {
       Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições negociadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
       <br>
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
@@ -1010,7 +1010,7 @@ class ProposalService {
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.      
       <br>
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -1048,7 +1048,7 @@ class ProposalService {
           <br><br>
           Você foi adicionado para acompanhar a proposta. Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
           <br><br>
-          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+          Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
             proposal._id
           }> click aqui, proposta: ${proposal.seq} </a>
           <br>
@@ -1114,7 +1114,7 @@ class ProposalService {
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.      
       <br>
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -1152,7 +1152,7 @@ class ProposalService {
           <br><br>
           Você foi adicionado para acompanhar a proposta. Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
           <br><br>
-          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+          Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
             proposal._id
           }> click aqui, proposta: ${proposal.seq} </a>
           <br>
@@ -1216,7 +1216,7 @@ class ProposalService {
       <br><br>
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
       <br><br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -1267,7 +1267,7 @@ class ProposalService {
         proposal.type === ProposalType.Aluguel
           ? 'de locação'
           : 'venda do imóvel'
-      }, <a href=${apiServer.prod}/proposal-view/${
+      }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, proposta: ${proposal.seq} </a>
       <br>
@@ -1323,7 +1323,7 @@ class ProposalService {
         proposal.type === ProposalType.Aluguel
           ? 'de locação'
           : 'venda do imóvel'
-      }, <a href=${apiServer.prod}/proposal-view/${
+      }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
@@ -1377,11 +1377,11 @@ class ProposalService {
       <br>
       Não deixe seus clientes esperando, se ainda não ENVIOU PARA CONTRATAÇÃO, acesse o sistema e a proposta fechada clicando aqui:
       <br>
-      <a href=${apiServer.prod}> Acesso ao sistema </a>
+      <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}> Acesso ao sistema </a>
       <br>
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
@@ -1423,7 +1423,7 @@ class ProposalService {
           Você poderá acessar as condições negociadas sempre que preciso, para isto basta clicar no link abaixo:
           <br>
           <br>
-          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+          Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
             proposal._id
           }> click aqui, Número da proposta: ${proposal.seq} </a>
           <br>
@@ -1498,7 +1498,7 @@ class ProposalService {
           proposal.type === ProposalType.Aluguel
             ? 'de locação'
             : 'venda do imóvel'
-        }, <a href=${apiServer.prod}/proposal-view/${
+        }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
           proposal._id
         }> click aqui, proposta: ${proposal.seq} </a>
         <br>
@@ -1572,7 +1572,7 @@ class ProposalService {
         proposal.type === ProposalType.Aluguel
           ? 'de locação'
           : 'venda do imóvel'
-      }, <a href=${apiServer.prod}/proposal-view/${
+      }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, proposta: ${proposal.seq} </a>
       <br>
@@ -1641,7 +1641,7 @@ class ProposalService {
         proposal.type === ProposalType.Aluguel
           ? 'de locação'
           : 'venda do imóvel'
-      }, <a href=${apiServer.prod}/proposal-view/${
+      }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, proposta: ${proposal.seq} </a>
       <br>
@@ -1833,7 +1833,7 @@ class ProposalService {
     //       Você poderá acessar as condições negociadas sempre que preciso, para isto basta clicar no link abaixo:
     //       <br>
     //       <br>
-    //       Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+    //       Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
     //         proposal._id
     //       }> click aqui, Número da proposta: ${proposal.seq} </a>
     //       <br>
@@ -1894,7 +1894,7 @@ class ProposalService {
         proposal.type === ProposalType.Aluguel
           ? 'de locação'
           : 'de venda do imóvel'
-      }, <a href=${apiServer.prod}/proposal-view/${
+      }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui </a>
       <br>
@@ -1929,7 +1929,7 @@ class ProposalService {
         proposal.type === ProposalType.Aluguel
           ? 'de locação'
           : 'de venda do imóvel'
-      }, <a href=${apiServer.prod}/proposal-view/${
+      }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui </a>
       <br>
@@ -1972,7 +1972,7 @@ class ProposalService {
       <br><br>
       Para agendamento da vistoria, <a href='https://share.hsforms.com/1Q7grdolmThioZ-20k-4bzQ49vzc'> click aqui </a>
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -2006,7 +2006,7 @@ class ProposalService {
       <br><br>
       Seremos ágeis agora na conclusão da vistoria e assim que o laudo for concluído o laudo, enviaremos em seu e-mail para a conferência. Havendo qualquer divergência, você poderá fazer o apontamento, o qual, uma vez validado, será incluído no laudo realizado.      
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -2049,7 +2049,7 @@ class ProposalService {
       <br><br>
       Para alinhamento da entrega de chaves, <a href='https://share.hsforms.com/1aUYfbox-TDmQiRPlLG_Hqg49vzc'> click aqui </a>
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -2077,7 +2077,7 @@ class ProposalService {
       <br>
       Além deste e-mail, logo mais, você receberá um contato de nossa equipe ou do administrador da locação para que combinem o recebimento das chaves.
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -2116,7 +2116,7 @@ class ProposalService {
       <br><br>
       Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação e que serão importantes na administração da locação, bem como, ao término dela, entre outras situações que possam demandar estes documentos, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui </a>
       <br>
@@ -2157,7 +2157,7 @@ class ProposalService {
       <br><br>
       Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação e que serão importantes durante a locação, bem como, ao término dela, entre outras situações que possam demandar estes documentos, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.      
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui </a>
       <br>
@@ -2209,7 +2209,7 @@ class ProposalService {
       <br><br>
       Somos especialistas em direito imobiliário e nas etapas que compõem toda a transação, do início ao fim de sua contratação, atuando de forma isenta entre as partes, pois essa é uma grande preocupação de seu corretor, ${userProposal?.name}, pensando em sua experiência como cliente e em sua satisfação.      
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -2242,7 +2242,7 @@ class ProposalService {
       Somos especialistas em direito imobiliário e nas etapas que compõem toda a transação, do início ao fim de sua contratação, atuando de forma isenta entre as partes, pois essa é uma grande preocupação de seu corretor, ${userProposal?.name}, pensando em sua experiência como cliente e em sua satisfação.
       <br><br>
 
-      Para verificar o status da contratação, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -2278,7 +2278,7 @@ class ProposalService {
       <br><br>
       Conforme explicado anteriormente, temos um corpo jurídico próprio, especialista e focado em direito imobiliário, isento entre as partes, o que aporta segurança, agilidade e economia em todo o processo, tornando-se desnecessário o envolvimento de advogados e terceiros nesta etapa, pois seu agente imobiliário confiou à VIVALISTO essa responsabilidade preocupado em aportar especialização e segurança jurídica e operacional na transação de venda de seu imóvel. Caso ainda queira e tenha contratado um advogado para representá-lo nesta etapa, sempre problemas, estamos abertos para tirar todas as dúvidas e prestar os esclarecimentos necessários para o bom andamento da fase contratual.
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       <br>
       Ainda para sua comodidade e segurança, prezamos pela assinatura online, eliminando a necessidade de cartórios e papel, o também que economiza tempo e dinheiro para todos os envolvidos. Fique tranquilo que você receberá todas as instruções para o procedimento, que é simples, rápido e seguro.
@@ -2312,7 +2312,7 @@ class ProposalService {
       Somos especialistas em direito imobiliário e nas etapas que compõem toda a transação, do início ao fim de sua contratação, atuando de forma isenta entre as partes, pois essa é uma grande preocupação de seu corretor, ${userProposal?.name}, pensando em sua experiência como cliente e em sua satisfação.
       <br><br>
 
-      Para verificar o status da contratação, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -2349,7 +2349,7 @@ class ProposalService {
       <br><br>
       Como citado, esta etapa possuí diferentes detalhes para cada tipo de transação, dessa forma, você receberá os direcionamentos de seu Gestor de Contratos Vivalisto em breve, para a sequência da transferência da propriedade.      
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       <br>
       Ainda para sua comodidade e segurança, prezamos pela assinatura online, eliminando a necessidade de cartórios e papel, o também que economiza tempo e dinheiro para todos os envolvidos. Fique tranquilo que você receberá todas as instruções para o procedimento, que é simples, rápido e seguro.
@@ -2380,7 +2380,7 @@ class ProposalService {
       <br><br>
       Como citado, esta etapa possuí diferentes detalhes para cada tipo de transação, dessa forma, você receberá os direcionamentos de seu Gestor de Contratos Vivalisto em breve, para a sequência da transferência da propriedade.
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -2418,7 +2418,7 @@ class ProposalService {
       <br><br>
       Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.      
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui </a>
       <br>
@@ -2457,7 +2457,7 @@ class ProposalService {
       Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.
       <br><br>import { boolean } from 'yup';
 
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui </a>
       <br>
