@@ -2075,12 +2075,10 @@ class ProposalService {
       <br>
       Além deste e-mail, logo mais, você receberá um contato de nossa equipe ou do administrador da locação para que combinem o recebimento das chaves.
       <br><br>
-      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
-      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      Caso deseje compartilhar, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
-      <br>
-      Estamos à disposição para qualquer esclarecimento, bem como, caso ainda não tenha recebido o seu laudo de vistoria, favor nos avisar, respondendo a este e-mail.
       <br>
       Atenciosamente.
       <br><br>
