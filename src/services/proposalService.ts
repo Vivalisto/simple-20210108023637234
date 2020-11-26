@@ -1927,13 +1927,13 @@ class ProposalService {
       <br><br>
       Para verificar o status da contratação ${
         proposal.type === ProposalType.Aluguel
-          ? 'de locação'
+          ? ''
           : 'de venda do imóvel'
       }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui </a>
       <br>
-      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      Caso deseje compartilhar, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
       <br>
       Agradecemos a confiança e desejamos sucesso em sua nova locação.
