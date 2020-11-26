@@ -2041,18 +2041,16 @@ class ProposalService {
       message: `
       Olá, ${locator.name}!
       <br><br>
-      Vistoria concluída, agora é só formalizar a entrega de chaves!
+      Vistoria realizada, estamos concluindo o seu laudo, o qual será enviado em breve em seu e-mail. 
       <br><br>
-      Para que esta Etapa rapidamente, pedimos que acesse o link abaixo para o alinhamento da entrega.
+      Agora, o próximo passo é concluir a formalização da entrega das chaves e na sequência baixar os arquivos de sua pasta digital para o seu arquivo pessoal. Para ambos os casos, você receberá instruções específicas em seu e-mail.
       <br><br>
-      Para alinhamento da entrega de chaves, <a href='https://share.hsforms.com/1aUYfbox-TDmQiRPlLG_Hqg49vzc'> click aqui </a>
-      <br><br>
-      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
-      Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
+      Caso deseje compartilhar, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
       <br>
-      Estamos à disposição para qualquer esclarecimento, bem como, caso ainda não tenha recebido o seu laudo de vistoria, favor nos avisar, respondendo a este e-mail.
+      Estamos à disposição para qualquer esclarecimento.
       <br>
       Atenciosamente.
       <br><br>
