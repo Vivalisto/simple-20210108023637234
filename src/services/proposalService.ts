@@ -2004,14 +2004,12 @@ class ProposalService {
       <br><br>
       Parabéns pela contratação de sua nova locação!
       <br><br>
-      Seremos ágeis agora na conclusão da vistoria e assim que o laudo for concluído o laudo, enviaremos em seu e-mail para a conferência. Havendo qualquer divergência, você poderá fazer o apontamento, o qual, uma vez validado, será incluído no laudo realizado.      
+      Seremos ágeis agora na conclusão da vistoria e assim que o laudo for concluído, enviaremos em seu e-mail para a conferência. Havendo qualquer divergência, você poderá fazer o apontamento, o qual, uma vez validado, será incluído no relatório final.      
       <br><br>
-      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
-      <br>
-      Estamos quase lá, após esta etapa será feita a entrega das chaves.
       <br>
       Em caso de dúvidas, é só entrar em contato.
       <br>
@@ -2114,29 +2112,18 @@ class ProposalService {
       <br><br>
       É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
       <br><br>
-      Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação e que serão importantes na administração da locação, bem como, ao término dela, entre outras situações que possam demandar estes documentos, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.
+      Para concluir, deverá baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação. Indicamos que salve em lugar seguro e que faça ao menos um backup.
       <br><br>
-      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
-        proposal._id
-      }> click aqui </a>
-      <br>
-      Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
-      <br>
-      <br>
       Agradecemos a confiança e nos colocamos à disposição para auxiliar você em negócios futuros.
       <br>
       Atenciosamente.
       <br><br>
-      ${userProposal.name}<br>
-      CRECI Corretor: ${userProposal.creci}<br><br>
-      Telefone: ${userProposal.cellphone}<br>
-      E-mail: ${userProposal.email}<br><br>
       ${organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''}<br>
       ${
         organizationDB?.name ? `CRECI Imobiliária: ${organizationDB.creci}` : ''
       }
       <br><br>
-      Equipe de Contratos
+      Equipe de Contratos Vivalisto
       <br>
       <br>
       powered by Vivalisto Proptech
@@ -2155,29 +2142,19 @@ class ProposalService {
       <br>
       É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
       <br><br>
-      Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação e que serão importantes durante a locação, bem como, ao término dela, entre outras situações que possam demandar estes documentos, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.      
-      <br><br>
-      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
-        proposal._id
-      }> click aqui </a>
-      <br>
-      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      Para concluir, deverá baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação. Indicamos que salve em lugar seguro e que faça ao menos um backup.      
       <br>
       <br>
       Agradecemos a confiança e nos colocamos à disposição para auxiliar você em negócios futuros.
       <br>
       Atenciosamente.
       <br><br>
-      ${userProposal.name}<br>
-      CRECI Corretor: ${userProposal.creci}<br><br>
-      Telefone: ${userProposal.cellphone}<br>
-      E-mail: ${userProposal.email}<br><br>
       ${organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''}<br>
       ${
         organizationDB?.name ? `CRECI Imobiliária: ${organizationDB.creci}` : ''
       }
       <br><br>
-      Equipe de Contratos
+      Equipe de Contratos Vivalisto
       <br>
       <br>
       powered by Vivalisto Proptech
@@ -2416,7 +2393,7 @@ class ProposalService {
       <br><br>
       É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
       <br><br>
-      Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.      
+      Para concluir, deverá baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.      
       <br><br>
       Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
@@ -2454,7 +2431,7 @@ class ProposalService {
       <br><br>
       É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
       <br><br>
-      Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.
+      Para concluir, deverá baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.
       <br><br>import { boolean } from 'yup';
 
       Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
