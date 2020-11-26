@@ -1972,12 +1972,12 @@ class ProposalService {
       <br><br>
       Para agendamento da vistoria, <a href='https://share.hsforms.com/1Q7grdolmThioZ-20k-4bzQ49vzc'> click aqui </a>
       <br><br>
-      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
-      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      Caso deseje compartilhar, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
       <br>
-      Assim que o laudo for concluído, enviaremos em seu e-mail para a conferência. Havendo qualquer divergência, você poderá fazer o apontamento, o qual, uma vez validado, será incluído no laudo realizado.
+      Assim que o laudo for concluído, enviaremos em seu e-mail para a conferência. Havendo qualquer divergência, você poderá fazer o apontamento, o qual, uma vez validado, será incluído no relatório final.
       <br>
       <br>
       Agradecemos a confiança e desejamos sucesso em sua nova locação.
