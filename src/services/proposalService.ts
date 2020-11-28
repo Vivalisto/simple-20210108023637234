@@ -131,9 +131,9 @@ class ProposalService {
       this.sendMailApproveRentBuySell(proposal, user);
     }
 
-    if (proposalStatus.status === ProposalStatus.EmviadaContratacao) {
-      this.sendMailHire(proposal, user);
-    }
+    // if (proposalStatus.status === ProposalStatus.EmviadaContratacao) {
+    //   this.sendMailHire(proposal, user);
+    // }
 
     return await this.update(_id, proposalUpdate);
   }
@@ -1502,41 +1502,52 @@ class ProposalService {
           proposal._id
         }> click aqui, proposta: ${proposal.seq} </a>
         <br>
+        <br>
+
+
+        <h3 style="color: #f3953d"> Resumo de contratação</h3>
+        Responsável:<br>
+        ${proposal?.user?.name}
+        <br>
+        <br>
         Responsabilidade de envio de documentos e informações complementares:
         <br>
         ${
           proposal?.hiringData?.proponentParts
             ? (
               proposal.type === ProposalType.Aluguel
-              ? '- Inquilinos'
-              : '- Compradores'  
+              ? 'Inquilinos'
+              : 'Compradores'  
             )
             : ''
         }
-        <br>
         ${
           proposal?.hiringData?.ownerParts
             ? (
               proposal.type === ProposalType.Aluguel
-              ? '- Locadores'
-              : '- Vendedores'
+              ? 'Locadores'
+              : 'Vendedores'
     
             )
             : ''
         }
         <br>
-        <br>
         ${
           proposal.type === ProposalType.Aluguel
-            ? `Administração da Locação: ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}<br>`
-            : '<br>'
+            ? `Administração da contrato: <br> ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}`
+            : ''
         }
-        
         <br>
-        Outras Informações Importantes para a Contratação:
+        Comentários e observações:
         <br>
         ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
-        <br><br>
+        <br>
+        <br>
+        E-mails de acompanhamento:<br> 
+        ${proposal?.followers.map((email:string) => ` ${email}`)}
+        <br>
+        <br>
+
         Assim como você, os clientes já foram acionados para o andamento da contratação, caso sejam eles os responsáveis pelo envio das informações complementares e da documentação.
         <br>
         Enviaremos em breve os próximos passos, mas caso precise de algo é só falar com o seu Gestor de Contratos Vivalisto.
@@ -1646,39 +1657,48 @@ class ProposalService {
       }> click aqui, proposta: ${proposal.seq} </a>
       <br>
       <br>
-      Responsabilidade de envio de documentos e informações complementares:
-      <br>
-      ${
-        proposal?.hiringData?.proponentParts
-          ? (
-            proposal.type === ProposalType.Aluguel
-            ? '- Inquilinos'
-            : '- Compradores'  
-          )
-          : ''
-      }
-      <br>
-      ${
-        proposal?.hiringData?.ownerParts
-          ? (
-            proposal.type === ProposalType.Aluguel
-            ? '- Locadores'
-            : '- Vendedores'
-  
-          )
-          : ''
-      }
-      <br>
-      <br>
-      ${
-        proposal.type === ProposalType.Aluguel
-          ? `Administração da Locação: ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}<br>`
-          : '<br>'
-      }
-      <br>
-      Outras Informações Importantes para a Contratação: ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
-      <br>
-      <br>
+        <h3 style="color: #f3953d"> Resumo de contratação</h3>
+        Responsável:<br>
+        ${proposal?.user?.name}
+        <br>
+        <br>
+        Responsabilidade de envio de documentos e informações complementares:
+        <br>
+        ${
+          proposal?.hiringData?.proponentParts
+            ? (
+              proposal.type === ProposalType.Aluguel
+              ? 'Inquilinos'
+              : 'Compradores'  
+            )
+            : ''
+        }
+        ${
+          proposal?.hiringData?.ownerParts
+            ? (
+              proposal.type === ProposalType.Aluguel
+              ? 'Locadores'
+              : 'Vendedores'
+    
+            )
+            : ''
+        }
+        <br>
+        ${
+          proposal.type === ProposalType.Aluguel
+            ? `Administração da contrato: <br> ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}`
+            : ''
+        }
+        <br>
+        Comentários e observações:
+        <br>
+        ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
+        <br>
+        <br>
+        E-mails de acompanhamento:<br> 
+        ${proposal?.followers.map((email:string) => ` ${email}`)}
+        <br>
+        <br>
       `,
     });
 
@@ -1706,6 +1726,51 @@ class ProposalService {
       Para envio das informações, <a href=${ proposal.type === ProposalType.Aluguel ? 'https://share.hsforms.com/1Xfp-eeMASHaXdbX0PlKLLA49vzc' : 'https://share.hsforms.com/1AIvfShu0QhmegRqm1dCE2g49vzc'}> click aqui </a>
       <br>
       <br>
+
+
+      <h3 style="color: #f3953d"> Resumo de contratação</h3>
+      Responsável:<br>
+      ${proposal?.user?.name}
+      <br>
+      <br>
+      Responsabilidade de envio de documentos e informações complementares:
+      <br>
+      ${
+        proposal?.hiringData?.proponentParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? 'Inquilinos'
+            : 'Compradores'  
+          )
+          : ''
+      }
+      ${
+        proposal?.hiringData?.ownerParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? 'Locadores'
+            : 'Vendedores'
+  
+          )
+          : ''
+      }
+      <br>
+      ${
+        proposal.type === ProposalType.Aluguel
+          ? `Administração da contrato: <br> ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}`
+          : ''
+      }
+      <br>
+      Comentários e observações:
+      <br>
+      ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
+      <br>
+      <br>
+      E-mails de acompanhamento:<br> 
+      ${proposal?.followers.map((email:string) => ` ${email}`)}
+      <br>
+      <br>
+
       Em caso de dúvida, é só entrar em contato pelo e-mail <a> contratos@vivalisto.com.br </a>
       <br>
       <br>
@@ -1743,6 +1808,51 @@ class ProposalService {
       Para envio das informações, <a href=${ proposal.type === ProposalType.Aluguel ? 'https://share.hsforms.com/1tW7eVQ-3RmKDzsLvHVXlpw49vzc' : 'https://share.hsforms.com/1lw5Uk3cvTfKgQxRQVGMrPw49vzc'}> click aqui </a>
       <br>
       <br>
+
+
+      <h3 style="color: #f3953d"> Resumo de contratação</h3>
+      Responsável:<br>
+      ${proposal?.user?.name}
+      <br>
+      <br>
+      Responsabilidade de envio de documentos e informações complementares:
+      <br>
+      ${
+        proposal?.hiringData?.proponentParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? 'Inquilinos'
+            : 'Compradores'  
+          )
+          : ''
+      }
+      ${
+        proposal?.hiringData?.ownerParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? 'Locadores'
+            : 'Vendedores'
+  
+          )
+          : ''
+      }
+      <br>
+      ${
+        proposal.type === ProposalType.Aluguel
+          ? `Administração da contrato: <br> ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}`
+          : ''
+      }
+      <br>
+      Comentários e observações:
+      <br>
+      ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
+      <br>
+      <br>
+      E-mails de acompanhamento:<br> 
+      ${proposal?.followers.map((email:string) => ` ${email}`)}
+      <br>
+      <br>
+
       Em caso de dúvida, é só entrar em contato pelo e-mail <a> contratos@vivalisto.com.br </a>
       <br>
       <br>
