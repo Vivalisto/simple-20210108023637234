@@ -211,7 +211,7 @@ class UserService {
 
     Mail.to = user.email;
     Mail.subject = 'Redefinição senha sistema Vivalisto';
-    Mail.message = `Solicitação de alteração de senha. <a href=${apiServer.prod}/reset-password/${user.email}/${token}> Clique aqui para alterar sua senha</a>`;
+    Mail.message = `Solicitação de alteração de senha. <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/reset-password/${user.email}/${token}> Clique aqui para alterar sua senha</a>`;
     await Mail.sendMail();
 
     return;
@@ -271,7 +271,7 @@ class UserService {
     await sendMailUtil({
       to: user.email,
       subject: 'VIVALISTO - Liberação de acesso',
-      message: `Olá, ${user.name}, Bem-vindo à Vivalisto, a sua nova plataforma de negócios. Para prosseguir com seu cadastro. <a href=${apiServer.prod}/reset-password/${user.email}/${token}> Clique aqui para Definir uma senha.</a>`,
+      message: `Olá, ${user.name}, Bem-vindo à Vivalisto, a sua nova plataforma de negócios. Para prosseguir com seu cadastro. <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/reset-password/${user.email}/${token}> Clique aqui para Definir uma senha.</a>`,
     });
     return;
   }

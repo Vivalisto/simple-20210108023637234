@@ -25,7 +25,7 @@ class CustomerService {
     }
 
 
-    return await CustomerRepository.find(query);
+    return await CustomerRepository.find(query).populate('organization', ['name']);
   }
 
   async getById(_id: string) {

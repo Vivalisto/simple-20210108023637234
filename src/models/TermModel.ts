@@ -6,7 +6,6 @@ const TermSchema: mongoose.Schema = new mongoose.Schema({
   key: {
     type: String,
     required: true,
-    unique: true,
     enum: Object.values(TermKey),
   },
   accept: {

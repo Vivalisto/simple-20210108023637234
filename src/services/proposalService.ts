@@ -131,9 +131,9 @@ class ProposalService {
       this.sendMailApproveRentBuySell(proposal, user);
     }
 
-    if (proposalStatus.status === ProposalStatus.EmviadaContratacao) {
-      this.sendMailHire(proposal, user);
-    }
+    // if (proposalStatus.status === ProposalStatus.EmviadaContratacao) {
+    //   this.sendMailHire(proposal, user);
+    // }
 
     return await this.update(_id, proposalUpdate);
   }
@@ -519,7 +519,7 @@ class ProposalService {
       <br><br>
       Acabamos de conseguir uma proposta para o seu imóvel, para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
       <br><br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, proposta: ${proposal.seq} </a>
       <br>
@@ -567,7 +567,7 @@ class ProposalService {
       Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições negociadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
       <br>
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
@@ -618,7 +618,7 @@ class ProposalService {
       <br><br>
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
       <br><br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -652,7 +652,7 @@ class ProposalService {
           <br><br>
           Você foi adicionado para acompanhar a proposta. Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
           <br><br>
-          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+          Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
             proposal._id
           }> click aqui, proposta: ${proposal.seq} </a>
           <br>
@@ -706,7 +706,7 @@ class ProposalService {
       <br><br>
       Acabamos de conseguir uma proposta para o seu imóvel, para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
       <br><br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, proposta: ${proposal.seq} </a>
       <br>
@@ -756,7 +756,7 @@ class ProposalService {
       Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições negociadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
       <br>
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
@@ -809,7 +809,7 @@ class ProposalService {
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
       <br>
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -843,7 +843,7 @@ class ProposalService {
           <br><br>
           Você foi adicionado para acompanhar a proposta. Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
           <br><br>
-          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+          Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
             proposal._id
           }> click aqui, proposta: ${proposal.seq} </a>
           <br>
@@ -900,7 +900,7 @@ class ProposalService {
       <br><br>
       Estamos evoluindo na negociação para fecharmos o negócio. No link abaixo você terá acesso às últimas condições propostas.
       <br><br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, proposta: ${proposal.seq} </a>
       <br>
@@ -952,7 +952,7 @@ class ProposalService {
       Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições negociadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
       <br>
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
@@ -1010,7 +1010,7 @@ class ProposalService {
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.      
       <br>
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -1048,7 +1048,7 @@ class ProposalService {
           <br><br>
           Você foi adicionado para acompanhar a proposta. Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
           <br><br>
-          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+          Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
             proposal._id
           }> click aqui, proposta: ${proposal.seq} </a>
           <br>
@@ -1114,7 +1114,7 @@ class ProposalService {
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.      
       <br>
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -1152,7 +1152,7 @@ class ProposalService {
           <br><br>
           Você foi adicionado para acompanhar a proposta. Para acessá-la, basta clicar no link abaixo. Nele, você terá acesso às condições ofertadas e poderá compartilhar a proposta com eventuais participantes na tomada de decisão.
           <br><br>
-          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+          Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
             proposal._id
           }> click aqui, proposta: ${proposal.seq} </a>
           <br>
@@ -1216,7 +1216,7 @@ class ProposalService {
       <br><br>
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
       <br><br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -1267,7 +1267,7 @@ class ProposalService {
         proposal.type === ProposalType.Aluguel
           ? 'de locação'
           : 'venda do imóvel'
-      }, <a href=${apiServer.prod}/proposal-view/${
+      }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, proposta: ${proposal.seq} </a>
       <br>
@@ -1323,7 +1323,7 @@ class ProposalService {
         proposal.type === ProposalType.Aluguel
           ? 'de locação'
           : 'venda do imóvel'
-      }, <a href=${apiServer.prod}/proposal-view/${
+      }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
@@ -1377,11 +1377,11 @@ class ProposalService {
       <br>
       Não deixe seus clientes esperando, se ainda não ENVIOU PARA CONTRATAÇÃO, acesse o sistema e a proposta fechada clicando aqui:
       <br>
-      <a href=${apiServer.prod}> Acesso ao sistema </a>
+      <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}> Acesso ao sistema </a>
       <br>
       O link abaixo direcionará você ou seus clientes para a visualização da proposta, dessa forma, poderá compartilhar o link com quem julgar importante e a qualquer momento, demonstrando profissionalismo e trazendo agilidade para o seu processo de negociação.
       <br>
-      Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+      Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, Número da proposta: ${proposal.seq} </a>
       <br>
@@ -1423,7 +1423,7 @@ class ProposalService {
           Você poderá acessar as condições negociadas sempre que preciso, para isto basta clicar no link abaixo:
           <br>
           <br>
-          Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+          Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
             proposal._id
           }> click aqui, Número da proposta: ${proposal.seq} </a>
           <br>
@@ -1475,7 +1475,7 @@ class ProposalService {
 
     const restProposal: string = proposal?.hiringData?.responsibleHiring
     
-    if(!proposal?.hiringData?.proponentParts && !proposal?.hiringData?.ownerParts) {
+    if(!proposal?.hiringData?.proponentParts || !proposal?.hiringData?.ownerParts) {
       sendMailUtil({
         from: 'contratos@vivalisto.com.br',
         to: userProposal.email,
@@ -1498,9 +1498,17 @@ class ProposalService {
           proposal.type === ProposalType.Aluguel
             ? 'de locação'
             : 'venda do imóvel'
-        }, <a href=${apiServer.prod}/proposal-view/${
+        }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
           proposal._id
         }> click aqui, proposta: ${proposal.seq} </a>
+        <br>
+        <br>
+
+
+        <h3 style="color: #f3953d"> Resumo de contratação</h3>
+        Responsável:<br>
+        ${proposal?.user?.name}
+        <br>
         <br>
         Responsabilidade de envio de documentos e informações complementares:
         <br>
@@ -1508,35 +1516,38 @@ class ProposalService {
           proposal?.hiringData?.proponentParts
             ? (
               proposal.type === ProposalType.Aluguel
-              ? '- Inquilinos'
-              : '- Compradores'  
+              ? 'Inquilinos'
+              : 'Compradores'  
             )
             : ''
         }
-        <br>
         ${
           proposal?.hiringData?.ownerParts
             ? (
               proposal.type === ProposalType.Aluguel
-              ? '- Locadores'
-              : '- Vendedores'
+              ? 'Locadores'
+              : 'Vendedores'
     
             )
             : ''
         }
         <br>
-        <br>
         ${
           proposal.type === ProposalType.Aluguel
-            ? `Administração da Locação: ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}<br>`
-            : '<br>'
+            ? `Administração da contrato: <br> ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}`
+            : ''
         }
-        
         <br>
-        Outras Informações Importantes para a Contratação:
+        Comentários e observações:
         <br>
         ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
-        <br><br>
+        <br>
+        <br>
+        E-mails de acompanhamento:<br> 
+        ${proposal?.followers.map((email:string) => ` ${email}`)}
+        <br>
+        <br>
+
         Assim como você, os clientes já foram acionados para o andamento da contratação, caso sejam eles os responsáveis pelo envio das informações complementares e da documentação.
         <br>
         Enviaremos em breve os próximos passos, mas caso precise de algo é só falar com o seu Gestor de Contratos Vivalisto.
@@ -1551,76 +1562,76 @@ class ProposalService {
       });
     }
 
-    sendMailUtil({
-      from: 'contratos@vivalisto.com.br',
-      to: user.email,
-      subject: `OS ${proposal.seq}, ${
-        proposal.type === ProposalType.Aluguel
-          ? 'Locação'
-          : 'Venda'
-      }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
-      message: `
-      Olá, ${user.name}!
-      <br><br>
-      Mais um negócio fechado!
-      <br><br>
-      A Equipe de Contratos Vivalisto cuidará de todo o processo de contratação e contará com o seu apoio para responder pela imobiliária quanto às questões de sua responsabilidade, como recebimentos de comissões entre outras, as quais serão solicitadas no decorrer das etapas.
-      <br><br>
-      Abaixo, seguem as informações consolidadas da negociação, cujo processo de contratação poderá ser acessado a qualquer momento na Plataforma Vivalisto, em MINHAS CONTRATAÇÕES.
-      <br><br>
-      Para acessar a proposta ${
-        proposal.type === ProposalType.Aluguel
-          ? 'de locação'
-          : 'venda do imóvel'
-      }, <a href=${apiServer.prod}/proposal-view/${
-        proposal._id
-      }> click aqui, proposta: ${proposal.seq} </a>
-      <br>
-      Responsabilidade de envio de documentos e informações complementares:
-      <br>
-      ${
-        proposal?.hiringData?.proponentParts
-          ? (
-            proposal.type === ProposalType.Aluguel
-            ? '- Inquilinos'
-            : '- Compradores'  
-          )
-          : ''
-      }
-      <br>
-      ${
-        proposal?.hiringData?.ownerParts
-          ? (
-            proposal.type === ProposalType.Aluguel
-            ? '- Locadores'
-            : '- Vendedores'
+    // sendMailUtil({
+    //   from: 'contratos@vivalisto.com.br',
+    //   to: user.email,
+    //   subject: `OS ${proposal.seq}, ${
+    //     proposal.type === ProposalType.Aluguel
+    //       ? 'Locação'
+    //       : 'Venda'
+    //   }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
+    //   message: `
+    //   Olá, ${user.name}!
+    //   <br><br>
+    //   Mais um negócio fechado!
+    //   <br><br>
+    //   A Equipe de Contratos Vivalisto cuidará de todo o processo de contratação e contará com o seu apoio para responder pela imobiliária quanto às questões de sua responsabilidade, como recebimentos de comissões entre outras, as quais serão solicitadas no decorrer das etapas.
+    //   <br><br>
+    //   Abaixo, seguem as informações consolidadas da negociação, cujo processo de contratação poderá ser acessado a qualquer momento na Plataforma Vivalisto, em MINHAS CONTRATAÇÕES.
+    //   <br><br>
+    //   Para acessar a proposta ${
+    //     proposal.type === ProposalType.Aluguel
+    //       ? 'de locação'
+    //       : 'venda do imóvel'
+    //   }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
+    //     proposal._id
+    //   }> click aqui, proposta: ${proposal.seq} </a>
+    //   <br>
+    //   Responsabilidade de envio de documentos e informações complementares:
+    //   <br>
+    //   ${
+    //     proposal?.hiringData?.proponentParts
+    //       ? (
+    //         proposal.type === ProposalType.Aluguel
+    //         ? '- Inquilinos'
+    //         : '- Compradores'  
+    //       )
+    //       : ''
+    //   }
+    //   <br>
+    //   ${
+    //     proposal?.hiringData?.ownerParts
+    //       ? (
+    //         proposal.type === ProposalType.Aluguel
+    //         ? '- Locadores'
+    //         : '- Vendedores'
   
-          )
-          : ''
-      }
-      <br>
-      <br>
-      ${
-        proposal.type === ProposalType.Aluguel
-          ? `Administração da Locação: ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}<br>`
-          : '<br>'
-      }
+    //       )
+    //       : ''
+    //   }
+    //   <br>
+    //   <br>
+    //   ${
+    //     proposal.type === ProposalType.Aluguel
+    //       ? `Administração da Locação: ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}<br>`
+    //       : '<br>'
+    //   }
       
-      <br>
-      Outras Informações Importantes para a Contratação: ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
-      <br><br>
-      Assim como você, os clientes já foram acionados para o andamento da contratação, caso sejam eles os responsáveis pelo envio das informações complementares e da documentação.
-      <br>
-      Enviaremos em breve os próximos passos, mas caso precise de algo é só falar com o seu Gestor de Contratos Vivalisto.
-      <br>
-      <br>
-      Atenciosamente.
-      <br><br>
-      Equipe de Contratos
-      <br>
-      powered by Vivalisto Proptech
-      `,
-    });
+    //   <br>
+    //   Outras Informações Importantes para a Contratação: ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
+    //   <br><br>
+    //   Assim como você, os clientes já foram acionados para o andamento da contratação, caso sejam eles os responsáveis pelo envio das informações complementares e da documentação.
+    //   <br>
+    //   Enviaremos em breve os próximos passos, mas caso precise de algo é só falar com o seu Gestor de Contratos Vivalisto.
+    //   <br>
+    //   <br>
+    //   Atenciosamente.
+    //   <br><br>
+    //   Equipe de Contratos
+    //   <br>
+    //   powered by Vivalisto Proptech
+    //   `,
+    // });
 
     sendMailUtil({
       from: 'contratos@vivalisto.com.br',
@@ -1641,9 +1652,85 @@ class ProposalService {
         proposal.type === ProposalType.Aluguel
           ? 'de locação'
           : 'venda do imóvel'
-      }, <a href=${apiServer.prod}/proposal-view/${
+      }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui, proposta: ${proposal.seq} </a>
+      <br>
+      <br>
+        <h3 style="color: #f3953d"> Resumo de contratação</h3>
+        Responsável:<br>
+        ${proposal?.user?.name}
+        <br>
+        <br>
+        Responsabilidade de envio de documentos e informações complementares:
+        <br>
+        ${
+          proposal?.hiringData?.proponentParts
+            ? (
+              proposal.type === ProposalType.Aluguel
+              ? 'Inquilinos'
+              : 'Compradores'  
+            )
+            : ''
+        }
+        ${
+          proposal?.hiringData?.ownerParts
+            ? (
+              proposal.type === ProposalType.Aluguel
+              ? 'Locadores'
+              : 'Vendedores'
+    
+            )
+            : ''
+        }
+        <br>
+        ${
+          proposal.type === ProposalType.Aluguel
+            ? `Administração da contrato: <br> ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}`
+            : ''
+        }
+        <br>
+        Comentários e observações:
+        <br>
+        ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
+        <br>
+        <br>
+        E-mails de acompanhamento:<br> 
+        ${proposal?.followers.map((email:string) => ` ${email}`)}
+        <br>
+        <br>
+      `,
+    });
+
+    sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
+      to: proposal?.hiringData?.proponentParts ? proponent.email : '', 
+      cc: followers?.length ? followers : [], 
+      subject: `OS ${proposal.seq}, ${
+        proposal.type === ProposalType.Aluguel
+          ? 'Locação'
+          : 'Venda'
+      }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
+      message: `
+      
+      Olá, ${proponent?.name}
+      <br><br>
+      Vamos dar início ao processo de contratação do imóvel ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}, Ordem de Serviço ${proposal.seq}.
+      <br><br>
+      A Vivalisto é especialista em contratos e processos. Com corpo jurídico próprio e isento em relação às partes da transação, aportamos segurança jurídica, agilidade e especialização em todas as etapas pós- negociação. Essa é uma grande preocupação de seu corretor, ${userProposal.name}, pensando      em sua experiência como cliente e em sua satisfação.
+      <br>
+      <br>
+      Agora, precisamos de informações complementares à sua negociação para que o processo caminhe de forma leve e com a devida segurança jurídica e operacional. É bem simples e prático! Quanto mais rápido responder, mais rápido receberá o e-mail com instruções para o envio de sua documentação de forma 100% digital. Após a análise da documentação e do(s) proponente(s), seguiremos para a assinatura on- line do contrato, vistoria do imóvel e entrega das chaves.
+      <br>
+      <br>
+      Para envio das informações, <a href=${ proposal.type === ProposalType.Aluguel ? 'https://share.hsforms.com/1Xfp-eeMASHaXdbX0PlKLLA49vzc' : 'https://share.hsforms.com/1AIvfShu0QhmegRqm1dCE2g49vzc'}> click aqui </a>
+      <br>
+      <br>
+
+
+      <h3 style="color: #f3953d"> Resumo de contratação</h3>
+      Responsável:<br>
+      ${proposal?.user?.name}
       <br>
       <br>
       Responsabilidade de envio de documentos e informações complementares:
@@ -1652,168 +1739,187 @@ class ProposalService {
         proposal?.hiringData?.proponentParts
           ? (
             proposal.type === ProposalType.Aluguel
-            ? '- Inquilinos'
-            : '- Compradores'  
+            ? 'Inquilinos'
+            : 'Compradores'  
           )
           : ''
       }
-      <br>
       ${
         proposal?.hiringData?.ownerParts
           ? (
             proposal.type === ProposalType.Aluguel
-            ? '- Locadores'
-            : '- Vendedores'
+            ? 'Locadores'
+            : 'Vendedores'
   
           )
           : ''
       }
       <br>
-      <br>
       ${
         proposal.type === ProposalType.Aluguel
-          ? `Administração da Locação: ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}<br>`
-          : '<br>'
+          ? `Administração da contrato: <br> ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}`
+          : ''
       }
       <br>
-      Outras Informações Importantes para a Contratação: ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
+      Comentários e observações:
+      <br>
+      ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
       <br>
       <br>
+      E-mails de acompanhamento:<br> 
+      ${proposal?.followers.map((email:string) => ` ${email}`)}
+      <br>
+      <br>
+
+      Em caso de dúvida, é só entrar em contato pelo e-mail <a> contratos@vivalisto.com.br </a>
+      <br>
+      <br>
+      Atenciosamente.
+      <br>
+      Equipe de Contratos
+      <br><br>
+
+      powered by Vivalisto Proptech    
+      
       `,
     });
 
-    if(proposal?.hiringData?.proponentParts) {
-      sendMailUtil({
-        from: 'contratos@vivalisto.com.br',
-        to: proponent.email,
-        subject: `OS ${proposal.seq}, ${
-          proposal.type === ProposalType.Aluguel
-            ? 'Locação'
-            : 'Venda'
-        }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}`,
-        message: `
-        
-        Olá, ${proponent?.name}
-        <br><br>
-        Vamos dar início ao processo de contratação do imóvel ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}, Ordem de Serviço ${proposal.seq}.
-        <br><br>
-        A Vivalisto é especialista em contratos e processos. Com corpo jurídico próprio e isento em relação às partes da transação, aportamos segurança jurídica, agilidade e especialização em todas as etapas pós- negociação. Essa é uma grande preocupação de seu corretor, ${userProposal.name}, pensando      em sua experiência como cliente e em sua satisfação.
-        <br>
-        <br>
-        Agora, precisamos de informações complementares à sua negociação para que o processo caminhe de forma leve e com a devida segurança jurídica e operacional. É bem simples e prático! Quanto mais rápido responder, mais rápido receberá o e-mail com instruções para o envio de sua documentação de forma 100% digital. Após a análise da documentação e do(s) proponente(s), seguiremos para a assinatura on- line do contrato, vistoria do imóvel e entrega das chaves.
-        <br>
-        <br>
-        Para envio das informações, <a href=${ proposal.type === ProposalType.Aluguel ? 'https://share.hsforms.com/1Xfp-eeMASHaXdbX0PlKLLA49vzc' : 'https://share.hsforms.com/1AIvfShu0QhmegRqm1dCE2g49vzc'}> click aqui </a>
-        <br>
-        <br>
-        Em caso de dúvida, é só entrar em contato pelo e-mail <a> contratos@vivalisto.com.br </a>
-        <br>
-        <br>
-        Atenciosamente.
-        <br>
-        Equipe de Contratos
-        <br><br>
-  
-        powered by Vivalisto Proptech    
-        
-        `,
-      });
-    }
+    sendMailUtil({
+      from: 'contratos@vivalisto.com.br',
+      to: proposal?.hiringData?.ownerParts ? locator.email : '',
+      cc: followers?.length ? followers : [],
+      subject: `OS ${proposal.seq}, ${
+        proposal.type === ProposalType.Aluguel
+          ? 'Locação'
+          : 'Venda'
+      }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+      message: `
+      
+      Olá, ${locator?.name}
+      <br><br>
+      Vamos dar início ao processo de contratação do imóvel ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}, Ordem de Serviço ${proposal.seq}.
+      <br><br>
+      A Vivalisto é especialista em contratos e processos. Com corpo jurídico próprio e isento em relação às partes da transação, aportamos segurança jurídica, agilidade e especialização em todas as etapas pós- negociação. Essa é uma grande preocupação de seu corretor, ${userProposal.name}, pensando em sua experiência como cliente e em sua satisfação.
+      <br>
+      <br>
+      Agora, precisamos de informações complementares à sua negociação para que o processo caminhe de forma leve e com a devida segurança jurídica e operacional. É bem simples e prático! Quanto mais rápido responder, mais rápido receberá o e-mail com instruções para o envio de sua documentação de forma 100% digital. Após a análise da documentação e do(s) proponente(s), seguiremos para a assinatura on- line do contrato, vistoria do imóvel e entrega das chaves.
+      <br>
+      <br>
+      Para envio das informações, <a href=${ proposal.type === ProposalType.Aluguel ? 'https://share.hsforms.com/1tW7eVQ-3RmKDzsLvHVXlpw49vzc' : 'https://share.hsforms.com/1lw5Uk3cvTfKgQxRQVGMrPw49vzc'}> click aqui </a>
+      <br>
+      <br>
 
-    if(proposal?.hiringData?.ownerParts) {
 
-      sendMailUtil({
-        from: 'contratos@vivalisto.com.br',
-        to: locator.email,
-        cc: followers?.length ? followers : [], 
-        subject: `OS ${proposal.seq}, ${
-          proposal.type === ProposalType.Aluguel
-            ? 'Locação'
-            : 'Venda'
-        }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
-        message: `
-        
-        Olá, ${locator?.name}
-        <br><br>
-        Vamos dar início ao processo de contratação do imóvel ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}, Ordem de Serviço ${proposal.seq}.
-        <br><br>
-        A Vivalisto é especialista em contratos e processos. Com corpo jurídico próprio e isento em relação às partes da transação, aportamos segurança jurídica, agilidade e especialização em todas as etapas pós- negociação. Essa é uma grande preocupação de seu corretor, ${userProposal.name}, pensando em sua experiência como cliente e em sua satisfação.
-        <br>
-        <br>
-        Agora, precisamos de informações complementares à sua negociação para que o processo caminhe de forma leve e com a devida segurança jurídica e operacional. É bem simples e prático! Quanto mais rápido responder, mais rápido receberá o e-mail com instruções para o envio de sua documentação de forma 100% digital. Após a análise da documentação e do(s) proponente(s), seguiremos para a assinatura on- line do contrato, vistoria do imóvel e entrega das chaves.
-        <br>
-        <br>
-        Para envio das informações, <a href=${ proposal.type === ProposalType.Aluguel ? 'https://share.hsforms.com/1tW7eVQ-3RmKDzsLvHVXlpw49vzc' : 'https://share.hsforms.com/1lw5Uk3cvTfKgQxRQVGMrPw49vzc'}> click aqui </a>
-        <br>
-        <br>
-        Em caso de dúvida, é só entrar em contato pelo e-mail <a> contratos@vivalisto.com.br </a>
-        <br>
-        <br>
-        Atenciosamente.
-        <br>
-        Equipe de Contratos
-        <br><br>
+      <h3 style="color: #f3953d"> Resumo de contratação</h3>
+      Responsável:<br>
+      ${proposal?.user?.name}
+      <br>
+      <br>
+      Responsabilidade de envio de documentos e informações complementares:
+      <br>
+      ${
+        proposal?.hiringData?.proponentParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? 'Inquilinos'
+            : 'Compradores'  
+          )
+          : ''
+      }
+      ${
+        proposal?.hiringData?.ownerParts
+          ? (
+            proposal.type === ProposalType.Aluguel
+            ? 'Locadores'
+            : 'Vendedores'
   
-        powered by Vivalisto Proptech    
-        
-        `,
-      });
-    }
+          )
+          : ''
+      }
+      <br>
+      ${
+        proposal.type === ProposalType.Aluguel
+          ? `Administração da contrato: <br> ${RESPONSIBLE[proposal?.hiringData?.responsibleHiring]}`
+          : ''
+      }
+      <br>
+      Comentários e observações:
+      <br>
+      ${proposal?.hiringData?.comments ? proposal?.hiringData?.comments : ''}
+      <br>
+      <br>
+      E-mails de acompanhamento:<br> 
+      ${proposal?.followers.map((email:string) => ` ${email}`)}
+      <br>
+      <br>
 
-    if(!proposal?.hiringData?.proponentParts && !proposal?.hiringData?.ownerParts) {
-      sendMailUtil({
-        from: 'contratos@vivalisto.com.br',
-        to: userProposal.email,
-        cc: followers?.length ? followers : [], 
-        subject: `OS ${proposal.seq}, ${
-          proposal.type === ProposalType.Aluguel
-            ? 'Locação'
-            : 'Venda'
-        }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
-        message: `
+      Em caso de dúvida, é só entrar em contato pelo e-mail <a> contratos@vivalisto.com.br </a>
+      <br>
+      <br>
+      Atenciosamente.
+      <br>
+      Equipe de Contratos
+      <br><br>
+
+      powered by Vivalisto Proptech    
+      
+      `,
+    });
+
+    // if(!proposal?.hiringData?.proponentParts && !proposal?.hiringData?.ownerParts) {
+    //   sendMailUtil({
+    //     from: 'contratos@vivalisto.com.br',
+    //     to: userProposal.email,
+    //     cc: followers?.length ? followers : [], 
+    //     subject: `OS ${proposal.seq}, ${
+    //       proposal.type === ProposalType.Aluguel
+    //         ? 'Locação'
+    //         : 'Venda'
+    //     }, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep}`,
+    //     message: `
         
-        Olá, ${userProposal?.name}
-        <br><br>
-        Vamos dar início ao processo. OS: ${proposal.seq}, ${
-          proposal.type === ProposalType.Aluguel
-            ? 'contratação da locação'
-            : 'contratação da venda'
-        } do imóvel, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}, Ordem de Serviço ${proposal.seq}.
-        <br><br>
-        Conforme apontado no envio para a contratação, você ficou responsável pelo fornecimento dos documentos e informações complementares do(s) cliente(s), dessa forma, solicitamos que acesse os links abaixo para a sequência do processo.
-        <br>
-        <br>
-        ${
-          proposal.type === ProposalType.Aluguel
-            ? `
-            Para envio das informações de LOCATÁRIOS, <a href='https://share.hsforms.com/1Xfp-eeMASHaXdbX0PlKLLA49vzc'> click aqui </a>
-            <br>
-            <br>
-            Para envio das informações de LOCADORES, <a href='https://share.hsforms.com/1tW7eVQ-3RmKDzsLvHVXlpw49vzc'> click aqui </a>
-            `
-            :
-            `
-            Para envio das informações de COMPRADORES, <a href='https://share.hsforms.com/1AIvfShu0QhmegRqm1dCE2g49vzc'> click aqui </a>
-            <br>
-            <br>
-            Para envio das informações de VENDEDORES, <a href='https://share.hsforms.com/1lw5Uk3cvTfKgQxRQVGMrPw49vzc'> click aqui </a>
-            `
-        }
-        <br>
-        <br>
-        Enviaremos os próximos passos na sequência, mas caso precise de algo é só falar com o seu Gestor de Contratos Vivalisto. Lembrando que o processo de contratação poderá ser acessado a qualquer momento na Plataforma Vivalisto, em MINHAS CONTRATAÇÕES.
-        <br>
-        <br>
-        Atenciosamente.
-        <br>
-        Equipe de Contratos
-        <br><br>
+    //     Olá, ${userProposal?.name}
+    //     <br><br>
+    //     Vamos dar início ao processo. OS: ${proposal.seq}, ${
+    //       proposal.type === ProposalType.Aluguel
+    //         ? 'contratação da locação'
+    //         : 'contratação da venda'
+    //     } do imóvel, ${proposal.immobile.publicPlace}, ${ proposal.immobile.number } - ${proposal.immobile.city} - ${proposal.immobile.state}, ${proposal.immobile.cep} ${proposal?.immobile?.complement ? ' - ' + proposal?.immobile?.complement : ''}, Ordem de Serviço ${proposal.seq}.
+    //     <br><br>
+    //     Conforme apontado no envio para a contratação, você ficou responsável pelo fornecimento dos documentos e informações complementares do(s) cliente(s), dessa forma, solicitamos que acesse os links abaixo para a sequência do processo.
+    //     <br>
+    //     <br>
+    //     ${
+    //       proposal.type === ProposalType.Aluguel
+    //         ? `
+    //         Para envio das informações de LOCATÁRIOS, <a href='https://share.hsforms.com/1Xfp-eeMASHaXdbX0PlKLLA49vzc'> click aqui </a>
+    //         <br>
+    //         <br>
+    //         Para envio das informações de LOCADORES, <a href='https://share.hsforms.com/1tW7eVQ-3RmKDzsLvHVXlpw49vzc'> click aqui </a>
+    //         `
+    //         :
+    //         `
+    //         Para envio das informações de COMPRADORES, <a href='https://share.hsforms.com/1AIvfShu0QhmegRqm1dCE2g49vzc'> click aqui </a>
+    //         <br>
+    //         <br>
+    //         Para envio das informações de VENDEDORES, <a href='https://share.hsforms.com/1lw5Uk3cvTfKgQxRQVGMrPw49vzc'> click aqui </a>
+    //         `
+    //     }
+    //     <br>
+    //     <br>
+    //     Enviaremos os próximos passos na sequência, mas caso precise de algo é só falar com o seu Gestor de Contratos Vivalisto. Lembrando que o processo de contratação poderá ser acessado a qualquer momento na Plataforma Vivalisto, em MINHAS CONTRATAÇÕES.
+    //     <br>
+    //     <br>
+    //     Atenciosamente.
+    //     <br>
+    //     Equipe de Contratos
+    //     <br><br>
   
-        powered by Vivalisto Proptech    
+    //     powered by Vivalisto Proptech    
         
-        `,
-      });
-    }
+    //     `,
+    //   });
+    // }
 
 
     // if (followers?.length) {
@@ -1833,7 +1939,7 @@ class ProposalService {
     //       Você poderá acessar as condições negociadas sempre que preciso, para isto basta clicar no link abaixo:
     //       <br>
     //       <br>
-    //       Para acessar a proposta, <a href=${apiServer.prod}/proposal-view/${
+    //       Para acessar a proposta, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
     //         proposal._id
     //       }> click aqui, Número da proposta: ${proposal.seq} </a>
     //       <br>
@@ -1894,7 +2000,7 @@ class ProposalService {
         proposal.type === ProposalType.Aluguel
           ? 'de locação'
           : 'de venda do imóvel'
-      }, <a href=${apiServer.prod}/proposal-view/${
+      }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui </a>
       <br>
@@ -1927,13 +2033,13 @@ class ProposalService {
       <br><br>
       Para verificar o status da contratação ${
         proposal.type === ProposalType.Aluguel
-          ? 'de locação'
+          ? ''
           : 'de venda do imóvel'
-      }, <a href=${apiServer.prod}/proposal-view/${
+      }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui </a>
       <br>
-      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      Caso deseje compartilhar, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
       <br>
       Agradecemos a confiança e desejamos sucesso em sua nova locação.
@@ -1972,12 +2078,12 @@ class ProposalService {
       <br><br>
       Para agendamento da vistoria, <a href='https://share.hsforms.com/1Q7grdolmThioZ-20k-4bzQ49vzc'> click aqui </a>
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
-      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      Caso deseje compartilhar, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
       <br>
-      Assim que o laudo for concluído, enviaremos em seu e-mail para a conferência. Havendo qualquer divergência, você poderá fazer o apontamento, o qual, uma vez validado, será incluído no laudo realizado.
+      Assim que o laudo for concluído, enviaremos em seu e-mail para a conferência. Havendo qualquer divergência, você poderá fazer o apontamento, o qual, uma vez validado, será incluído no relatório final.
       <br>
       <br>
       Agradecemos a confiança e desejamos sucesso em sua nova locação.
@@ -2004,14 +2110,12 @@ class ProposalService {
       <br><br>
       Parabéns pela contratação de sua nova locação!
       <br><br>
-      Seremos ágeis agora na conclusão da vistoria e assim que o laudo for concluído o laudo, enviaremos em seu e-mail para a conferência. Havendo qualquer divergência, você poderá fazer o apontamento, o qual, uma vez validado, será incluído no laudo realizado.      
+      Seremos ágeis agora na conclusão da vistoria e assim que o laudo for concluído, enviaremos em seu e-mail para a conferência. Havendo qualquer divergência, você poderá fazer o apontamento, o qual, uma vez validado, será incluído no relatório final.      
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
-      <br>
-      Estamos quase lá, após esta etapa será feita a entrega das chaves.
       <br>
       Em caso de dúvidas, é só entrar em contato.
       <br>
@@ -2043,18 +2147,16 @@ class ProposalService {
       message: `
       Olá, ${locator.name}!
       <br><br>
-      Vistoria concluída, agora é só formalizar a entrega de chaves!
+      Vistoria realizada, estamos concluindo o seu laudo, o qual será enviado em breve em seu e-mail. 
       <br><br>
-      Para que esta Etapa rapidamente, pedimos que acesse o link abaixo para o alinhamento da entrega.
+      Agora, o próximo passo é concluir a formalização da entrega das chaves e na sequência baixar os arquivos de sua pasta digital para o seu arquivo pessoal. Para ambos os casos, você receberá instruções específicas em seu e-mail.
       <br><br>
-      Para alinhamento da entrega de chaves, <a href='https://share.hsforms.com/1aUYfbox-TDmQiRPlLG_Hqg49vzc'> click aqui </a>
-      <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
-      Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
+      Caso deseje compartilhar, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
       <br>
-      Estamos à disposição para qualquer esclarecimento, bem como, caso ainda não tenha recebido o seu laudo de vistoria, favor nos avisar, respondendo a este e-mail.
+      Estamos à disposição para qualquer esclarecimento.
       <br>
       Atenciosamente.
       <br><br>
@@ -2077,12 +2179,10 @@ class ProposalService {
       <br>
       Além deste e-mail, logo mais, você receberá um contato de nossa equipe ou do administrador da locação para que combinem o recebimento das chaves.
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
-      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      Caso deseje compartilhar, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
-      <br>
-      Estamos à disposição para qualquer esclarecimento, bem como, caso ainda não tenha recebido o seu laudo de vistoria, favor nos avisar, respondendo a este e-mail.
       <br>
       Atenciosamente.
       <br><br>
@@ -2114,29 +2214,18 @@ class ProposalService {
       <br><br>
       É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
       <br><br>
-      Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação e que serão importantes na administração da locação, bem como, ao término dela, entre outras situações que possam demandar estes documentos, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.
+      Para concluir, deverá baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação. Indicamos que salve em lugar seguro e que faça ao menos um backup.
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
-        proposal._id
-      }> click aqui </a>
-      <br>
-      Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
-      <br>
-      <br>
       Agradecemos a confiança e nos colocamos à disposição para auxiliar você em negócios futuros.
       <br>
       Atenciosamente.
       <br><br>
-      ${userProposal.name}<br>
-      CRECI Corretor: ${userProposal.creci}<br><br>
-      Telefone: ${userProposal.cellphone}<br>
-      E-mail: ${userProposal.email}<br><br>
       ${organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''}<br>
       ${
         organizationDB?.name ? `CRECI Imobiliária: ${organizationDB.creci}` : ''
       }
       <br><br>
-      Equipe de Contratos
+      Equipe de Contratos Vivalisto
       <br>
       <br>
       powered by Vivalisto Proptech
@@ -2155,29 +2244,19 @@ class ProposalService {
       <br>
       É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
       <br><br>
-      Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação e que serão importantes durante a locação, bem como, ao término dela, entre outras situações que possam demandar estes documentos, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.      
-      <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
-        proposal._id
-      }> click aqui </a>
-      <br>
-      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      Para concluir, deverá baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação. Indicamos que salve em lugar seguro e que faça ao menos um backup.      
       <br>
       <br>
       Agradecemos a confiança e nos colocamos à disposição para auxiliar você em negócios futuros.
       <br>
       Atenciosamente.
       <br><br>
-      ${userProposal.name}<br>
-      CRECI Corretor: ${userProposal.creci}<br><br>
-      Telefone: ${userProposal.cellphone}<br>
-      E-mail: ${userProposal.email}<br><br>
       ${organizationDB?.name ? `Imobiliária: ${organizationDB.name}` : ''}<br>
       ${
         organizationDB?.name ? `CRECI Imobiliária: ${organizationDB.creci}` : ''
       }
       <br><br>
-      Equipe de Contratos
+      Equipe de Contratos Vivalisto
       <br>
       <br>
       powered by Vivalisto Proptech
@@ -2209,7 +2288,7 @@ class ProposalService {
       <br><br>
       Somos especialistas em direito imobiliário e nas etapas que compõem toda a transação, do início ao fim de sua contratação, atuando de forma isenta entre as partes, pois essa é uma grande preocupação de seu corretor, ${userProposal?.name}, pensando em sua experiência como cliente e em sua satisfação.      
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -2242,7 +2321,7 @@ class ProposalService {
       Somos especialistas em direito imobiliário e nas etapas que compõem toda a transação, do início ao fim de sua contratação, atuando de forma isenta entre as partes, pois essa é uma grande preocupação de seu corretor, ${userProposal?.name}, pensando em sua experiência como cliente e em sua satisfação.
       <br><br>
 
-      Para verificar o status da contratação, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -2278,7 +2357,7 @@ class ProposalService {
       <br><br>
       Conforme explicado anteriormente, temos um corpo jurídico próprio, especialista e focado em direito imobiliário, isento entre as partes, o que aporta segurança, agilidade e economia em todo o processo, tornando-se desnecessário o envolvimento de advogados e terceiros nesta etapa, pois seu agente imobiliário confiou à VIVALISTO essa responsabilidade preocupado em aportar especialização e segurança jurídica e operacional na transação de venda de seu imóvel. Caso ainda queira e tenha contratado um advogado para representá-lo nesta etapa, sempre problemas, estamos abertos para tirar todas as dúvidas e prestar os esclarecimentos necessários para o bom andamento da fase contratual.
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       <br>
       Ainda para sua comodidade e segurança, prezamos pela assinatura online, eliminando a necessidade de cartórios e papel, o também que economiza tempo e dinheiro para todos os envolvidos. Fique tranquilo que você receberá todas as instruções para o procedimento, que é simples, rápido e seguro.
@@ -2312,7 +2391,7 @@ class ProposalService {
       Somos especialistas em direito imobiliário e nas etapas que compõem toda a transação, do início ao fim de sua contratação, atuando de forma isenta entre as partes, pois essa é uma grande preocupação de seu corretor, ${userProposal?.name}, pensando em sua experiência como cliente e em sua satisfação.
       <br><br>
 
-      Para verificar o status da contratação, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -2349,7 +2428,7 @@ class ProposalService {
       <br><br>
       Como citado, esta etapa possuí diferentes detalhes para cada tipo de transação, dessa forma, você receberá os direcionamentos de seu Gestor de Contratos Vivalisto em breve, para a sequência da transferência da propriedade.      
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       <br>
       Ainda para sua comodidade e segurança, prezamos pela assinatura online, eliminando a necessidade de cartórios e papel, o também que economiza tempo e dinheiro para todos os envolvidos. Fique tranquilo que você receberá todas as instruções para o procedimento, que é simples, rápido e seguro.
@@ -2380,7 +2459,7 @@ class ProposalService {
       <br><br>
       Como citado, esta etapa possuí diferentes detalhes para cada tipo de transação, dessa forma, você receberá os direcionamentos de seu Gestor de Contratos Vivalisto em breve, para a sequência da transferência da propriedade.
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${proposal._id}> click aqui </a>
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
       Caso deseje compartilhar é só copiar e colar este link em seu e-mail ou WhatsApp
       <br>
@@ -2416,9 +2495,9 @@ class ProposalService {
       <br><br>
       É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
       <br><br>
-      Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.      
+      Para concluir, deverá baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.      
       <br><br>
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui </a>
       <br>
@@ -2454,10 +2533,10 @@ class ProposalService {
       <br><br>
       É nossa missão aportar segurança e eficiência nas transações imobiliárias, permitindo que todos os envolvidos tenham um alto nível de satisfação com essa operação tão importante para negócios, famílias e indivíduos.
       <br><br>
-      Para concluir, você receberá na sequência um link para baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.
+      Para concluir, deverá baixar a sua “PASTA JURÍDICA”, na qual constam todos os documentos de sua transação, os quais são de grande importância pois são eles que dão validade jurídica à transação, dessa forma, indicamos que salve em lugar seguro e que faça ao menos um backup.
       <br><br>import { boolean } from 'yup';
 
-      Para verificar o status, <a href=${apiServer.prod}/proposal-view/${
+      Para verificar o status, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui </a>
       <br>
