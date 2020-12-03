@@ -2077,7 +2077,7 @@ class ProposalService {
       <br><br>
       Seremos ágeis agora na conclusão da vistoria, para isso, precisamos de sua ajuda. Para o agendamento da data da vistoria e instruções para acesso ao imóvel, pedimos favor acessar o link abaixo e responder as perguntas para que possamos dar andamento.
       <br><br>
-      Para agendamento da vistoria, <a href='https://share.hsforms.com/1Q7grdolmThioZ-20k-4bzQ49vzc'> click aqui </a>
+      Para agendamento da vistoria, <a href='https://form.jotform.com/203228773550051'> click aqui </a>
       <br><br>
       Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
