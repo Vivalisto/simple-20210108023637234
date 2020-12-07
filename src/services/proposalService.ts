@@ -1994,24 +1994,25 @@ class ProposalService {
       message: `
       Olá, ${locator.name}!
       <br><br>
+      Inquilino(s) aprovado(s), vamos em frente!
+      <br>
+      Em breve você receberá um e-mail para a assinatura de seu contrato de locação. Uma vez assinado, realizaremos a vistoria e na sequência a entrega das chaves. 
+      <br>
       Concluímos o levantamento da documentação e realizamos as análises. Tudo correu bem, a locação foi aprovada pelo(s) locador(es) e em breve você receberá um e-mail para a assinatura de seu contrato de locação. Uma vez assinado, realizaremos a vistoria e na sequência a entrega das chaves.
       <br><br>
-      Para verificar o status da contratação ${
-        proposal.type === ProposalType.Aluguel
-          ? 'de locação'
-          : 'de venda do imóvel'
-      }, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
+      Para verificar o status da contratação,
+      <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
         proposal._id
       }> click aqui </a>
       <br>
-      Caso deseje compartilhar a proposta, é só copiar e colar este link em seu e-mail ou WhatsApp
+      Caso deseje compartilhar, é só copiar e colar este link em seu e-mail ou WhatsApp.
       <br>
       <br>
-      Agradecemos a confiança e desejamos sucesso em sua nova locação.
+      Agradecemos a confiança e em caso de dúvidas, é só entrar em contato. 
       <br>
       Atenciosamente.
       <br><br>
-      Equipe de Contratos
+      Equipe de Contratos 
       <br>
       <br>
       E-mail: contratos@vivalisto.com.br
@@ -2076,7 +2077,7 @@ class ProposalService {
       <br><br>
       Seremos ágeis agora na conclusão da vistoria, para isso, precisamos de sua ajuda. Para o agendamento da data da vistoria e instruções para acesso ao imóvel, pedimos favor acessar o link abaixo e responder as perguntas para que possamos dar andamento.
       <br><br>
-      Para agendamento da vistoria, <a href='https://share.hsforms.com/1Q7grdolmThioZ-20k-4bzQ49vzc'> click aqui </a>
+      Para agendamento da vistoria, <a href='https://form.jotform.com/203228773550051'> click aqui </a>
       <br><br>
       Para verificar o status da contratação, <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${proposal._id}> click aqui </a>
       <br>
