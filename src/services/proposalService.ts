@@ -19,6 +19,7 @@ import { GroupType, ProfileType } from '../enums/access-control.enum';
 import { apiServer } from '../config/api';
 import organizationService from './organizationService';
 import { ResponsibleHiring } from '../enums/responsible-hiring.enum';
+import { filterProposal } from '../utils/filter'
 
 const proposalUserFields = [
   'name',
@@ -254,12 +255,15 @@ class ProposalService {
       .populate('proponent');
   }
 
-  async getIntegrationHiring(userId: mongoose.Schema.Types.ObjectId, type: String) {
-
-    return await ProposalRepository.find({stage: { $gt: 0 },})
-      .populate('user', proposalUserFields)
-      .populate('locator')
-      .populate('proponent');
+  async getIntegrationHiring(userId: mongoose.Schema.Types.ObjectId, phone: string) {
+    let proposalsFiltered = []
+    const proposals:any = await ProposalRepository.find({stage: { $gt: 0 }})
+                        .populate('user', proposalUserFields)
+                        .populate('locator')
+                        .populate('proponent') ?? [];
+    
+    proposalsFiltered = filterProposal(proposals, phone)
+    return proposalsFiltered
   }
 
   async createProposalParts(proposal: any) {

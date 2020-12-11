@@ -116,9 +116,9 @@ class ProposalController {
   }
 
   async getIntegrationHiring(req: Request | any, res: Response) {
-    const { type } = req.query;
+    const { phone } = req.query;
     try {
-      const proposals = await proposalService.getIntegrationHiring(req.userId, type);
+      const proposals = await proposalService.getIntegrationHiring(req.userId, phone);
       Helper.sendResponse(res, HttpStatus.OK, { proposals });
     } catch (error) {
       Helper.sendResponse(

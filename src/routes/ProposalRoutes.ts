@@ -5,7 +5,7 @@ import authMiddleware from '../middlewares/auth';
 const proposalRouter = express.Router();
 
 proposalRouter.get('/:id/view', ProposalController.getByProposalAndsCustomer);
-proposalRouter.get('/integration-hiring', ProposalController.getIntegrationHiring);
+proposalRouter.get('/hiring/customer', ProposalController.getIntegrationHiring);
 proposalRouter.use(authMiddleware);
 
 proposalRouter.get('/signings', ProposalController.getSignings);
