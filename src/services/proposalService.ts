@@ -1528,7 +1528,7 @@ class ProposalService {
 
     const restProposal: string = proposal?.hiringData?.responsibleHiring
     
-    if(!proposal?.hiringData?.proponentParts || !proposal?.hiringData?.ownerParts) {
+    // if(!proposal?.hiringData?.proponentParts || !proposal?.hiringData?.ownerParts) {
       sendMailUtil({
         from: 'contratos@vivalisto.com.br',
         to: userProposal.email,
@@ -1613,7 +1613,7 @@ class ProposalService {
         powered by Vivalisto Proptech
         `,
       });
-    }
+    // }
 
     // sendMailUtil({
     //   from: 'contratos@vivalisto.com.br',
@@ -2049,9 +2049,7 @@ class ProposalService {
       <br><br>
       Inquilino(s) aprovado(s), vamos em frente!
       <br>
-      Em breve você receberá um e-mail para a assinatura de seu contrato de locação. Uma vez assinado, realizaremos a vistoria e na sequência a entrega das chaves. 
-      <br>
-      Concluímos o levantamento da documentação e realizamos as análises. Tudo correu bem, a locação foi aprovada pelo(s) locador(es) e em breve você receberá um e-mail para a assinatura de seu contrato de locação. Uma vez assinado, realizaremos a vistoria e na sequência a entrega das chaves.
+      Em breve você receberá um e-mail para a assinatura de seu contrato de locação. Uma vez assinado, realizaremos a vistoria e na sequência a entrega das chaves.
       <br><br>
       Para verificar o status da contratação,
       <a href=${process.env.NODE_ENV === "production" ? apiServer.prod : apiServer.staging}/proposal-view/${
