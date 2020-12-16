@@ -107,7 +107,9 @@ class ProposalService {
       new: true,
     })
       .populate('locator')
-      .populate('proponent');
+      .populate('proponent')
+      .populate('user')
+      .populate('organization');
   }
 
   async delete(_id: string) {
