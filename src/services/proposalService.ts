@@ -146,6 +146,20 @@ class ProposalService {
       this.sendMailApproveRentBuySell(proposal, user);
     }
 
+    if (proposalStatus.status === ProposalStatus.ContratacaoCancelada) {
+      proposalUpdate = {
+        ...proposalStatus,
+        stage: ProposalStage.ContratacaoCancelada,
+      };
+    }
+
+    if (proposalStatus.status === ProposalStatus.EmNegociacao) {
+      proposalUpdate = {
+        ...proposalStatus,
+        stage: ProposalStage.Criacao,
+      };
+    }
+
     // if (proposalStatus.status === ProposalStatus.EmviadaContratacao) {
     //   this.sendMailHire(proposal, user);
     // }
