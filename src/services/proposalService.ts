@@ -117,12 +117,15 @@ class ProposalService {
   async delete(_id: string): Promise<mongoose.Document | null | void> {
     const proposalRepository: any = await this.getById(_id);
 
-    if (proposalRepository.status !== ProposalStatus.Cancelada) {
-      throw new AppError(
-        `Ação não permitida. Apenas propostas com o status de 'Cancelada' pode ser excluída`
-      );
+    if (
+      proposalRepository.status === ProposalStatus.Cancelada ||
+      proposalRepository.status === ProposalStatus.ContratacaoCancelada
+    ) {
+      return await ProposalRepository.findByIdAndRemove(_id);
     }
-    return await ProposalRepository.findByIdAndRemove(_id);
+    throw new AppError(
+      `Ação não permitida. Apenas propostas com o status de 'Cancelada' pode ser excluída`
+    );
   }
 
   async updateStatus(_id: string, proposalStatus: any, userId: any) {
