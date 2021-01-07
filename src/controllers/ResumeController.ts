@@ -8,7 +8,7 @@ class ResumeController {
   async get(req: Request | any, res: Response) {
     try {
       const resume = await resumeService.get();
-      Helper.sendResponse(res, HttpStatus.OK, { resume });
+      Helper.sendResponse(res, HttpStatus.OK, resume);
     } catch (error) {
       console.error.bind(console, `Error ${error}`);
     }
