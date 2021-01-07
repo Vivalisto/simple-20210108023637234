@@ -1,17 +1,18 @@
-import express, { Request, Response } from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
+import express, { Request, Response } from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
 
-import DataBase from './config/database';
-import userRouter from './routes/UserRoutes';
-import authRouter from './routes/AuthRoutes';
-import proposalRoutes from './routes/ProposalRoutes';
-import stageRouter from './routes/StageRoutes';
-import ruleRouter from './routes/RuleRoutes';
-import customerRouter from './routes/CustomerRoutes';
-import organizationRouter from './routes/OrganizationRoutes';
-import termRouter from './routes/TermRoutes';
-import authMiddleware from './middlewares/auth';
+import DataBase from "./config/database";
+import userRouter from "./routes/UserRoutes";
+import authRouter from "./routes/AuthRoutes";
+import proposalRoutes from "./routes/ProposalRoutes";
+import stageRouter from "./routes/StageRoutes";
+import ruleRouter from "./routes/RuleRoutes";
+import customerRouter from "./routes/CustomerRoutes";
+import organizationRouter from "./routes/OrganizationRoutes";
+import termRouter from "./routes/TermRoutes";
+import resumeRouter from "./routes/ResumeRoutes";
+import authMiddleware from "./middlewares/auth";
 
 class StartUp {
   public app: express.Application;
@@ -27,8 +28,8 @@ class StartUp {
 
   enableCors() {
     const options: cors.CorsOptions = {
-      methods: 'GET, OPTIONS, PUT, POST, DELETE',
-      origin: 'https://app.programadorfavorito.com.br/',
+      methods: "GET, OPTIONS, PUT, POST, DELETE",
+      origin: "https://app.programadorfavorito.com.br/",
     };
   }
 
@@ -40,17 +41,18 @@ class StartUp {
   }
 
   routes() {
-    this.app.use('/api/v1/auth', authRouter);
-    this.app.use('/api/v1/users', userRouter);
-    this.app.use('/api/v1/proposals', proposalRoutes);
-    this.app.use('/api/v1/stage', stageRouter);
-    this.app.use('/api/v1/rule', ruleRouter);
-    this.app.use('/api/v1/customer', customerRouter);
-    this.app.use('/api/v1/organization', organizationRouter);
-    this.app.use('/api/v1/term', termRouter);
+    this.app.use("/api/v1/auth", authRouter);
+    this.app.use("/api/v1/users", userRouter);
+    this.app.use("/api/v1/proposals", proposalRoutes);
+    this.app.use("/api/v1/stage", stageRouter);
+    this.app.use("/api/v1/rule", ruleRouter);
+    this.app.use("/api/v1/customer", customerRouter);
+    this.app.use("/api/v1/organization", organizationRouter);
+    this.app.use("/api/v1/term", termRouter);
+    this.app.use("/api/v1/resume", resumeRouter);
 
-    this.app.route('/').get((req: Request, res: Response) => {
-      return res.send({ versao: '0.0.1' });
+    this.app.route("/").get((req: Request, res: Response) => {
+      return res.send({ versao: "0.0.1" });
     });
   }
 }
