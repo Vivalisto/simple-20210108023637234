@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
-import httpStatus, * as HttpStatus from 'http-status';
+import { Request, Response } from "express";
+import httpStatus, * as HttpStatus from "http-status";
 
-import proposalService from '../services/proposalService';
-import Helper from '../utils/helper';
+import proposalService from "../services/proposalService";
+import Helper from "../utils/helper";
 
 class ProposalController {
   async create(req: Request | any, res: Response) {
@@ -94,7 +94,7 @@ class ProposalController {
     const { hiringData } = req.body;
 
     try {
-      const proposal = await proposalService.sendHiring(id, userId,  hiringData );
+      const proposal = await proposalService.sendHiring(id, userId, hiringData);
       Helper.sendResponse(res, HttpStatus.OK, { proposal });
     } catch (error) {
       Helper.sendResponse(res, HttpStatus.BAD_REQUEST, error);
@@ -110,7 +110,7 @@ class ProposalController {
       Helper.sendResponse(
         res,
         HttpStatus.INTERNAL_SERVER_ERROR,
-        'Erro ao buscar as propostas'
+        "Erro ao buscar as propostas"
       );
     }
   }
@@ -118,13 +118,16 @@ class ProposalController {
   async getIntegrationHiring(req: Request | any, res: Response) {
     const { phone } = req.query;
     try {
-      const proposals = await proposalService.getIntegrationHiring(req.userId, phone);
+      const proposals = await proposalService.getIntegrationHiring(
+        req.userId,
+        phone
+      );
       Helper.sendResponse(res, HttpStatus.OK, { proposals });
     } catch (error) {
       Helper.sendResponse(
         res,
         HttpStatus.INTERNAL_SERVER_ERROR,
-        'Erro ao buscar as propostas'
+        "Erro ao buscar as propostas"
       );
     }
   }
@@ -151,16 +154,18 @@ class ProposalController {
     }
   }
 
-  // async delete(req: Request, res: Response) {
-  //   const { id } = req.params;
+  async delete(req: Request, res: Response) {
+    const { id } = req.params;
 
-  //   try {
-  //     await proposalService.delete(id);
-  //     Helper.sendResponse(res, httpStatus.OK, 'Usuário deletado com sucesso');
-  //   } catch (error) {
-  //     console.error.bind(console, `Error ${error}`);
-  //   }
-  // }
+    try {
+      await proposalService.delete(id);
+      Helper.sendResponse(res, httpStatus.OK, {
+        message: "Proposta excluída com sucesso",
+      });
+    } catch (error) {
+      Helper.sendResponse(res, HttpStatus.BAD_REQUEST, error);
+    }
+  }
 }
 
 export default new ProposalController();
